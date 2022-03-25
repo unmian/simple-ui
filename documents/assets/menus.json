@@ -1,0 +1,208 @@
+[
+  {
+    "name": "常用工具",
+    "path": "/tool",
+    "children": [
+      {
+        "name": "HTML转义符",
+        "path": "/tool/escape"
+      }
+    ]
+  },
+  {
+    "name": "基本组件",
+    "path": "/base",
+    "children": [
+      {
+        "name": "图标",
+        "path": "/base/icon"
+      },
+      {
+        "name": "头像",
+        "path": "/base/avatar"
+      },
+      {
+        "name": "进度条",
+        "path": "/base/bar"
+      },
+      {
+        "name": "描述",
+        "path": "/base/desc"
+      },
+      {
+        "name": "标签",
+        "path": "/base/tag"
+      },
+      {
+        "name": "路径",
+        "path": "/base/path"
+      },
+      {
+        "name": "卡片",
+        "path": "/base/card"
+      },
+      {
+        "name": "提示",
+        "path": "/base/tip"
+      },
+      {
+        "name": "信息提示",
+        "path": "/base/message"
+      },
+      {
+        "name": "标记",
+        "path": "/base/badge"
+      },
+      {
+        "name": "步骤条",
+        "path": "/base/step"
+      },
+      {
+        "name": "弹出框",
+        "path": "/base/popover"
+      },
+      {
+        "name": "图片容器",
+        "path": "/base/image"
+      },
+      {
+        "name": "媒体预览",
+        "path": "/base/preview"
+      },
+      {
+        "name": "图片水印",
+        "path": "/base/water-mark"
+      }
+    ]
+  },
+  {
+    "name": "表单组件",
+    "path": "/form",
+    "children": [
+      {
+        "name": "按钮",
+        "path": "/form/button"
+      },
+      {
+        "name": "冷却按钮",
+        "path": "/form/cool-button"
+      },
+      {
+        "name": "图形验证码",
+        "path": "/form/verification-code"
+      },
+      {
+        "name": "单选框",
+        "path": "/form/radio"
+      },
+      {
+        "name": "复选框",
+        "path": "/form/checkbox"
+      },
+      {
+        "name": "切换按钮",
+        "path": "/form/switch"
+      },
+      {
+        "name": "下拉框",
+        "path": "/form/select"
+      },
+      {
+        "name": "树形下拉框",
+        "path": "/form/tree-select"
+      },
+      {
+        "name": "输入框",
+        "path": "/form/input"
+      },
+      {
+        "name": "文本域",
+        "path": "/form/textarea"
+      },
+      {
+        "name": "日期选择",
+        "path": "/form/date-picker"
+      },
+      {
+        "name": "时间选择",
+        "path": "/form/time-picker"
+      },
+      {
+        "name": "日期时间选择",
+        "path": "/form/date-time-picker"
+      },
+      {
+        "name": "图片选择",
+        "path": "/form/image-picker"
+      },
+      {
+        "name": "文件选择",
+        "path": "/form/file-button"
+      },
+      {
+        "name": "密码强度",
+        "path": "/form/password-strength"
+      },
+      {
+        "name": "树形控件",
+        "path": "/form/tree"
+      },
+      {
+        "name": "表单验证",
+        "path": "/form/form"
+      }
+    ]
+  },
+  {
+    "name": "页面组件",
+    "path": "/page",
+    "children": [
+      {
+        "name": "标签页",
+        "path": "/page/tab"
+      },
+      {
+        "name": "弹窗",
+        "path": "/page/dialog"
+      },
+      {
+        "name": "表格",
+        "path": "/page/table"
+      },
+      {
+        "name": "分页",
+        "path": "/page/pagination"
+      },
+      {
+        "name": "滚动条",
+        "path": "/page/scroll"
+      },
+      {
+        "name": "滚动吸附",
+        "path": "/page/sticky"
+      },
+      {
+        "name": "返回顶部",
+        "path": "/page/backtop"
+      }
+    ]
+  },
+  {
+    "name": "动画组件",
+    "path": "/transition",
+    "children": [
+      {
+        "name": "展开动画",
+        "path": "/transition/collapse"
+      },
+      {
+        "name": "缩放动画",
+        "path": "/transition/scale"
+      },
+      {
+        "name": "透明度动画",
+        "path": "/transition/fade"
+      }
+    ]
+  }
+]

@@ -1,0 +1,362 @@
+[
+  {
+    "symbol": "\"",
+    "name": "双引号",
+    "code": "&quot;"
+  },
+  {
+    "symbol": "&",
+    "name": "AND符号",
+    "code": "&amp;"
+  },
+  {
+    "symbol": "<",
+    "name": "小于符号",
+    "code": "&lt;"
+  },
+  {
+    "symbol": ">",
+    "name": "大于符号",
+    "code": "&gt;"
+  },
+  {
+    "symbol": " ",
+    "name": "空格符号",
+    "code": "&nbsp;"
+  },
+  {
+    "symbol": "¿",
+    "name": "倒问号",
+    "code": "&iquest;"
+  },
+  {
+    "symbol": "«",
+    "name": "双左箭头",
+    "code": "&laquo;"
+  },
+  {
+    "symbol": "»",
+    "name": "双右箭头",
+    "code": "&raquo;"
+  },
+  {
+    "symbol": "‘",
+    "name": "左单引号",
+    "code": "&lsquo;"
+  },
+  {
+    "symbol": "’",
+    "name": "右单引号",
+    "code": "&rsquo;"
+  },
+  {
+    "symbol": "“",
+    "name": "左双引号",
+    "code": "&ldquo;"
+  },
+  {
+    "symbol": "”",
+    "name": "右双引号",
+    "code": "&rdquo;"
+  },
+  {
+    "symbol": "¶",
+    "name": "段落符号",
+    "code": "&para;"
+  },
+  {
+    "symbol": "§",
+    "name": "章节符号",
+    "code": "&sect;"
+  },
+  {
+    "symbol": "©",
+    "name": "版权所有符号",
+    "code": "&copy;"
+  },
+  {
+    "symbol": "®",
+    "name": "注册商标符号",
+    "code": "&reg;"
+  },
+  {
+    "symbol": "™",
+    "name": "商标符号",
+    "code": "&trade;"
+  },
+  {
+    "symbol": "€",
+    "name": "欧元符号",
+    "code": "&euro;"
+  },
+  {
+    "symbol": "¢",
+    "name": "美分符号",
+    "code": "&cent;"
+  },
+  {
+    "symbol": "£",
+    "name": "英镑符号",
+    "code": "&pound;"
+  },
+  {
+    "symbol": "¥",
+    "name": "日圆符号",
+    "code": "&yen;"
+  },
+  {
+    "symbol": "…",
+    "name": "...",
+    "code": "&hellip;"
+  },
+  {
+    "symbol": "⊕",
+    "name": "⊕",
+    "code": "&oplus;"
+  },
+  {
+    "symbol": "∇",
+    "name": "倒三角型符号",
+    "code": "&nabla;"
+  },
+  {
+    "symbol": "×",
+    "name": "乘号",
+    "code": "&times;"
+  },
+  {
+    "symbol": "÷",
+    "name": "除号",
+    "code": "&divide;"
+  },
+  {
+    "symbol": "±",
+    "name": "正负符号",
+    "code": "&plusmn;"
+  },
+  {
+    "symbol": "ƒ",
+    "name": "function符号",
+    "code": "&fnof;"
+  },
+  {
+    "symbol": "√",
+    "name": "根号",
+    "code": "&radic;"
+  },
+  {
+    "symbol": "∞",
+    "name": "无限大符号",
+    "code": "&infin;"
+  },
+  {
+    "symbol": "∠",
+    "name": "角度符号",
+    "code": "&ang;"
+  },
+  {
+    "symbol": "∫",
+    "name": "微积分符号",
+    "code": "&int;"
+  },
+  {
+    "symbol": "°",
+    "name": "度数符号",
+    "code": "&deg;"
+  },
+  {
+    "symbol": "≠",
+    "name": "不等于符号",
+    "code": "&ne;"
+  },
+  {
+    "symbol": "≡",
+    "name": "相等符号",
+    "code": "&equiv;"
+  },
+  {
+    "symbol": "≤",
+    "name": "小于等于符号",
+    "code": "&le;"
+  },
+  {
+    "symbol": "≥",
+    "name": "大于等于符号",
+    "code": "&ge;"
+  },
+  {
+    "symbol": "⊥",
+    "name": "垂直符号",
+    "code": "&perp;"
+  },
+  {
+    "symbol": "½",
+    "name": "二分之一符号",
+    "code": "&frac12;"
+  },
+  {
+    "symbol": "¼",
+    "name": "四分之一符号",
+    "code": "&frac14;"
+  },
+  {
+    "symbol": "¾",
+    "name": "四分之三符号",
+    "code": "&frac34;"
+  },
+  {
+    "symbol": "‰",
+    "name": "千分号",
+    "code": "&permil;"
+  },
+  {
+    "symbol": "∴",
+    "name": "所以符号",
+    "code": "&there4;"
+  },
+  {
+    "symbol": "π",
+    "name": "圆周率符号",
+    "code": "&pi;"
+  },
+  {
+    "symbol": "¹",
+    "name": "批注1符号",
+    "code": "&sup1;"
+  },
+  {
+    "symbol": "²",
+    "name": "批注2符号、平方",
+    "code": "&sup2;"
+  },
+  {
+    "symbol": "³",
+    "name": "批注3符号、立方",
+    "code": "&sup3;"
+  },
+  {
+    "symbol": "↵",
+    "name": "ENTER符号",
+    "code": "&crarr;"
+  },
+  {
+    "symbol": "←",
+    "name": "向左箭头",
+    "code": "&larr;"
+  },
+  {
+    "symbol": "→",
+    "name": "向右箭头",
+    "code": "&rarr;"
+  },
+  {
+    "symbol": "↑",
+    "name": "向上箭头",
+    "code": "&uarr;"
+  },
+  {
+    "symbol": "↓",
+    "name": "向下箭头",
+    "code": "&darr;"
+  },
+  {
+    "symbol": "↔",
+    "name": "双向箭头",
+    "code": "&harr;"
+  },
+  {
+    "symbol": "⇔",
+    "name": "双线双向箭头",
+    "code": "&hArr;"
+  },
+  {
+    "symbol": "⇐",
+    "name": "双线向左箭头",
+    "code": "&lArr;"
+  },
+  {
+    "symbol": "⇒",
+    "name": "双线向右箭头",
+    "code": "&rArr;"
+  },
+  {
+    "symbol": "⇑",
+    "name": "双线向上箭头",
+    "code": "&uArr;"
+  },
+  {
+    "symbol": "⇓",
+    "name": "双线向下箭头",
+    "code": "&dArr;"
+  },
+  {
+    "symbol": "♠",
+    "name": "黑桃符号",
+    "code": "&spades;"
+  },
+  {
+    "symbol": "♣",
+    "name": "梅花符号",
+    "code": "&clubs;"
+  },
+  {
+    "symbol": "♥",
+    "name": "红心符号",
+    "code": "&hearts;"
+  },
+  {
+    "symbol": "♦",
+    "name": "方块符号",
+    "code": "&diams;"
+  },
+  {
+    "symbol": "α",
+    "name": "Alpha符号",
+    "code": "&alpha;"
+  },
+  {
+    "symbol": "β",
+    "name": "Bata符号",
+    "code": "&beta;"
+  },
+  {
+    "symbol": "γ",
+    "name": "Gamma符号",
+    "code": "&gamma;"
+  },
+  {
+    "symbol": "Δ",
+    "name": "Delta符号",
+    "code": "&Delta;"
+  },
+  {
+    "symbol": "θ",
+    "name": "Theta符号",
+    "code": "&theta;"
+  },
+  {
+    "symbol": "λ",
+    "name": "Lambda符号",
+    "code": "&lambda;"
+  },
+  {
+    "symbol": "Σ",
+    "name": "Sigma符号",
+    "code": "&Sigma;"
+  },
+  {
+    "symbol": "τ",
+    "name": "Tau符号",
+    "code": "&#tau;"
+  },
+  {
+    "symbol": "ω",
+    "name": "Omega符号",
+    "code": "&omega;"
+  },
+  {
+    "symbol": "Ω",
+    "name": "Omega符号、奥姆符号",
+    "code": "&Omega;"
+  }
+]
