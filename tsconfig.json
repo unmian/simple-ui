@@ -17,8 +17,14 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "documents": [
+        "documents/*"
+      ],
       "documents/*": [
         "documents/*"
+      ],
+      "packages": [
+        "packages/*"
       ],
       "packages/*": [
         "packages/*"
