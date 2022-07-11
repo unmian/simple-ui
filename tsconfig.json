@@ -18,18 +18,33 @@
     "baseUrl": ".",
     "paths": {
       "documents": [
-        "documents/*"
+        "documents/index.ts"
       ],
       "documents/*": [
         "documents/*"
       ],
+      "icons": [
+        "icons/index.ts"
+      ],
+      "icons/*": [
+        "icons/*"
+      ],
       "packages": [
-        "packages/*"
+        "packages/index.ts"
       ],
       "packages/*": [
         "packages/*"
+      ],
+      "@quarter/simple-ui": [
+        "packages/index.ts"
+      ],
+      "@quarter/simple-ui/*": [
+        "packages/*"
       ]
-    }
+    },
+    "types": [
+      "vite/client"
+    ]
   },
   "vueCompilerOptions": {
     "experimentalCompatMode": 2

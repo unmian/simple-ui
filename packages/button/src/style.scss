@@ -1,0 +1,754 @@
+/*
+ * @Author: Quarter
+ * @Date: 2022-07-07 19:36:52
+ * @LastEditors: Quarter
+ * @LastEditTime: 2022-07-08 14:04:51
+ * @FilePath: /simple-ui/packages/button/src/style.scss
+ * @Description: 按钮样式
+ */
+
+@import "packages/styles/mixin.scss";
+
+.s-button {
+  user-select: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  overflow: hidden;
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+
+  .s-icon,
+  .s-iconfont {
+    transform: scale(1.1);
+  }
+
+  .s-button__text {
+    white-space: nowrap;
+  }
+
+  &.s-size-small {
+    @include s-text-5;
+
+    height: 1.2rem;
+
+    .s-icon,
+    .s-iconfont {
+
+      margin-right: 0.3rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  &.s-size-medium {
+    @include s-text-4;
+
+    height: 1.6rem;
+
+    .s-icon,
+    .s-iconfont {
+      margin-right: 0.4rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  &.s-size-large {
+    @include s-text-3;
+
+    height: 2rem;
+
+    .s-icon,
+    .s-iconfont {
+      margin-right: 0.5rem;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+// 矩形按钮
+.s-button--rectangle {
+  border-radius: var(--s-border-radius);
+
+  &.s-size-small {
+    padding: 0 0.4rem;
+  }
+
+  &.s-size-medium {
+    padding: 0 0.8rem;
+  }
+
+  &.s-size-large {
+    padding: 0 1.2rem;
+  }
+}
+
+// 方形按钮
+.s-button--square {
+  border-radius: var(--s-border-radius);
+  justify-content: center;
+
+  &.s-size-small {
+    width: 1.2rem;
+    padding: 0.1rem;
+  }
+
+  &.s-size-medium {
+    width: 1.6rem;
+    padding: 0.25rem;
+  }
+
+  &.s-size-large {
+    width: 2rem;
+    padding: 0.4rem;
+  }
+}
+
+// 圆角按钮
+.s-button--round {
+  justify-content: center;
+
+  &.s-size-small {
+    min-width: 1.2rem;
+    padding: 0 0.4rem;
+    border-radius: 0.8rem;
+  }
+
+  &.s-size-medium {
+    min-width: 1.6rem;
+    padding: 0 0.8rem;
+    border-radius: 0.9rem;
+  }
+
+  &.s-size-large {
+    min-width: 2rem;
+    padding: 0 1.2rem;
+    border-radius: 1rem;
+  }
+}
+
+// 圆形按钮
+.s-button--circle {
+  justify-content: center;
+
+  &.s-size-small {
+    width: 1.2rem;
+    padding: 0.1rem;
+    border-radius: 0.8rem;
+  }
+
+  &.s-size-medium {
+    width: 1.6rem;
+    padding: 0.25rem;
+    border-radius: 0.9rem;
+  }
+
+  &.s-size-large {
+    width: 2rem;
+    padding: 0.4rem;
+    border-radius: 1rem;
+  }
+}
+
+// 虚线描边按钮
+.s-button--outline-dashed {
+  border-style: dashed;
+}
+
+// 禁用按钮
+.s-button--disabled {
+  cursor: not-allowed;
+}
+
+// 默认主题
+.s-button--default {
+  &.s-button--plain {
+    color: var(--s-text-primary);
+
+    &:hover {
+      color: var(--s-brand-hover);
+      background-color: var(--s-gray-100);
+    }
+
+    &:active {
+      color: var(--s-brand-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-text-disabled);
+      background: none;
+    }
+  }
+
+  &.s-button--fill {
+    color: var(--s-text-primary);
+    background-color: var(--s-gray-200);
+
+    &:hover {
+      color: var(--s-brand-hover);
+      background-color: var(--s-gray-100);
+    }
+
+    &:active {
+      color: var(--s-brand-click);
+      background-color: var(--s-gray-300);
+    }
+
+    &:disabled {
+      color: var(--s-text-disabled);
+      background-color: var(--s-gray-100);
+    }
+  }
+
+  &.s-button--outline,
+  &.s-button--outline-dashed {
+    color: var(--s-text-primary);
+    border-color: var(--s-gray-300);
+
+    &:hover {
+      color: var(--s-brand-hover);
+      border-color: var(--s-brand-hover);
+    }
+
+    &:active {
+      color: var(--s-brand-click);
+      border-color: var(--s-brand-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-text-disabled);
+      border-color: var(--s-gray-100);
+      background: none;
+    }
+  }
+}
+
+// 品牌色主题
+.s-button--primary {
+  &.s-button--plain {
+    color: var(--s-brand-normal);
+
+    &:hover {
+      color: var(--s-brand-hover);
+      background-color: var(--s-gray-100);
+    }
+
+    &:active {
+      color: var(--s-brand-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-brand-disabled);
+      background: none;
+    }
+  }
+
+  &.s-button--fill {
+    color: var(--s-font-white-400);
+    background-color: var(--s-brand-normal);
+
+    &:hover {
+      background-color: var(--s-brand-hover);
+    }
+
+    &:active {
+      background-color: var(--s-brand-click);
+    }
+
+    &:disabled {
+      background-color: var(--s-brand-disabled);
+    }
+  }
+
+  &.s-button--outline,
+  &.s-button--outline-dashed {
+    color: var(--s-brand-normal);
+    border-color: var(--s-brand-normal);
+
+    &:hover {
+      color: var(--s-brand-hover);
+      border-color: var(--s-brand-hover);
+    }
+
+    &:active {
+      color: var(--s-brand-click);
+      border-color: var(--s-brand-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-brand-disabled);
+      border-color: var(--s-brand-disabled);
+      background: none;
+    }
+  }
+}
+
+// 警告色主题
+.s-button--warning {
+  &.s-button--plain {
+    color: var(--s-warning-normal);
+
+    &:hover {
+      color: var(--s-warning-hover);
+      background-color: var(--s-gray-100);
+    }
+
+    &:active {
+      color: var(--s-warning-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-warning-disabled);
+      background: none;
+    }
+  }
+
+  &.s-button--fill {
+    color: var(--s-font-white-400);
+    background-color: var(--s-warning-normal);
+
+    &:hover {
+      background-color: var(--s-warning-hover);
+    }
+
+    &:active {
+      background-color: var(--s-warning-click);
+    }
+
+    &:disabled {
+      background-color: var(--s-warning-disabled);
+    }
+  }
+
+  &.s-button--outline,
+  &.s-button--outline-dashed {
+    color: var(--s-warning-normal);
+    border-color: var(--s-warning-normal);
+
+    &:hover {
+      color: var(--s-warning-hover);
+      border-color: var(--s-warning-hover);
+    }
+
+    &:active {
+      color: var(--s-warning-click);
+      border-color: var(--s-warning-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-warning-disabled);
+      border-color: var(--s-warning-disabled);
+      background: none;
+    }
+  }
+}
+
+// 危险色主题
+.s-button--danger {
+  &.s-button--plain {
+    color: var(--s-danger-normal);
+
+    &:hover {
+      color: var(--s-danger-hover);
+      background-color: var(--s-gray-100);
+    }
+
+    &:active {
+      color: var(--s-danger-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-danger-disabled);
+      background: none;
+    }
+  }
+
+  &.s-button--fill {
+    color: var(--s-font-white-400);
+    background-color: var(--s-danger-normal);
+
+    &:hover {
+      background-color: var(--s-danger-hover);
+    }
+
+    &:active {
+      background-color: var(--s-danger-click);
+    }
+
+    &:disabled {
+      background-color: var(--s-danger-disabled);
+    }
+  }
+
+  &.s-button--outline,
+  &.s-button--outline-dashed {
+    color: var(--s-danger-normal);
+    border-color: var(--s-danger-normal);
+
+    &:hover {
+      color: var(--s-danger-hover);
+      border-color: var(--s-danger-hover);
+    }
+
+    &:active {
+      color: var(--s-danger-click);
+      border-color: var(--s-danger-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-danger-disabled);
+      border-color: var(--s-danger-disabled);
+      background: none;
+    }
+  }
+}
+
+// 安全色主题
+.s-button--success {
+  &.s-button--plain {
+    color: var(--s-success-normal);
+
+    &:hover {
+      color: var(--s-success-hover);
+      background-color: var(--s-gray-100);
+    }
+
+    &:active {
+      color: var(--s-success-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-success-disabled);
+      background: none;
+    }
+  }
+
+  &.s-button--fill {
+    color: var(--s-font-white-400);
+    background-color: var(--s-success-normal);
+
+    &:hover {
+      background-color: var(--s-success-hover);
+    }
+
+    &:active {
+      background-color: var(--s-success-click);
+    }
+
+    &:disabled {
+      background-color: var(--s-success-disabled);
+    }
+  }
+
+  &.s-button--outline,
+  &.s-button--outline-dashed {
+    color: var(--s-success-normal);
+    border-color: var(--s-success-normal);
+
+    &:hover {
+      color: var(--s-success-hover);
+      border-color: var(--s-success-hover);
+    }
+
+    &:active {
+      color: var(--s-success-click);
+      border-color: var(--s-success-click);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-success-disabled);
+      border-color: var(--s-success-disabled);
+      background: none;
+    }
+  }
+}
+
+// 取消主题
+.s-button--cancel {
+  &.s-button--plain {
+    color: var(--s-text-secondary);
+
+    &:hover {
+      color: var(--s-text-primary);
+    }
+
+    &:active {
+      color: var(--s-text-primary);
+      background-color: var(--s-gray-100);
+    }
+
+    &:disabled {
+      color: var(--s-text-disabled);
+      background: none;
+    }
+  }
+
+  &.s-button--fill {
+    color: var(--s-text-secondary);
+
+    &:hover {
+      color: var(--s-text-primary);
+      background-color: var(--s-gray-100);
+    }
+
+    &:active {
+      color: var(--s-text-primary);
+      background-color: var(--s-gray-300);
+    }
+
+    &:disabled {
+      color: var(--s-text-disabled);
+      background: none;
+    }
+  }
+
+  &.s-button--outline,
+  &.s-button--outline-dashed {
+    color: var(--s-text-secondary);
+
+    &:hover {
+      color: var(--s-text-primary);
+    }
+
+    &:active {
+      color: var(--s-text-primary);
+      border-color: var(--s-gray-200);
+    }
+
+    &:disabled {
+      color: var(--s-text-disabled);
+      border-color: transparent;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+
+  // 默认主题
+  .s-button--default {
+    &.s-button--plain {
+      &:hover {
+        color: var(--s-brand-hover);
+        background-color: var(--s-gray-1200);
+      }
+
+      &:active {
+        color: var(--s-brand-click);
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        color: var(--s-text-disabled);
+        background: none;
+      }
+    }
+
+    &.s-button--fill {
+      background-color: var(--s-gray-1200);
+
+      &:hover {
+        background-color: var(--s-gray-1100);
+      }
+
+      &:active {
+        background-color: var(--s-gray-1300);
+      }
+
+      &:disabled {
+        background-color: var(--s-gray-1300);
+      }
+    }
+
+    &.s-button--outline,
+    &.s-button--outline-dashed {
+      border-color: var(--s-gray-1000);
+
+      &:hover {
+        border-color: var(--s-brand-hover);
+      }
+
+      &:active {
+        border-color: var(--s-brand-click);
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        border-color: var(--s-gray-1200);
+        background: none;
+      }
+    }
+  }
+
+  // 品牌色主题
+  .s-button--primary {
+    &.s-button--plain {
+      &:hover {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+
+    &.s-button--outline,
+    &.s-button--outline-dashed {
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+  }
+
+  // 警告色主题
+  .s-button--warning {
+    &.s-button--plain {
+      &:hover {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+
+    &.s-button--outline,
+    &.s-button--outline-dashed {
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+  }
+
+  // 危险色主题
+  .s-button--danger {
+    &.s-button--plain {
+      &:hover {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+
+    &.s-button--outline,
+    &.s-button--outline-dashed {
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+  }
+
+  // 安全色主题
+  .s-button--success {
+    &.s-button--plain {
+      &:hover {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+
+    &.s-button--outline,
+    &.s-button--outline-dashed {
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+  }
+
+  // 取消主题
+  .s-button--cancel {
+    &.s-button--plain {
+      &:active {
+        background-color: var(--s-gray-1200);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+
+    &.s-button--fill {
+      &:hover {
+        background-color: var(--s-gray-1100);
+      }
+
+      &:active {
+        background-color: var(--s-gray-1300);
+      }
+
+      &:disabled {
+        background: none;
+      }
+    }
+
+    &.s-button--outline,
+    &.s-button--outline-dashed {
+      &:active {
+        border-color: var(--s-gray-1100);
+      }
+
+      &:disabled {
+        border-color: transparent;
+      }
+    }
+  }
+}

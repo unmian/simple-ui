@@ -1,0 +1,71 @@
+[
+  {
+    "title": "主题色",
+    "color": "blue",
+    "theme": "brand",
+    "colors": [
+      { "code": "#ecf2fe", "opacity": 1, "mode": "light", "level": 50, "name": "Light" },
+      { "code": "#d4e3fc", "opacity": 1, "mode": "light", "level": 100, "name": "Focus" },
+      { "code": "#bbd3fb", "opacity": 1, "mode": "light", "level": 200, "name": "Disabled" },
+      { "code": "#96bbf8", "opacity": 1, "mode": "light", "level": 300 },
+      { "code": "#699ef5", "opacity": 1, "mode": "light", "level": 400 },
+      { "code": "#4787f0", "opacity": 1, "mode": "dark", "level": 500 },
+      { "code": "#266fe8", "opacity": 1, "mode": "dark", "level": 600, "name": "Hover" },
+      { "code": "#0052d9", "opacity": 1, "mode": "dark", "level": 700, "name": "Normal" },
+      { "code": "#0034b5", "opacity": 1, "mode": "dark", "level": 800, "name": "Click" },
+      { "code": "#001f97", "opacity": 1, "mode": "dark", "level": 900 }
+    ]
+  },
+  {
+    "title": "危险色",
+    "color": "red",
+    "theme": "danger",
+    "colors": [
+      { "code": "#fdecee", "opacity": 1, "mode": "light", "level": 50, "name": "Light" },
+      { "code": "#f9d7d9", "opacity": 1, "mode": "light", "level": 100, "name": "Focus" },
+      { "code": "#f8b9be", "opacity": 1, "mode": "light", "level": 200, "name": "Disabled" },
+      { "code": "#f78d94", "opacity": 1, "mode": "light", "level": 300 },
+      { "code": "#f36d78", "opacity": 1, "mode": "light", "level": 400, "name": "Hover" },
+      { "code": "#e34d59", "opacity": 1, "mode": "dark", "level": 500, "name": "Normal" },
+      { "code": "#c9353f", "opacity": 1, "mode": "dark", "level": 600, "name": "Click" },
+      { "code": "#b11f26", "opacity": 1, "mode": "dark", "level": 700 },
+      { "code": "#951114", "opacity": 1, "mode": "dark", "level": 800 },
+      { "code": "#680506", "opacity": 1, "mode": "dark", "level": 900 }
+    ]
+  },
+  {
+    "id": "warning",
+    "title": "警告色",
+    "color": "orange",
+    "theme": "warning",
+    "colors": [
+      { "code": "#fef3e6", "opacity": 1, "mode": "light", "level": 50, "name": "Light" },
+      { "code": "#f9e0c7", "opacity": 1, "mode": "light", "level": 100, "name": "Focus" },
+      { "code": "#f7c797", "opacity": 1, "mode": "light", "level": 200, "name": "Disabled" },
+      { "code": "#f2995f", "opacity": 1, "mode": "light", "level": 300, "name": "Hover" },
+      { "code": "#ed7b2f", "opacity": 1, "mode": "light", "level": 400, "name": "Normal" },
+      { "code": "#d35a21", "opacity": 1, "mode": "dark", "level": 500, "name": "Click" },
+      { "code": "#ba431b", "opacity": 1, "mode": "dark", "level": 600 },
+      { "code": "#9e3610", "opacity": 1, "mode": "dark", "level": 700 },
+      { "code": "#842b0b", "opacity": 1, "mode": "dark", "level": 800 },
+      { "code": "#5a1907", "opacity": 1, "mode": "dark", "level": 900 }
+    ]
+  },
+  {
+    "title": "安全色",
+    "color": "green",
+    "theme": "success",
+    "colors": [
+      { "code": "#e8f8f2", "opacity": 1, "mode": "light", "level": 50, "name": "Light" },
+      { "code": "#bcebdc", "opacity": 1, "mode": "light", "level": 100, "name": "Focus" },
+      { "code": "#85dbbe", "opacity": 1, "mode": "light", "level": 200, "name": "Disabled" },
+      { "code": "#48c79c", "opacity": 1, "mode": "light", "level": 300, "name": "Hover" },
+      { "code": "#00a870", "opacity": 1, "mode": "light", "level": 400, "name": "Normal" },
+      { "code": "#078d5c", "opacity": 1, "mode": "dark", "level": 500, "name": "Click" },
+      { "code": "#067945", "opacity": 1, "mode": "dark", "level": 600 },
+      { "code": "#056334", "opacity": 1, "mode": "dark", "level": 700 },
+      { "code": "#044f2a", "opacity": 1, "mode": "dark", "level": 800 },
+      { "code": "#033017", "opacity": 1, "mode": "dark", "level": 900 }
+    ]
+  }
+]

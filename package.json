@@ -1,6 +1,6 @@
 {
   "name": "@quarter/simple-ui",
-  "version": "0.0.1-alpha",
+  "version": "0.0.3",
   "author": {
     "name": "Quarter",
     "email": "master@shiruihua.cn"
@@ -10,10 +10,10 @@
     "vue2",
     "UI Kit"
   ],
-  "license": "GPL-3.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/unmian/-quarter-simple-ui"
+    "url": "https://github.com/unmian/simple-ui"
   },
   "files": [
     "lib",
@@ -32,36 +32,43 @@
     }
   },
   "typings": "types/index.d.ts",
-  "homepage": "https://github.com/unmian/-quarter-simple-ui",
-  "bugs": "https://github.com/unmian/-quarter-simple-ui/issues",
+  "homepage": "https://github.com/unmian/simple-ui",
+  "bugs": "https://github.com/unmian/simple-ui/issues",
   "scripts": {
     "dev": "vite --config ./build/base.config.ts",
-    "test": "vue-tsc --noEmit",
-    "build:lib": "vue-tsc --noEmit && vite build --config ./build/lib.config.ts",
-    "build:doc": "vue-tsc --noEmit && vite build --config ./build/doc.config.ts",
+    "test": "vue-tsc --skipLibCheck --noEmit",
+    "build:lib": "vue-tsc --skipLibCheck --noEmit && vite build --config ./build/lib.config.ts",
+    "build:doc": "vue-tsc --skipLibCheck --noEmit && vite build --config ./build/doc.config.ts",
     "preview": "vite preview",
+    "update:deps": "node ./scripts/update.deps",
+    "release:stage": "node ./scripts/release.stage",
+    "release:patch": "node ./scripts/release.release patch",
+    "release:minor": "node ./scripts/release.release minor",
+    "release:major": "node ./scripts/release.release major",
     "publish:private": "npm publish --registry https://npm.lescity.com.cn/",
     "unpublish:private": "npm unpublish --force --registry https://npm.lescity.com.cn/"
   },
   "devDependencies": {
-    "@types/node": "^17.0.18",
-    "@vue/compiler-sfc": "^3.2.31",
-    "@vue/runtime-dom": "^3.2.31",
-    "autoprefixer": "^10.4.2",
-    "postcss": "^8.4.5",
-    "sass": "^1.49.4",
-    "typescript": "^4.4.4",
-    "vite": "^2.7.2",
-    "vite-plugin-dts": "^0.9.9",
-    "vite-plugin-vue2": "^1.9.3",
-    "vue-template-compiler": "^2.6.14",
-    "vue-tsc": "^0.31.4"
+    "@types/node": "^18.0.1",
+    "@vue/compiler-sfc": "^3.2.37",
+    "autoprefixer": "^10.4.7",
+    "f2elint": "^2.2.1",
+    "husky": "^8.0.1",
+    "postcss": "^8.4.14",
+    "sass": "^1.53.0",
+    "typescript": "^4.7.4",
+    "vite": "^2.9.13",
+    "vite-plugin-dts": "^1.2.1",
+    "vite-plugin-vue2": "^2.0.1",
+    "vue-template-compiler": "^2.7.2",
+    "vue-tsc": "^0.38.2"
   },
   "dependencies": {
-    "vue": "^2.6.14",
+    "@quarter/simple-icons": "^0.0.1",
+    "vue": "^2.7.2",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
-    "vue-router": "^3.5.3",
+    "vue-router": "^3.5.4",
     "vuex": "^3.6.2"
   },
   "browserslist": [

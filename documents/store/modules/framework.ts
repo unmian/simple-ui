@@ -2,41 +2,43 @@
  * @Author: Quarter
  * @Date: 2020-07-14 14:12:30
  * @LastEditors: Quarter
- * @LastEditTime: 2022-03-10 05:34:45
+ * @LastEditTime: 2022-06-06 01:08:04
  * @Description: 全局框架数据
  */
 import menuList from "documents/assets/menus.json";
-import { SimpleMenuItem } from "packages";
+import { MenuItem } from "@quarter/simple-ui";
 
 // 定义菜单项
-const menus: SimpleMenuItem[] = menuList;
+const menus: MenuItem[] = menuList;
 
 /**
  * @description: 通过路径锁定菜单
  * @author: Quarter
- * @param {Array<SimpleMenuItem>} menu 菜单内容
+ * @param {Array<MenuItem>} menu 菜单内容
  * @param {String} path 路径地址
  * @return {Array<number>} 菜单下标数组
  */
-const findMenuByPath: (menu: SimpleMenuItem[], path: string) => number[]
-  = (menu: SimpleMenuItem[], path: string) => {
-    if (Array.isArray(menu)) {
-      for (let i: number = 0; i < menu.length; i++) {
-        const item: SimpleMenuItem = menu[i];
-        if (typeof item.path === "string") {
-          const testRegExp: RegExp = new RegExp("^" + item.path);
-          if (testRegExp.test(path) === true) {
-            let result: number[] = [i];
-            if (Array.isArray(item.children)) {
-              result = result.concat(findMenuByPath(item.children, path));
-            }
-            return result;
+const findMenuByPath: (menu: MenuItem[], path: string) => number[] = (
+  menu: MenuItem[],
+  path: string
+) => {
+  if (Array.isArray(menu)) {
+    for (let i: number = 0; i < menu.length; i++) {
+      const item: MenuItem = menu[i];
+      if (typeof item.path === "string") {
+        const testRegExp: RegExp = new RegExp("^" + item.path);
+        if (testRegExp.test(path) === true) {
+          let result: number[] = [i];
+          if (Array.isArray(item.children)) {
+            result = result.concat(findMenuByPath(item.children, path));
           }
+          return result;
         }
       }
     }
-    return [];
-  };
+  }
+  return [];
+};
 
 export default {
   state: {
@@ -120,8 +122,6 @@ export default {
       return false;
     },
   },
-  actions: {
-  },
-  modules: {
-  },
+  actions: {},
+  modules: {},
 };

@@ -1,0 +1,44 @@
+[
+  {
+    "title": "中性色板",
+    "color": "gray",
+    "colors": [
+      { "code": "#ffffff", "opacity": 1, "mode": "light", "level": 0, "name": "White" },
+      { "code": "#f3f3f3", "opacity": 1, "mode": "light", "level": 100 },
+      { "code": "#eeeeee", "opacity": 1, "mode": "light", "level": 200 },
+      { "code": "#e7e7e7", "opacity": 1, "mode": "light", "level": 300 },
+      { "code": "#dcdcdc", "opacity": 1, "mode": "light", "level": 400 },
+      { "code": "#c5c5c5", "opacity": 1, "mode": "light", "level": 500 },
+      { "code": "#a6a6a6", "opacity": 1, "mode": "dark", "level": 600 },
+      { "code": "#8b8b8b", "opacity": 1, "mode": "dark", "level": 700 },
+      { "code": "#777777", "opacity": 1, "mode": "dark", "level": 800 },
+      { "code": "#5e5e5e", "opacity": 1, "mode": "dark", "level": 900 },
+      { "code": "#4b4b4b", "opacity": 1, "mode": "dark", "level": 1000 },
+      { "code": "#383838", "opacity": 1, "mode": "dark", "level": 1100 },
+      { "code": "#2c2c2c", "opacity": 1, "mode": "dark", "level": 1200 },
+      { "code": "#242424", "opacity": 1, "mode": "dark", "level": 1300 },
+      { "code": "#181818", "opacity": 1, "mode": "dark", "level": 1400 }
+    ]
+  },
+  {
+    "title": "蓝灰中性色板",
+    "color": "blue-gray",
+    "colors": [
+      { "code": "#ffffff", "opacity": 1, "mode": "light", "level": 0, "name": "White" },
+      { "code": "#f1f2f5", "opacity": 1, "mode": "light", "level": 100 },
+      { "code": "#ebedf1", "opacity": 1, "mode": "light", "level": 200 },
+      { "code": "#e3e6eB", "opacity": 1, "mode": "light", "level": 300 },
+      { "code": "#d6dbe3", "opacity": 1, "mode": "light", "level": 400 },
+      { "code": "#bcc4d0", "opacity": 1, "mode": "light", "level": 500 },
+      { "code": "#97a3b7", "opacity": 1, "mode": "dark", "level": 600 },
+      { "code": "#7787a2", "opacity": 1, "mode": "dark", "level": 700 },
+      { "code": "#5f7292", "opacity": 1, "mode": "dark", "level": 800 },
+      { "code": "#4b5b76", "opacity": 1, "mode": "dark", "level": 900 },
+      { "code": "#3c485c", "opacity": 1, "mode": "dark", "level": 1000 },
+      { "code": "#2c3645", "opacity": 1, "mode": "dark", "level": 1100 },
+      { "code": "#232a35", "opacity": 1, "mode": "dark", "level": 1200 },
+      { "code": "#1c222b", "opacity": 1, "mode": "dark", "level": 1300 },
+      { "code": "#13161b", "opacity": 1, "mode": "dark", "level": 1400 }
+    ]
+  }
+]

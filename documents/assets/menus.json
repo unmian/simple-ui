@@ -10,12 +10,38 @@
     ]
   },
   {
+    "name": "全局样式",
+    "path": "/global",
+    "children": [
+      {
+        "name": "颜色",
+        "path": "/global/color"
+      },
+      {
+        "name": "文本",
+        "path": "/global/text"
+      },
+      {
+        "name": "间距",
+        "path": "/global/spacing"
+      },
+      {
+        "name": "阴影",
+        "path": "/global/shadow"
+      }
+    ]
+  },
+  {
     "name": "基本组件",
     "path": "/base",
     "children": [
       {
         "name": "图标",
         "path": "/base/icon"
+      },
+      {
+        "name": "按钮",
+        "path": "/base/button"
       },
       {
         "name": "头像",
@@ -26,20 +52,12 @@
         "path": "/base/bar"
       },
       {
-        "name": "描述",
-        "path": "/base/desc"
-      },
-      {
         "name": "标签",
         "path": "/base/tag"
       },
       {
         "name": "路径",
         "path": "/base/path"
-      },
-      {
-        "name": "卡片",
-        "path": "/base/card"
       },
       {
         "name": "提示",
@@ -58,7 +76,7 @@
         "path": "/base/step"
       },
       {
-        "name": "弹出框",
+        "name": "弹出层",
         "path": "/base/popover"
       },
       {
@@ -79,10 +97,6 @@
     "name": "表单组件",
     "path": "/form",
     "children": [
-      {
-        "name": "按钮",
-        "path": "/form/button"
-      },
       {
         "name": "冷却按钮",
         "path": "/form/cool-button"
@@ -184,6 +198,40 @@
       {
         "name": "返回顶部",
         "path": "/page/backtop"
+      }
+    ]
+  },
+  {
+    "name": "消息提示",
+    "path": "/notification",
+    "children": [
+      {
+        "name": "警告提醒",
+        "path": "/notification/alert"
+      },
+      {
+        "name": "对话框",
+        "path": "/notification/dialog"
+      },
+      {
+        "name": "抽屉",
+        "path": "/notification/drawer"
+      },
+      {
+        "name": "全局提示",
+        "path": "/notification/message"
+      },
+      {
+        "name": "消息通知",
+        "path": "/notification/notification"
+      },
+      {
+        "name": "气泡确认框",
+        "path": "/notification/popconfirm"
+      },
+      {
+        "name": "弹出层",
+        "path": "/notification/popup"
       }
     ]
   },

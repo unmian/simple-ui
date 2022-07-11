@@ -1,7 +1,7 @@
 /*
  * @Author: Quarter
  * @Date: 2021-12-29 07:29:06
- * @LastEditTime: 2022-03-10 02:25:49
+ * @LastEditTime: 2022-07-06 13:47:00
  * @LastEditors: Quarter
  * @Description: vite 组件库配置
  * @FilePath: /simple-ui/build/lib.config.ts

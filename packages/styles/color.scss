@@ -1,0 +1,97 @@
+/*
+ * @Author: Quarter
+ * @Date: 2022-05-26 10:57:48
+ * @LastEditors: Quarter
+ * @LastEditTime: 2022-07-07 15:14:09
+ * @FilePath: /simple-ui/packages/styles/color.scss
+ * @Description: 颜色库
+ */
+
+:root {
+  // RED
+  --s-red-50: #fdecee;
+  --s-red-100: #f9d7d9;
+  --s-red-200: #f8b9be;
+  --s-red-300: #f78d94;
+  --s-red-400: #f36d78;
+  --s-red-500: #e34d59;
+  --s-red-600: #c9353f;
+  --s-red-700: #b11f26;
+  --s-red-800: #951114;
+  --s-red-900: #680506;
+  // BLUE
+  --s-blue-50: #ecf2fe;
+  --s-blue-100: #d4e3fc;
+  --s-blue-200: #bbd3fb;
+  --s-blue-300: #96bbf8;
+  --s-blue-400: #699ef5;
+  --s-blue-500: #4787f0;
+  --s-blue-600: #266fe8;
+  --s-blue-700: #0052d9;
+  --s-blue-800: #0034b5;
+  --s-blue-900: #001f97;
+  // GREEN
+  --s-green-50: #e8f8f2;
+  --s-green-100: #bcebdc;
+  --s-green-200: #85dbbe;
+  --s-green-300: #48c79c;
+  --s-green-400: #00a870;
+  --s-green-500: #078d5c;
+  --s-green-600: #067945;
+  --s-green-700: #056334;
+  --s-green-800: #044f2a;
+  --s-green-900: #033017;
+  // ORANGE
+  --s-orange-50: #fef3e6;
+  --s-orange-100: #f9e0c7;
+  --s-orange-200: #f7c797;
+  --s-orange-300: #f2995f;
+  --s-orange-400: #ed7b2f;
+  --s-orange-500: #d35a21;
+  --s-orange-600: #ba431b;
+  --s-orange-700: #9e3610;
+  --s-orange-800: #842b0b;
+  --s-orange-900: #5a1907;
+  // FONT GRAY
+  --s-font-gray-100: rgba(0, 0, 0, 0.26);
+  --s-font-gray-200: rgba(0, 0, 0, 0.40);
+  --s-font-gray-300: rgba(0, 0, 0, 0.60);
+  --s-font-gray-400: rgba(0, 0, 0, 0.90);
+  // FONT WHTIE
+  --s-font-white-100: rgba(255, 255, 255, 0.22);
+  --s-font-white-200: rgba(255, 255, 255, 0.35);
+  --s-font-white-300: rgba(255, 255, 255, 0.55);
+  --s-font-white-400: rgba(255, 255, 255, 0.90);
+  // GRAY
+  --s-gray-0: #ffffff;
+  --s-gray-100: #f3f3f3;
+  --s-gray-200: #eeeeee;
+  --s-gray-300: #e7e7e7;
+  --s-gray-400: #dcdcdc;
+  --s-gray-500: #c5c5c5;
+  --s-gray-600: #a6a6a6;
+  --s-gray-700: #8b8b8b;
+  --s-gray-800: #777777;
+  --s-gray-900: #5e5e5e;
+  --s-gray-1000: #4b4b4b;
+  --s-gray-1100: #383838;
+  --s-gray-1200: #2c2c2c;
+  --s-gray-1300: #242424;
+  --s-gray-1400: #181818;
+  // BLUE GRAY
+  --s-blue-gray-0: #ffffff;
+  --s-blue-gray-100: #f1f2f5;
+  --s-blue-gray-200: #ebedf1;
+  --s-blue-gray-300: #e3e6eB;
+  --s-blue-gray-400: #d6dbe3;
+  --s-blue-gray-500: #bcc4d0;
+  --s-blue-gray-600: #97a3b7;
+  --s-blue-gray-700: #7787a2;
+  --s-blue-gray-800: #5f7292;
+  --s-blue-gray-900: #4b5b76;
+  --s-blue-gray-1000: #3c485c;
+  --s-blue-gray-1100: #2c3645;
+  --s-blue-gray-1200: #232a35;
+  --s-blue-gray-1300: #1c222b;
+  --s-blue-gray-1400: #13161b;
+}

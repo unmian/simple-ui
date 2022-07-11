@@ -1,0 +1,74 @@
+/*
+ * @Author: Quarter
+ * @Date: 2022-05-16 09:26:55
+ * @LastEditTime: 2022-07-08 13:59:21
+ * @LastEditors: Quarter
+ * @Description: 示例代码
+ * @FilePath: /simple-ui/documents/components/code-example/index.scss
+ */
+
+.code-example {
+  width: 100%;
+  border: 1px solid var(--s-gray-200);
+  border-radius: var(--s-border-radius);
+  box-sizing: border-box;
+  position: relative;
+
+  .code-example__body,
+  .code-example__code {
+    box-sizing: border-box;
+  }
+
+  .code-example__body {
+    padding: var(--s-spacing-48) var(--s-spacing-16) var(--s-spacing-16);
+    min-height: 200px;
+    border-radius: var(--s-border-radius);
+  }
+
+  .code-example__operation {
+    padding: var(--s-spacing-12) var(--s-spacing-24);
+    text-align: right;
+  }
+
+  .code-example__code {
+    max-height: 480px;
+    background-color: var(--s-gray-100);
+
+    pre {
+      padding: 0 var(--s-spacing-16);
+    }
+  }
+
+  .example-name {
+    padding: var(--s-spacing-4) var(--s-spacing-12);
+    user-select: none;
+    background-color: var(--s-gray-200);
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    span {
+      margin-left: var(--s-spacing-4);
+    }
+  }
+
+  &:nth-child(n + 2) {
+    margin-top: var(--s-spacing-32);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .code-example {
+    border-color: var(--s-gray-1100);
+
+    .code-example__code {
+      background-color: var(--s-gray-1100);
+    }
+
+    .example-name {
+      background-color: var(--s-gray-1100);
+    }
+  }
+}

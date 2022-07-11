@@ -2,14 +2,14 @@
  * @Author: Quarter
  * @Date: 2020-07-13 09:19:17
  * @LastEditors: Quarter
- * @LastEditTime: 2022-03-10 03:34:14
+ * @LastEditTime: 2022-06-06 01:07:53
  * @Description: 函数主入口
  */
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import SimpleUIPlugin from "packages";
+import SimpleUIPlugin from "@quarter/simple-ui";
 
 Vue.use(SimpleUIPlugin);
 

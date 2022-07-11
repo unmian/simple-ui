@@ -1,0 +1,22 @@
+[
+  {
+    "title": "暗色文本",
+    "color": "font-gray",
+    "colors": [
+      { "code": "#000000", "opacity": 0.26, "mode": "light", "level": 100, "name": "Disabled" },
+      { "code": "#000000", "opacity": 0.4, "mode": "dark", "level": 200, "name": "Placeholder" },
+      { "code": "#000000", "opacity": 0.6, "mode": "dark", "level": 300, "name": "Secondary" },
+      { "code": "#000000", "opacity": 0.9, "mode": "dark", "level": 400, "name": "Primary" }
+    ]
+  },
+  {
+    "title": "亮色文本",
+    "color": "font-white",
+    "colors": [
+      { "code": "#ffffff", "opacity": 0.22, "mode": "dark", "level": 100, "name": "Disabled" },
+      { "code": "#ffffff", "opacity": 0.35, "mode": "dark", "level": 200, "name": "Placeholder" },
+      { "code": "#ffffff", "opacity": 0.55, "mode": "dark", "level": 300, "name": "Secondary" },
+      { "code": "#ffffff", "opacity": 0.9, "mode": "light", "level": 400, "name": "Primary" }
+    ]
+  }
+]
