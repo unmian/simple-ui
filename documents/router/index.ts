@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-07-13 09:19:17
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-08 09:42:05
+ * @LastEditTime: 2022-12-15 10:03:23
  * @Description: 路由配置文件
  */
 
@@ -113,11 +113,6 @@ const routes: RouteConfig[] = [
             path: "step",
             name: "StepDocument",
             component: () => import("documents/views/document/StepDocument.vue"),
-          },
-          {
-            path: "popover",
-            name: "PopoverDocument",
-            component: () => import("documents/views/document/PopoverDocument.vue"),
           },
           {
             path: "image",
@@ -302,6 +297,11 @@ const routes: RouteConfig[] = [
             path: "notification",
             name: "NotificationDocument",
             component: () => import("documents/views/document/FadeDocument.vue"),
+          },
+          {
+            path: "popover",
+            name: "PopoverDocument",
+            component: () => import("documents/views/document/PopoverDocument.vue"),
           },
         ],
       },

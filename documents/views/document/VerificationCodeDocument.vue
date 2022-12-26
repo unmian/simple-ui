@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-06-07 16:26:36
+ * @LastEditTime: 2022-12-13 15:29:46
  * @Description: 图形验证码文档
  * @FilePath: /simple-ui/documents/views/document/VerificationCodeDocument.vue
 -->
@@ -98,11 +98,7 @@
             ref="verificationCode"
             style="margin-left: 20px"
           ></s-verification-code>
-          <s-button
-            outline
-            type="normal"
-            @click="verifyCode"
-            style="margin-left: 20px"
+          <s-button outline type="normal" @click="verifyCode" style="margin-left: 20px"
             >验证</s-button
           >
         </div>
@@ -113,7 +109,7 @@
 
 <script lang="ts">
 import { DocumentPage } from "documents/components";
-import { VerificationCode } from "@quarter/simple-ui";
+import { MessageCommand, VerificationCode } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -147,7 +143,7 @@ export default class VerificationCodeDocument extends Vue {
 
 <script lang="ts">
 import Vue from "vue";
-import { VerificationCode } from "@quarter/simple-ui";
+import { VerificationCode } from "@unmian/simple-ui";
 
 ${"export default Vue.extend"}({
   data() {
@@ -158,17 +154,16 @@ ${"export default Vue.extend"}({
   methods: {
     /**
      * @description: 验证
-     * @author: Quarter
      * @return
      */
     verifyCode(): void {
       if (this.$refs.verificationCode instanceof VerificationCode) {
       this.$refs.verificationCode.validate(this.verificationCode)
         .then(() => {
-          this.$message.success("验证成功");
+          MessageCommand.success("验证成功");
         })
         .catch(() => {
-          this.$message.error("验证失败");
+          MessageCommand.error("验证失败");
         });
       }
     },
@@ -179,7 +174,6 @@ ${"export default Vue.extend"}({
 
   /**
    * @description: 验证
-   * @author: Quarter
    * @return
    */
   verifyCode(): void {
@@ -187,10 +181,10 @@ ${"export default Vue.extend"}({
       (this.$refs.verificationCode as InstanceType<typeof VerificationCode>)
         .validate(this.verificationCode)
         .then(() => {
-          this.$message.success("验证成功");
+          MessageCommand.success("验证成功");
         })
         .catch(() => {
-          this.$message.error("验证失败");
+          MessageCommand.error("验证失败");
         });
     }
   }

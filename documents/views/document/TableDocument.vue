@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:02:14
+ * @LastEditTime: 2022-12-13 15:29:04
  * @Description: 冷却按钮文档
- * @FilePath: /simple-ui/documents/views/TableDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/TableDocument.vue
 -->
 <template>
   <div class="table-document">
@@ -29,8 +29,9 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class TableDocument extends Vue {
-  code = ``; // 示例代码
-  tableData = [ // 表格数据
+  code = ""; // 示例代码
+  tableData = [
+    // 表格数据
     {
       name: "张三",
       sex: 1,
@@ -50,5 +51,4 @@ export default class TableDocument extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

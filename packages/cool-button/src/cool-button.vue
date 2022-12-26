@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:29:59
+ * @LastEditTime: 2022-12-13 15:33:43
  * @LastEditors: Quarter
  * @Description: 简易的冷却按钮
  * @FilePath: /simple-ui/packages/cool-button/src/cool-button.vue
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Button, ButtonType } from "packages/button";
+import { Button, ButtonTheme } from "packages/button";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
@@ -34,7 +34,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
     SButton: Button,
   },
 })
-export default class SCoolButton extends Vue {
+export default class CoolButton extends Vue {
   @Prop({
     type: Number,
     default: 60,
@@ -66,7 +66,7 @@ export default class SCoolButton extends Vue {
     type: String,
     default: "normal",
   })
-  type?: ButtonType; // 按钮类型
+  type?: ButtonTheme; // 按钮类型
 
   cooling = false; // 是否冷却
   coolStartTime = 0; // 开始冷却时间
@@ -75,7 +75,6 @@ export default class SCoolButton extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -86,7 +85,6 @@ export default class SCoolButton extends Vue {
 
   /**
    * @description: 点击按钮事件
-   * @author: Quarter
    * @param {MouseEvent} event 鼠标事件
    * @return
    */
@@ -102,13 +100,12 @@ export default class SCoolButton extends Vue {
 
   /**
    * @description: 计算冷却时间
-   * @author: Quarter
    * @return
    */
   calcRelayTime(): void {
     const now: number = Date.now();
     const distance: number = Math.ceil((now - this.coolStartTime) / 1000);
-    let delay: number = 60;
+    let delay = 60;
     if (typeof this.delay === "number" && this.delay > 0) {
       delay = this.delay;
     }

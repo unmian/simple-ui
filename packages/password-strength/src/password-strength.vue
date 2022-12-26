@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:47:13
+ * @LastEditTime: 2022-12-13 15:40:38
  * @LastEditors: Quarter
  * @Description: 简易的密码强度显示
  * @FilePath: /simple-ui/packages/password-strength/src/password-strength.vue
@@ -9,9 +9,7 @@
 <template>
   <collapse-transition>
     <div class="s-password-strength" v-show="visible">
-      <div class="password-message" :style="{ color: color }">
-        密码强度：{{ levelStr }}
-      </div>
+      <div class="password-message" :style="{ color: color }">密码强度：{{ levelStr }}</div>
       <s-bar
         :value="barWidth"
         :color="color"
@@ -35,7 +33,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     SBar: Bar,
   },
 })
-export default class SPasswordStrength extends Vue {
+export default class PasswordStrength extends Vue {
   @Prop(String)
   password?: string; // 密码字符串
 
@@ -45,7 +43,6 @@ export default class SPasswordStrength extends Vue {
 
   /**
    * @description: 是否显示组件
-   * @author: Quarter
    * @return
    */
   get visible(): boolean {
@@ -57,7 +54,6 @@ export default class SPasswordStrength extends Vue {
 
   /**
    * @description: 监听密码的变化
-   * @author: Quarter
    * @param {String} newValue 变化的密码
    * @return
    */
@@ -66,19 +62,17 @@ export default class SPasswordStrength extends Vue {
   })
   handlePasswordChange(newValue: string): void {
     if (typeof newValue === "string") {
-      let levelStr: string = "无";
-      let barWidth: number = 0;
-      let color: string = "transparent";
+      let levelStr = "无";
+      let barWidth = 0;
+      let color = "transparent";
       if (newValue.length > 0) {
         levelStr = "弱";
         barWidth = 30;
         color = "#f5222d";
       }
-      const passwordRegExp: RegExp = new RegExp(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
-      );
-      const strongPasswordRegExp: RegExp = new RegExp(
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/
+      const passwordRegExp = new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/);
+      const strongPasswordRegExp = new RegExp(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/,
       );
       if (strongPasswordRegExp.test(newValue) === true) {
         levelStr = "强";

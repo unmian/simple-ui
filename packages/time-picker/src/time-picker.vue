@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-05 11:21:33
+ * @LastEditTime: 2022-12-13 15:42:17
  * @LastEditors: Quarter
  * @Description: 简易的时间选择器
  * @FilePath: /simple-ui/packages/time-picker/src/time-picker.vue
@@ -22,7 +22,7 @@
         @clear="clearValue"
       >
         <template #icon>
-          <i class="s-icon-time" style="color: #d6e1e5"></i>
+          <icon name="clock" color="#d6e1e5"></icon>
         </template>
       </s-input>
       <div class="date-picker-popover">
@@ -42,22 +42,24 @@
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Input } from "packages/input";
 import { Emitter } from "packages/mixins";
 import { Popover } from "packages/popover";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import STimePickerPopover from "./time-picker-popover.vue";
 import { TimeConfig } from "./types";
 
 @Component({
   name: "STimePicker",
   components: {
+    Icon,
     SPopover: Popover,
     SInput: Input,
     STimePickerPopover,
   },
 })
-export default class STimePicker extends Mixins(Emitter) {
+export default class TimePicker extends Emitter {
   @Prop(String)
   width?: string; // 宽度
 
@@ -112,7 +114,6 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {string|null}
    */
   get syncedValue(): string | null {
@@ -121,7 +122,6 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {string|null} val 值
    * @return
    */
@@ -133,7 +133,6 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -142,37 +141,36 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 最小值
-   * @author: Quarter
    * @return {String}
    */
   get min(): string | undefined {
     if (Array.isArray(this.interval) && typeof this.interval[0] === "string") {
       const minStr: string = this.interval[0];
-      const timeRegExp: RegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
+      const timeRegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (timeRegExp.test(minStr)) {
         return minStr;
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 最小值
-   * @author: Quarter
    * @return {String}
    */
   get max(): string | undefined {
     if (Array.isArray(this.interval) && typeof this.interval[1] === "string") {
       const maxStr: string = this.interval[1];
-      const timeRegExp: RegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
+      const timeRegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (timeRegExp.test(maxStr)) {
         return maxStr;
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 时间字符串
-   * @author: Quarter
    * @return {String}
    */
   get timeStr(): string | null {
@@ -189,16 +187,14 @@ export default class STimePicker extends Mixins(Emitter) {
           .replace(/h+/g, hourStr)
           .replace(/m+/g, minuteStr)
           .replace(/s+/g, secondStr);
-      } else {
-        return `${hourStr}:${minuteStr}:${secondStr}`;
       }
+      return `${hourStr}:${minuteStr}:${secondStr}`;
     }
     return null;
   }
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return
    */
@@ -207,7 +203,7 @@ export default class STimePicker extends Mixins(Emitter) {
   })
   handleWatchValueChange(timeStr: string): void {
     if (typeof timeStr === "string" && timeStr !== this.timeStr) {
-      const timeRegExp: RegExp = new RegExp(/^([0-9]{1,2}):([0-9]{1,2})(:([0-9]{1,2})){0,1}$/);
+      const timeRegExp = new RegExp(/^([0-9]{1,2}):([0-9]{1,2})(:([0-9]{1,2})){0,1}$/);
       if (timeRegExp.test(timeStr)) {
         const times: string[] = timeStr.split(":");
         if (times[0]) {
@@ -234,7 +230,6 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 监听选中值变化
-   * @author: Quarter
    * @return
    */
   @Watch("timeStr")
@@ -245,7 +240,6 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 清空值
-   * @author: Quarter
    * @return
    */
   clearValue(): void {
@@ -258,19 +252,17 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 切换弹窗显隐
-   * @author: Quarter
    * @param {Boolean} visible 显隐
    * @return
    */
   switchPopover(visible: boolean): void {
-    if (true === visible && this.$refs.timePicker instanceof STimePickerPopover) {
+    if (visible === true && this.$refs.timePicker instanceof STimePickerPopover) {
       this.$refs.timePicker.init();
     }
   }
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closePopover(): void {
@@ -281,7 +273,6 @@ export default class STimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认弹窗
-   * @author: Quarter
    * @param {Number} hour 小时
    * @param {Number} minute 分钟
    * @param {Number} second 秒

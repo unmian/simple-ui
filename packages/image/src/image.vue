@@ -1,44 +1,33 @@
 <!--
  * @Author: Quarter
  * @Date: 2021-04-13 13:58:24
- * @LastEditTime: 2022-06-07 16:42:33
+ * @LastEditTime: 2022-12-13 15:35:29
  * @LastEditors: Quarter
  * @Description: 简易的图片容器
  * @FilePath: /simple-ui/packages/image/src/image.vue
 -->
 <template>
-  <div
-    ref="container"
-    class="s-image"
-    :class="{ 'fill-mode': fill }"
-    :style="customStyle"
-  >
-    <s-preview ref="imagePreview" v-if="src" v-show="load">
-      <img
-        :src="src"
-        :title="title"
-        :alt="alt"
-        @error="fail = true"
-        @load="load = true"
-      />
+  <div ref="container" class="s-image" :class="{ 'fill-mode': fill }" :style="customStyle">
+    <preview ref="imagePreview" v-if="src" v-show="load">
+      <img :src="src" :title="title" :alt="alt" @error="fail = true" @load="load = true" />
       <div class="image-mask" v-if="load">
-        <s-button type="confirm" @click="previewImage">
-          <i class="s-icon-preview-outline"></i>
+        <s-button theme="default" @click="previewImage">
+          <icon name="show"></icon>
           <span>预览</span>
         </s-button>
       </div>
-    </s-preview>
+    </preview>
     <div class="image-message" v-if="!load" :style="messageContainerStyles">
       <template v-if="!src">
         <div class="error-icon">
-          <i class="s-icon-empty-fill"></i>
+          <icon name="image-01"></icon>
         </div>
         <div class="error-message">暂无图片</div>
       </template>
       <template v-else>
         <template v-if="fail">
-          <div class="error-icon">
-            <i class="s-icon-damaged-picture-fill"></i>
+          <div class="link-break">
+            <icon name="triangle-warning"></icon>
           </div>
           <div class="error-message">加载失败</div>
         </template>
@@ -49,6 +38,7 @@
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Preview } from "packages/preview";
 import { CustomStyle } from "packages/types";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -56,10 +46,11 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 @Component({
   name: "SImage",
   components: {
-    SPreview: Preview,
+    Icon,
+    Preview,
   },
 })
-export default class SImage extends Vue {
+export default class Image extends Vue {
   @Prop(String)
   color?: string; // 颜色
 
@@ -85,12 +76,11 @@ export default class SImage extends Vue {
 
   /**
    * @description: 安全的颜色
-   * @author: Quarter
    * @return {String}
    */
   get safeColor(): string {
     if (typeof this.color === "string") {
-      const hexColor: RegExp = new RegExp(/^#[0-9a-fA-F]{6}$/);
+      const hexColor = new RegExp(/^#[0-9a-fA-F]{6}$/);
       if (hexColor.test(this.color)) {
         return this.color;
       }
@@ -100,11 +90,10 @@ export default class SImage extends Vue {
 
   /**
    * @description: 文字颜色
-   * @author: Quarter
    * @return {String}
    */
   get fontColor(): string {
-    const colors: number[] = new Array();
+    const colors: number[] = [];
     for (let i = 0; i < 3; i++) {
       colors.push(parseInt(this.safeColor.substr(2 * i + 1, 2), 16));
     }
@@ -113,11 +102,10 @@ export default class SImage extends Vue {
 
   /**
    * @description: 背景颜色
-   * @author: Quarter
    * @return {String}
    */
   get backgroundColor(): string {
-    const colors: number[] = new Array();
+    const colors: number[] = [];
     for (let i = 0; i < 3; i++) {
       colors.push(parseInt(this.safeColor.substr(2 * i + 1, 2), 16));
     }
@@ -126,7 +114,6 @@ export default class SImage extends Vue {
 
   /**
    * @description: 安全的长宽比
-   * @author: Quarter
    * @return
    */
   get safeRatio(): number {
@@ -145,7 +132,6 @@ export default class SImage extends Vue {
 
   /**
    * @description: 自定义样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get customStyle(): CustomStyle {
@@ -153,14 +139,13 @@ export default class SImage extends Vue {
       backgroundColor: this.backgroundColor,
     };
     if (this.height > 0) {
-      styles.height = this.height + "px";
+      styles.height = `${this.height}px`;
     }
     return styles;
   }
 
   /**
    * @description: 消息容器样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get messageContainerStyles(): CustomStyle {
@@ -171,7 +156,6 @@ export default class SImage extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -180,7 +164,6 @@ export default class SImage extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -191,7 +174,6 @@ export default class SImage extends Vue {
 
   /**
    * @description: 监听图片地址变化
-   * @author: Quarter
    * @return
    */
   @Watch("src")
@@ -202,16 +184,12 @@ export default class SImage extends Vue {
 
   /**
    * @description: 初始化观察器
-   * @author: Quarter
    * @return
    */
   initObserver(): void {
     this.eleObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
       for (const entry of entries) {
-        if (
-          entry.target instanceof HTMLDivElement &&
-          entry.target.classList.contains("s-image")
-        ) {
+        if (entry.target instanceof HTMLDivElement && entry.target.classList.contains("s-image")) {
           this.calcContainerHeight();
         }
       }
@@ -224,12 +202,10 @@ export default class SImage extends Vue {
 
   /**
    * @description: 计算容器高度
-   * @author: Quarter
    * @return
    */
   calcContainerHeight(): void {
-    const container: Vue | Element | (Vue | Element)[] | undefined =
-      this.$refs.container;
+    const { container } = this.$refs;
     if (container instanceof HTMLDivElement) {
       const bounding: DOMRect = container.getBoundingClientRect();
       if (bounding.width > 0) {
@@ -245,7 +221,6 @@ export default class SImage extends Vue {
 
   /**
    * @description: 预览图片
-   * @author: Quarter
    * @return
    */
   previewImage(): void {
@@ -263,7 +238,7 @@ export default class SImage extends Vue {
   user-select: none;
   position: relative;
 
-  .s-preview {
+  .preview {
     width: 100%;
     height: 100%;
     display: flex;

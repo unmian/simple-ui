@@ -1,19 +1,14 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:28:08
+ * @LastEditTime: 2022-12-13 15:33:17
  * @LastEditors: Quarter
  * @Description: 简易的进度条
  * @FilePath: /simple-ui/packages/bar/src/bar.vue
 -->
 <template>
   <div class="s-bar">
-    <div
-      ref="container"
-      class="bar-container"
-      :style="containerStyle"
-      @resize="calcContainerWidth"
-    >
+    <div ref="container" class="bar-container" :style="containerStyle" @resize="calcContainerWidth">
       <div class="bar" :style="barStyle"></div>
     </div>
   </div>
@@ -26,7 +21,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   name: "SBar",
 })
-export default class SBar extends Vue {
+export default class Bar extends Vue {
   @Prop({
     type: Number,
     default: 0,
@@ -43,7 +38,6 @@ export default class SBar extends Vue {
 
   /**
    * @description: 组件自定义样式
-   * @author: Quarter
    * @return {String}
    */
   get widthStyle(): string | undefined {
@@ -60,29 +54,28 @@ export default class SBar extends Vue {
 
   /**
    * @description: 高度样式
-   * @author: Quarter
    * @return {String}
    */
   get heightStyle(): string | undefined {
     if (typeof this.height === "number" && this.height > 0) {
       return `${this.height}px`;
     }
+    return undefined;
   }
 
   /**
    * @description: 圆角样式
-   * @author: Quarter
    * @return {String}
    */
   get borderRadiusStyle(): string | undefined {
     if (typeof this.height === "number" && this.height > 0) {
       return `${this.height / 2}px`;
     }
+    return undefined;
   }
 
   /**
    * @description: 容器样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get containerStyle(): CustomStyle {
@@ -94,7 +87,6 @@ export default class SBar extends Vue {
 
   /**
    * @description: 柱子样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get barStyle(): CustomStyle {
@@ -103,16 +95,13 @@ export default class SBar extends Vue {
       "border-radius": this.borderRadiusStyle,
     };
     if (this.widthStyle) {
-      styles[
-        "clip-path"
-      ] = `polygon(0 0, ${this.widthStyle} 0, ${this.widthStyle} 100%, 0 100%)`;
+      styles["clip-path"] = `polygon(0 0, ${this.widthStyle} 0, ${this.widthStyle} 100%, 0 100%)`;
     }
     return styles;
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -121,12 +110,10 @@ export default class SBar extends Vue {
 
   /**
    * @description: 计算容器宽度
-   * @author: Quarter
    * @return
    */
   calcContainerWidth(): void {
-    const container: Element | Vue | (Element | Vue)[] | undefined =
-      this.$refs.container;
+    const {container} = this.$refs;
     if (container instanceof HTMLDivElement) {
       this.containerWidth = container.getBoundingClientRect().width;
     }

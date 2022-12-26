@@ -1,10 +1,10 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:46:18
+ * @LastEditTime: 2022-12-13 15:32:49
  * @LastEditors: Quarter
  * @Description: 简易的消息提示组件
- * @FilePath: /simple-ui/packages/message/src/message.vue
+ * @FilePath: /simple-ui/packages/alert/src/message.vue
 -->
 <template>
   <div class="s-message" :class="customClass">
@@ -29,7 +29,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   name: "SMessage",
 })
-export default class SMessage extends Vue {
+export default class Message extends Vue {
   @Prop({
     type: String,
     default: "info",
@@ -50,7 +50,6 @@ export default class SMessage extends Vue {
 
   /**
    * @description: 自定义类
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -66,7 +65,6 @@ export default class SMessage extends Vue {
 
   /**
    * @description: 是否显示图标
-   * @author: Quarter
    * @return {Boolean}
    */
   get iconVisible(): boolean {
@@ -75,7 +73,6 @@ export default class SMessage extends Vue {
 
   /**
    * @description: 图标的名称
-   * @author: Quarter
    * @return {String}
    */
   get iconName(): string | null {
@@ -88,13 +85,13 @@ export default class SMessage extends Vue {
         return "s-icon-success";
       case "error":
         return "s-icon-error";
+      default:
+        return null;
     }
-    return null;
   }
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   close(): void {
@@ -103,7 +100,6 @@ export default class SMessage extends Vue {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closeMessage(): void {

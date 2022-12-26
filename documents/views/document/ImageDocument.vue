@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:59:07
+ * @LastEditTime: 2022-12-13 15:17:43
  * @Description: 图片选择文档
- * @FilePath: /simple-ui/documents/views/ImageDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/ImageDocument.vue
 -->
 <template>
   <div class="image-document">
@@ -98,19 +98,8 @@ import demoUrl from "documents/assets/demo.jpg";
 })
 export default class ImageDocument extends Vue {
   demoUrl = demoUrl; // 图片地址
-  code = `
-<div style="width: 320px">
-  <s-image></s-image>
-</div>
-<div style="width: 320px; margin-top: 20px">
-  <s-image :src="require('documents/assets/demo.jpg')"></s-image>
-</div>
-<div style="width: 320px; margin-top: 20px">
-  <s-image :src="require('documents/assets/demo.jpg')" fill></s-image>
-</div>
-  `;
+  code = "";
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

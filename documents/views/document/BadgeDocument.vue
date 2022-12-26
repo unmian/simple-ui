@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:53:44
+ * @LastEditTime: 2022-12-13 15:15:59
  * @Description: 冷却按钮文档
- * @FilePath: /simple-ui/documents/views/BadgeDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/BadgeDocument.vue
 -->
 <template>
   <div class="cool-button-document">

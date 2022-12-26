@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:28:53
+ * @LastEditTime: 2022-12-14 15:34:55
  * @LastEditors: Quarter
  * @Description: 复选框组组件
  * @FilePath: /simple-ui/packages/checkbox/src/checkbox-group.vue
@@ -15,24 +15,25 @@
 <script lang="ts">
 import { deepAssign } from "packages/util";
 import { Emitter } from "packages/mixins";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { CheckboxValue } from "./types";
 
 @Component({
   name: "SCheckboxGroup",
 })
-export default class SCheckboxGroup extends Mixins(Emitter) {
+export default class CheckboxGroup extends Emitter {
+  // 双向同步选中值
   @Prop({
     type: Array,
     default: () => [],
   })
-  value!: CheckboxValue[]; // 双向同步选中值
+  readonly value!: CheckboxValue[];
 
-  unsyncedValue: CheckboxValue[] = []; // 不同步选中值
+  // 不同步选中值
+  unsyncedValue: CheckboxValue[] = [];
 
   /**
    * @description: 双向同步选中值
-   * @author: Quarter
    * @return {CheckboxValue[]}
    */
   get syncedValue(): CheckboxValue[] {
@@ -41,7 +42,6 @@ export default class SCheckboxGroup extends Mixins(Emitter) {
 
   /**
    * @description: 双向同步选中值
-   * @author: Quarter
    * @param {CheckboxValue[]} val 值
    * @return
    */
@@ -52,16 +52,12 @@ export default class SCheckboxGroup extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
-    this.$on(
-      "s-checkbox-register",
-      (register: (value?: CheckboxValue[]) => void) => {
-        register(deepAssign(this.unsyncedValue));
-      }
-    );
+    this.$on("s-checkbox-register", (register: (value?: CheckboxValue[]) => void) => {
+      register(deepAssign(this.unsyncedValue));
+    });
     this.$on("s-checkbox-checked", (label: CheckboxValue) => {
       this.check(label);
     });
@@ -72,7 +68,6 @@ export default class SCheckboxGroup extends Mixins(Emitter) {
 
   /**
    * @description: 监听传入选中列表发生变化
-   * @author: Quarter
    * @param {Array<CheckboxValue>} newValue 更改的值
    * @return
    */
@@ -80,7 +75,7 @@ export default class SCheckboxGroup extends Mixins(Emitter) {
     immediate: true,
   })
   handleValueChange(newValue?: CheckboxValue[]): void {
-    let canBroadcast: boolean = false;
+    let canBroadcast = false;
     if (Array.isArray(newValue)) {
       if (
         Array.isArray(this.unsyncedValue) &&
@@ -88,16 +83,14 @@ export default class SCheckboxGroup extends Mixins(Emitter) {
       ) {
         canBroadcast = true;
       }
-    } else {
-      if (Array.isArray(this.unsyncedValue) && this.unsyncedValue.length > 0) {
-        canBroadcast = true;
-      }
+    } else if (Array.isArray(this.unsyncedValue) && this.unsyncedValue.length > 0) {
+      canBroadcast = true;
     }
     if (Array.isArray(newValue)) {
       this.unsyncedValue = newValue;
     } else {
-      this.syncedValue = new Array();
-      this.unsyncedValue = new Array();
+      this.syncedValue = [];
+      this.unsyncedValue = [];
     }
     if (canBroadcast) {
       this.broadcast("SCheckbox", "s-checkbox-changed", [this.unsyncedValue]);

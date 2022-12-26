@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2022-07-07 19:36:52
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-08 14:04:51
+ * @LastEditTime: 2022-12-13 09:51:20
  * @FilePath: /simple-ui/packages/button/src/style.scss
  * @Description: 按钮样式
  */
@@ -20,7 +20,7 @@
   align-items: center;
 
   &:not(:last-child) {
-    margin-right: 10px;
+    margin-right: var(--s-spacing-12);
   }
 
   .s-icon,
@@ -35,12 +35,11 @@
   &.s-size-small {
     @include s-text-5;
 
-    height: 1.2rem;
+    height: 2.6rem;
 
     .s-icon,
     .s-iconfont {
-
-      margin-right: 0.3rem;
+      margin-right: var(--s-spacing-4);
 
       &:last-child {
         margin-right: 0;
@@ -51,11 +50,11 @@
   &.s-size-medium {
     @include s-text-4;
 
-    height: 1.6rem;
+    height: 3.4rem;
 
     .s-icon,
     .s-iconfont {
-      margin-right: 0.4rem;
+      margin-right: var(--s-spacing-8);
 
       &:last-child {
         margin-right: 0;
@@ -66,11 +65,11 @@
   &.s-size-large {
     @include s-text-3;
 
-    height: 2rem;
+    height: 4rem;
 
     .s-icon,
     .s-iconfont {
-      margin-right: 0.5rem;
+      margin-right: var(--s-spacing-12);
 
       &:last-child {
         margin-right: 0;
@@ -84,15 +83,15 @@
   border-radius: var(--s-border-radius);
 
   &.s-size-small {
-    padding: 0 0.4rem;
+    padding: 0 var(--s-spacing-8);
   }
 
   &.s-size-medium {
-    padding: 0 0.8rem;
+    padding: 0 var(--s-spacing-16);
   }
 
   &.s-size-large {
-    padding: 0 1.2rem;
+    padding: 0 var(--s-spacing-24);
   }
 }
 
@@ -102,18 +101,18 @@
   justify-content: center;
 
   &.s-size-small {
-    width: 1.2rem;
-    padding: 0.1rem;
+    width: 2.6rem;
+    padding: 0.2rem;
   }
 
   &.s-size-medium {
-    width: 1.6rem;
-    padding: 0.25rem;
+    width: 3.4rem;
+    padding: 0.5rem;
   }
 
   &.s-size-large {
-    width: 2rem;
-    padding: 0.4rem;
+    width: 4rem;
+    padding: 0.8rem;
   }
 }
 
@@ -122,21 +121,21 @@
   justify-content: center;
 
   &.s-size-small {
-    min-width: 1.2rem;
-    padding: 0 0.4rem;
-    border-radius: 0.8rem;
+    min-width: 2.6rem;
+    padding: 0 0.8rem;
+    border-radius: 1.3rem;
   }
 
   &.s-size-medium {
-    min-width: 1.6rem;
-    padding: 0 0.8rem;
-    border-radius: 0.9rem;
+    min-width: 3.4rem;
+    padding: 0 1.6rem;
+    border-radius: 1.7rem;
   }
 
   &.s-size-large {
-    min-width: 2rem;
-    padding: 0 1.2rem;
-    border-radius: 1rem;
+    min-width: 4rem;
+    padding: 0 2.4rem;
+    border-radius: 2rem;
   }
 }
 
@@ -145,21 +144,21 @@
   justify-content: center;
 
   &.s-size-small {
-    width: 1.2rem;
-    padding: 0.1rem;
-    border-radius: 0.8rem;
+    width: 2.6rem;
+    padding: 0.2rem;
+    border-radius: 1.3rem;
   }
 
   &.s-size-medium {
-    width: 1.6rem;
-    padding: 0.25rem;
-    border-radius: 0.9rem;
+    width: 3.4rem;
+    padding: 0.5rem;
+    border-radius: 1.7rem;
   }
 
   &.s-size-large {
-    width: 2rem;
-    padding: 0.4rem;
-    border-radius: 1rem;
+    width: 4rem;
+    padding: 0.8rem;
+    border-radius: 2rem;
   }
 }
 
@@ -546,7 +545,6 @@
 }
 
 @media (prefers-color-scheme: dark) {
-
   // 默认主题
   .s-button--default {
     &.s-button--plain {

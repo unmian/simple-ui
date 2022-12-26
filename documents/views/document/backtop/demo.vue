@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-05-23 06:31:53
- * @LastEditTime: 2022-07-07 19:30:07
+ * @LastEditTime: 2022-12-13 15:31:12
  * @LastEditors: Quarter
  * @Description: 示例代码
  * @FilePath: /simple-ui/documents/views/document/backtop/demo.vue
@@ -19,5 +19,5 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class Demo extends Vue { }
+export default class BacktopDemo extends Vue {}
 </script>

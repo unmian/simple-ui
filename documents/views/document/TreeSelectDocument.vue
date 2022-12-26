@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:03:55
+ * @LastEditTime: 2022-12-14 17:13:29
  * @Description: 下拉框文档
- * @FilePath: /simple-ui/documents/views/TreeSelectDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/TreeSelectDocument.vue
 -->
 <template>
   <div class="tree-select-document">
@@ -148,8 +148,7 @@
             <td>change</td>
             <td>
               value: TreeSelectValue[] | TreeSelectValue 下拉框的值
-              <br />item:
-              TreeSelectValue 当前选中的值
+              <br />item: TreeSelectValue 当前选中的值
             </td>
             <td>下拉框变化</td>
           </tr>
@@ -194,6 +193,7 @@
                 width="240px"
                 :props="{ id: 'value', label: 'name' }"
                 :data="selectData"
+                value="02"
                 disabled
               ></s-tree-select>
             </li>
@@ -202,6 +202,7 @@
                 width="240px"
                 :props="{ id: 'value', label: 'name' }"
                 :data="selectData"
+                value="02"
                 readonly
               ></s-tree-select>
             </li>
@@ -231,7 +232,8 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class TreeSelectDocument extends Vue {
-  selectData = [ // 下拉数据
+  selectData = [
+    // 下拉数据
     {
       name: "数据看板",
       value: "01",

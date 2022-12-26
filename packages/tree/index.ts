@@ -1,7 +1,7 @@
 /*
  * @Author: Quarter
  * @Date: 2022-04-08 05:51:43
- * @LastEditTime: 2022-06-10 11:14:03
+ * @LastEditTime: 2022-12-14 09:09:39
  * @LastEditors: Quarter
  * @Description: 树型组件入口
  * @FilePath: /simple-ui/packages/tree/index.ts
@@ -9,11 +9,14 @@
 import Tree from "./src/tree.vue";
 import Vue, { PluginObject, VueConstructor } from "vue";
 
-export default {
+const plugin: PluginObject<any> = {
   install: (vue: VueConstructor<Vue>): void => {
     vue.component("STree", Tree);
   },
-} as PluginObject<any>;
+};
 
+type TreeInstance = InstanceType<typeof Tree>;
+
+export default plugin;
 export * from "./src/types";
-export { Tree };
+export { Tree, TreeInstance };

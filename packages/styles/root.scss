@@ -1,5 +1,5 @@
 :root {
-  font-size: 20px;
+  font-size: 10px;
   // 主题色
   --s-brand-light: var(--s-blue-50);
   --s-brand-focus: var(--s-blue-100);
@@ -33,26 +33,34 @@
   --s-text-secondary: var(--s-font-gray-300);
   --s-text-placeholder: var(--s-font-gray-200);
   --s-text-disabled: var(--s-font-gray-100);
-  // 其他相关颜色
+  --s-text-white: var(--s-font-white-400);
+  --s-text-black: var(--s-font-gray-400);
+  // 边框色
+  --s-border-color: var(--s-blue-gray-300);
+  // 背景色
   --s-background-primary: var(--s-gray-0);
   --s-background-secondary: var(--s-gray-100);
+  --s-background-disabled: var(--s-gray-300);
   // 圆角
   --s-border-radius: 3px;
   // 间距
-  --s-spacing-4: 0.2rem;
-  --s-spacing-8: 0.4rem;
-  --s-spacing-12: 0.6rem;
-  --s-spacing-16: 0.8rem;
-  --s-spacing-24: 1.2rem;
-  --s-spacing-32: 1.6rem;
-  --s-spacing-48: 2.4rem;
-  --s-spacing-64: 3.2rem;
-  --s-spacing-96: 4.8rem;
-  --s-spacing-160: 8rem;
+  --s-spacing-4: 0.4rem;
+  --s-spacing-8: 0.8rem;
+  --s-spacing-12: 1.2rem;
+  --s-spacing-16: 1.6rem;
+  --s-spacing-24: 2.4rem;
+  --s-spacing-32: 3.2rem;
+  --s-spacing-48: 4.8rem;
+  --s-spacing-64: 6.4rem;
+  --s-spacing-96: 9.6rem;
+  --s-spacing-160: 16rem;
   // 阴影
-  --s-shadow-1: 0 1px 10px rgba(0, 0, 0, 5%), 0 4px 5px rgba(0, 0, 0, 8%), 0 2px 4px -1px rgba(0, 0, 0, 12%);
-  --s-shadow-2: 0 3px 14px 2px rgba(0, 0, 0, 5%), 0 8px 10px 1px rgba(0, 0, 0, 6%), 0 5px 5px -3px rgba(0, 0, 0, 10%);
-  --s-shadow-3: 0 6px 30px 5px rgba(0, 0, 0, 5%), 0 16px 24px 2px rgba(0, 0, 0, 4%), 0 8px 10px -5px rgba(0, 0, 0, 8%);
+  --s-shadow-1: 0 1px 10px rgba(0, 0, 0, 5%), 0 4px 5px rgba(0, 0, 0, 8%),
+    0 2px 4px -1px rgba(0, 0, 0, 12%);
+  --s-shadow-2: 0 3px 14px 2px rgba(0, 0, 0, 5%), 0 8px 10px 1px rgba(0, 0, 0, 6%),
+    0 5px 5px -3px rgba(0, 0, 0, 10%);
+  --s-shadow-3: 0 6px 30px 5px rgba(0, 0, 0, 5%), 0 16px 24px 2px rgba(0, 0, 0, 4%),
+    0 8px 10px -5px rgba(0, 0, 0, 8%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -62,9 +70,11 @@
     --s-text-secondary: var(--s-font-white-300);
     --s-text-placeholder: var(--s-font-white-200);
     --s-text-disabled: var(--s-font-white-100);
-    // 其他相关颜色
+    // 边框色
+    --s-border-color: var(--s-gray-1100);
+    // 背景色
     --s-background-primary: var(--s-gray-1300);
     --s-background-secondary: var(--s-gray-1200);
-    // 阴影
+    --s-background-disabled: var(--s-gray-1100);
   }
 }

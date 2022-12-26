@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:52:46
+ * @LastEditTime: 2022-12-15 16:26:18
  * @Description: 日期选择器文档
- * @FilePath: /simple-ui/documents/views/DatePickerDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/DatePickerDocument.vue
 -->
 <template>
   <div class="date-picker-document">
@@ -116,16 +116,19 @@
               <s-date-picker formate="yyyy-MM"></s-date-picker>
             </li>
             <li>
-              <s-date-picker value="2021-12-05" :interval="['2021-12-01', '2021-12-20']"></s-date-picker>
+              <s-date-picker
+                value="2021-12-05"
+                :interval="['2021-12-01', '2021-12-20']"
+              ></s-date-picker>
             </li>
             <li>
               <s-date-picker quick></s-date-picker>
             </li>
             <li>
-              <s-date-picker disabled></s-date-picker>
+              <s-date-picker value="2021-12-05" disabled></s-date-picker>
             </li>
             <li>
-              <s-date-picker readonly></s-date-picker>
+              <s-date-picker value="2021-12-05" readonly></s-date-picker>
             </li>
           </ul>
         </div>

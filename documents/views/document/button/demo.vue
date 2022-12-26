@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2022-07-07 19:28:37
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-08 10:43:10
+ * @LastEditTime: 2022-12-13 15:31:31
  * @FilePath: /simple-ui/documents/views/document/button/demo.vue
  * @Description: 按钮示例文件
 -->
@@ -107,11 +107,11 @@
 </template>
 
 <script lang="ts">
-import { ButtonShape, ButtonSize, ButtonVariant } from "@quarter/simple-ui";
+import { ButtonShape, ButtonSize, ButtonVariant } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class Demo extends Vue {
+export default class ButtonDemo extends Vue {
   // 按钮变体
   buttonVariant: ButtonVariant = "fill";
   // 按钮尺寸

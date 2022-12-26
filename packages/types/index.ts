@@ -2,23 +2,20 @@
  * @Author: Quarter
  * @Date: 2020-08-27 20:22:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-07 19:15:08
+ * @LastEditTime: 2022-12-15 11:40:15
  * @Description: ui组件类名
  */
-import { MessageCommand } from "packages/message";
-
-declare module "vue/types/vue" {
-  interface Vue {
-    $message: MessageCommand;
-  }
-
-  interface VueConstructor {
-    $message: MessageCommand;
-  }
-}
 
 // 位置
-export type CommonPosition = "top" | "left" | "bottom" | "right";
+export type CommonPosition =
+  | "top"
+  | "left"
+  | "left-top"
+  | "left-bottom"
+  | "bottom"
+  | "right"
+  | "right-top"
+  | "right-bottom";
 
 // 交互
 export type CommonAction = "click" | "hover";
@@ -64,9 +61,11 @@ export interface CustomStyle {
 }
 
 // 自定义类
-export type CustomClass = {
-  [className: string]: boolean | undefined;
-} | string[];
+export type CustomClass =
+  | {
+      [className: string]: boolean | undefined;
+    }
+  | string[];
 
 export interface AnimationIndex {
   [key: string]: number | undefined; // 索引

@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:08:58
+ * @LastEditTime: 2022-12-13 16:06:35
  * @LastEditors: Quarter
  * @Description: 简易的标签页组件
  * @FilePath: /simple-ui/packages/tab/src/tab.vue
@@ -9,11 +9,7 @@
 <template>
   <div class="s-tab" :class="customClass">
     <ul>
-      <li
-        v-for="(item, index) in tabs"
-        :key="`tab-item-${index}`"
-        :class="menuClass(index)"
-      >
+      <li v-for="(item, index) in tabs" :key="`tab-item-${index}`" :class="menuClass(index)">
         <button @click="toPath(index)">{{ item.name }}</button>
         <div v-if="numberMarkVisible(item.value)" class="number-mark">
           {{ item.value }}
@@ -33,7 +29,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 @Component({
   name: "STab",
 })
-export default class STab extends Vue {
+export default class Tab extends Vue {
   @Prop({
     type: Array,
     default: () => [],
@@ -68,7 +64,6 @@ export default class STab extends Vue {
 
   /**
    * @description: 选中的菜单
-   * @author: Quarter
    * @return {number}
    */
   get syncedActive(): number {
@@ -77,7 +72,6 @@ export default class STab extends Vue {
 
   /**
    * @description: 选中的菜单
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -87,7 +81,6 @@ export default class STab extends Vue {
 
   /**
    * @description: 过滤的排列方式
-   * @author: Quarter
    * @return {String}
    */
   get realAlign(): string {
@@ -99,7 +92,6 @@ export default class STab extends Vue {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -111,7 +103,6 @@ export default class STab extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -150,30 +141,20 @@ export default class STab extends Vue {
 
   /**
    * @description: 是否显示数字标记
-   * @author: Quarter
    * @return {Boolean}
    */
   numberMarkVisible(value: number | null | undefined): boolean {
     return (
-      this.mark === true &&
-      this.markMode === "number" &&
-      typeof value === "number" &&
-      value > 0
+      this.mark === true && this.markMode === "number" && typeof value === "number" && value > 0
     );
   }
 
   /**
    * @description: 是否显示点标记
-   * @author: Quarter
    * @return {Boolean}
    */
   dotMarkVisible(value: number | null | undefined): boolean {
-    return (
-      this.mark === true &&
-      this.markMode === "dot" &&
-      typeof value === "number" &&
-      value > 0
-    );
+    return this.mark === true && this.markMode === "dot" && typeof value === "number" && value > 0;
   }
 
   /**
@@ -183,20 +164,13 @@ export default class STab extends Vue {
    * @return
    */
   toPath(index: number): void {
-    if (
-      typeof index === "number" &&
-      Array.isArray(this.tabs) &&
-      this.unsyncedActive !== index
-    ) {
+    if (typeof index === "number" && Array.isArray(this.tabs) && this.unsyncedActive !== index) {
       const tab: MenuItem = this.tabs[index];
       if (tab) {
-        const currentPath: string = this.$route.path;
-        if (typeof tab.path === "string" && currentPath !== tab.path) {
-          this.$router.push(tab.path);
-        }
         this.unsyncedActive = index;
         this.syncedActive = this.unsyncedActive;
         // 触发 change 事件
+        this.$emit("change", this.unsyncedActive, tab);
         this.$emit("change", this.unsyncedActive, tab);
         // 选中回调
         if (typeof tab.onActive === "function") {

@@ -8,6 +8,4 @@
  */
 import Emitter from "./emitter";
 
-export {
-  Emitter,
-};
+export { Emitter };

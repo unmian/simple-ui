@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:01:14
+ * @LastEditTime: 2022-12-13 15:27:37
  * @Description: 下拉框文档
- * @FilePath: /simple-ui/documents/views/SelectDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/SelectDocument.vue
 -->
 <template>
   <div class="select-document">
@@ -139,8 +139,7 @@
             <td>change</td>
             <td>
               value: SelectValue[]|SelectValue 下拉框的值
-              <br />item: SelectValue
-              当前选中的值
+              <br />item: SelectValue 当前选中的值
             </td>
             <td>下拉框变化</td>
           </tr>
@@ -189,7 +188,12 @@
               </s-select>
             </li>
             <li>
-              <s-select width="240px" placeholder="可以清除的下拉框" value="香港特别行政区" clearable>
+              <s-select
+                width="240px"
+                placeholder="可以清除的下拉框"
+                value="香港特别行政区"
+                clearable
+              >
                 <s-option value="中国大陆">中国大陆</s-option>
                 <s-option value="香港特别行政区">香港特别行政区</s-option>
                 <s-option value="澳门特别行政区">澳门特别行政区</s-option>

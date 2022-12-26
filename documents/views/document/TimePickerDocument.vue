@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:03:01
+ * @LastEditTime: 2022-12-13 15:29:15
  * @Description: 日期选择器文档
- * @FilePath: /simple-ui/documents/views/TimePickerDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/TimePickerDocument.vue
 -->
 <template>
   <div class="time-picker-document">

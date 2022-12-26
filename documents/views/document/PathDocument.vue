@@ -1,10 +1,10 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-04-12 12:00:27
+ * @LastEditTime: 2022-12-13 15:26:58
  * @LastEditors: Quarter
  * @Description: 路径文档
- * @FilePath: /simple-ui/documents/views/PathDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/PathDocument.vue
 -->
 <template>
   <div class="path-document">
@@ -72,7 +72,10 @@
               <s-path :path="path"></s-path>
             </li>
             <li>
-              <s-path :path="path" style="--mark-color: #f04134;--selected-color: #f04134;"></s-path>
+              <s-path
+                :path="path"
+                style="--mark-color: #f04134; --selected-color: #f04134"
+              ></s-path>
             </li>
           </ul>
         </div>
@@ -82,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { MenuItem } from "@quarter/simple-ui";
+import { MenuItem } from "@unmian/simple-ui";
 import { DocumentPage } from "documents/components";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -93,38 +96,13 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class PathDocument extends Vue {
-  path: MenuItem[] = [ // 路径配置
+  path: MenuItem[] = [
+    // 路径配置
     { name: "系统管理", path: "/path" },
     { name: "日志管理", path: "/path" },
     { name: "登录日志", path: "/path" },
   ];
-  code = `
-<template>
-  <div>
-    <s-path :path="path" :click="false" :show-mark="false"></s-path>
-    <s-path :path="path" :click="false"></s-path>
-    <s-path :path="path"></s-path>
-    <s-path :path="path" style="--mark-color: #f04134;--selected-color: #f04134;"></s-path>
-  </div>
-</template>
-
-<${"script"} lang="ts">
-import Vue from "vue";
-import { MenuItem } from "@quarter/simple-ui";
-
-${"export default Vue.extend"}({
-  data() {
-    return {
-      path: [
-        { name: "系统管理", path: "/path" },
-        { name: "日志管理", path: "/path" },
-        { name: "登录日志", path: "/path" },
-      ] as MenuItem[],
-    };
-  },
-});
-</${"script"}>
-  `; // 示例代码
+  code = ""; // 示例代码
 }
 </script>
 

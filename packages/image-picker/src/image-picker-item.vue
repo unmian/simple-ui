@@ -1,39 +1,47 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:42:57
+ * @LastEditTime: 2022-12-13 15:39:38
  * @LastEditors: Quarter
  * @Description: 图片选择器项
  * @FilePath: /simple-ui/packages/image-picker/src/image-picker-item.vue
 -->
 <template>
   <div class="s-image-item">
-    <div
-      v-if="imageVisible"
-      class="image-preview"
-      :style="{ 'background-image': realUrl }"
-    >
+    <div v-if="imageVisible" class="image-preview" :style="{ 'background-image': realUrl }">
       <div v-if="imageLoading" class="image-loading">
-        <i class="s-icon-loading"></i>
+        <icon name="loading"></icon>
       </div>
       <div class="image-delete">
-        <i class="s-icon-delete-fill" @click="deleteImage"></i>
+        <s-button
+          variant="plain"
+          shape="square"
+          theme="danger"
+          icon="trash-empty"
+          @click="deleteImage"
+        ></s-button>
       </div>
     </div>
     <button v-else>
-      <i class="s-icon-plus"></i>
+      <icon name="add-plus"></icon>
       <input type="file" accept="image/*" @change="fileChange" />
     </button>
   </div>
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
+import { Button } from "packages/button";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
   name: "SImagePickerItem",
+  components: {
+    Icon,
+    SButton: Button,
+  },
 })
-export default class SImagePickerItem extends Vue {
+export default class ImagePickerItem extends Vue {
   @Prop({
     type: Number,
     required: true,
@@ -49,7 +57,6 @@ export default class SImagePickerItem extends Vue {
 
   /**
    * @description: 是否显示加载
-   * @author: Quarter
    * @return {Boolean}
    */
   get imageLoading(): boolean {
@@ -58,7 +65,6 @@ export default class SImagePickerItem extends Vue {
 
   /**
    * @description: 真实的图片路径
-   * @author: Quarter
    * @return {String|undefined}
    */
   get realUrl(): string | undefined {
@@ -70,14 +76,10 @@ export default class SImagePickerItem extends Vue {
 
   /**
    * @description: 图片是否显示
-   * @author: Quarter
    * @return {Boolean}
    */
   get imageVisible(): boolean {
-    if (
-      this.src === null ||
-      (typeof this.src === "string" && this.src.length > 0)
-    ) {
+    if (this.src === null || (typeof this.src === "string" && this.src.length > 0)) {
       return true;
     }
     return false;
@@ -85,19 +87,22 @@ export default class SImagePickerItem extends Vue {
 
   /**
    * @description: 选中文件变化
-   * @author: Quarter
    * @param {Event} event 事件
    * @return
    */
   fileChange(event: Event) {
     if (event) {
-      const target: any = event.target;
-      if (target && target.nodeName === "INPUT" && target.type === "file") {
-        const files: File[] = Array.from(target.files);
+      const { target } = event;
+      if (
+        target instanceof Element &&
+        target.nodeName === "INPUT" &&
+        (target as HTMLInputElement).type === "file"
+      ) {
+        const files: File[] = Array.from((target as HTMLInputElement).files || []);
         if (Array.isArray(files) && files.length > 0) {
           const file: File = files[0];
           this.$emit("update-file", this.index, file);
-          target.value = null;
+          (target as HTMLInputElement).value = "";
         }
       }
     }
@@ -105,7 +110,6 @@ export default class SImagePickerItem extends Vue {
 
   /**
    * @description: 删除文件
-   * @author: Quarter
    * @return
    */
   deleteImage(): void {
@@ -153,10 +157,6 @@ export default class SImagePickerItem extends Vue {
       position: absolute;
       top: 0;
       left: 0;
-
-      i:hover {
-        color: #f5222d;
-      }
     }
 
     &:hover .image-delete {
@@ -164,7 +164,7 @@ export default class SImagePickerItem extends Vue {
     }
   }
 
-  button {
+  > button {
     width: 100%;
     height: 100%;
     color: #d6e1e5;

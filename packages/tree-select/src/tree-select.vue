@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-04-08 03:35:34
- * @LastEditTime: 2022-07-05 11:19:00
+ * @LastEditTime: 2022-12-14 17:27:25
  * @LastEditors: Quarter
  * @Description: 树形下拉框组件
  * @FilePath: /simple-ui/packages/tree-select/src/tree-select.vue
@@ -17,44 +17,54 @@
       <template #reference>
         <div
           v-if="hasReference"
-          class="select-name"
+          class="s-tree-select__input-container"
+          :style="{
+            width,
+            height,
+          }"
           @mouseenter="mouseEneter"
           @mouseleave="mouseLeave"
         >
-          <div class="select-label">
+          <div class="s-tree-select__label">
             <slot name="reference"></slot>
           </div>
-          <div v-if="showArrow" class="select-arrow" @click="clearSelect">
-            <i :class="arrowClassName"></i>
+          <div v-if="showArrow" class="s-tree-select__arrow" @click="handleClear">
+            <icon :name="arrowIconName"></icon>
           </div>
         </div>
-        <div v-else class="select-input" @mouseenter="mouseEneter" @mouseleave="mouseLeave">
-          <div v-if="placeholderVisible" class="select-placeholder">
+        <div
+          v-else
+          class="s-tree-select__input-container"
+          :style="{
+            width,
+            minHeight: height,
+          }"
+          @mouseenter="mouseEneter"
+          @mouseleave="mouseLeave"
+        >
+          <div v-if="placeholderVisible" class="s-tree-select__placeholder">
             {{ placeholder }}
           </div>
-          <div v-else class="select-label">
+          <div v-else class="s-tree-select__label">
             <template v-if="multiple">
-              <ul @click.stop>
-                <li v-for="(tag, index) of label" :key="`tag-item-${index}`">
-                  <s-tag
-                    mode="light"
-                    :show-close="!disabled"
-                    external
-                    @close="closeOptionTag(index)"
-                    >{{ tag }}</s-tag
-                  >
-                </li>
-              </ul>
+              <s-tag
+                :show-close="!disabled && !readonly"
+                external
+                v-for="(tag, index) of label"
+                :key="`tag-item-${index}`"
+                @close="handleTagRemove(index)"
+                >{{ tag }}</s-tag
+              >
             </template>
             <template v-else>{{ labelName }}</template>
           </div>
-          <div class="select-arrow" @click="clearSelect">
-            <i :class="arrowClassName"></i>
+          <div v-if="!readonly" class="s-tree-select__arrow" @click="handleClear">
+            <icon :name="arrowIconName"></icon>
           </div>
         </div>
       </template>
-      <div v-if="hasOption" class="option-list" style="padding: 2px 0">
-        <s-scroll full :style="{ 'max-height': listHeight }">
+      <div v-if="hasOption" class="s-tree-select__option-list">
+        <s-scroll full show-bar :style="{ 'max-height': listHeight }">
           <s-tree-option
             v-for="node of filterTree"
             :key="`node-item-${node.id}`"
@@ -69,105 +79,125 @@
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Emitter } from "packages/mixins";
 import { SelectValue } from "packages/select";
 import { TreeProp } from "packages/tree";
 import { CustomClass, CustomStyle } from "packages/types";
 import STreeOption from "./tree-option.vue";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { SelectNodeConfig } from "./types";
 
 @Component({
   name: "STreeSelect",
   components: {
+    Icon,
     STreeOption,
   },
 })
-export default class STreeSelect extends Mixins(Emitter) {
+export default class TreeSelect extends Emitter {
+  // 宽度
   @Prop(String)
-  width?: String; // 宽度
+  readonly width?: string;
 
+  // 高度
   @Prop(String)
-  height?: string; // 高度
+  readonly height?: string;
 
+  // 列表高度
   @Prop({
     type: String,
-    default: "300px",
+    default: "32rem",
   })
-  listHeight!: string; // 列表高度
+  readonly listHeight!: string;
 
+  // 选中值
   @Prop({
     type: [Array, String, Number, Boolean],
     default: () => [],
   })
-  value!: SelectValue[] | SelectValue; // 选中值
+  readonly value!: SelectValue[] | SelectValue;
 
+  // 参数配置
   @Prop({
     type: Object,
     default: () => ({}),
   })
-  props!: TreeProp; // 参数配置
+  readonly props!: TreeProp;
 
+  // 树形结构数据
   @Prop({
     type: Array,
     default: () => [],
   })
-  data!: []; // 树形结构数据
+  readonly data!: [];
 
+  // 提示文本
   @Prop({
     type: String,
     default: "请选择",
   })
-  placeholder!: string; // 提示文本
+  readonly placeholder!: string;
 
+  // 是否支持复选
   @Prop({
     type: Boolean,
     default: false,
   })
-  multiple!: boolean; // 是否支持复选
+  readonly multiple!: boolean;
 
+  // 是否显示下拉箭头
   @Prop({
     type: Boolean,
     default: true,
   })
-  showArrow!: boolean; // 是否显示下拉箭头
+  readonly showArrow!: boolean;
 
+  // 是否可以清除
   @Prop({
     type: Boolean,
     default: false,
   })
-  clearable!: boolean; // 是否可以清除
+  readonly clearable!: boolean;
 
+  // 是否禁用
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled!: boolean; // 是否禁用
+  readonly disabled!: boolean;
 
+  // 是否只读
   @Prop({
     type: Boolean,
     default: false,
   })
-  readonly!: boolean; // 是否只读
+  readonly readonly!: boolean;
 
+  // 隐藏箭头
   @Prop({
     type: Boolean,
     default: false,
   })
-  hideArrow!: boolean; // 隐藏箭头
+  readonly hideArrow!: boolean;
 
+  // 自定义类名
   @Prop(String)
-  specialClass?: string; // 自定义类名
+  readonly specialClass?: string;
 
-  label: string[] = []; // 标签值
-  options: SelectValue[] = []; // 所有的值域集合
-  expand = false; // 展开
-  mouseOver = false; // 鼠标是否在下拉框
-  unsyncedValue: SelectValue[] = []; // 不同步的值
+  // 标签值
+  label: string[] = [];
+  // 所有的值域集合
+  options: SelectValue[] = [];
+  // 展开
+  expand = false;
+  // 鼠标是否在下拉框
+  mouseOver = false;
+  // 不同步的值
+  unsyncedValue: SelectValue[] = [];
 
   /**
    * @description: 选中值
-   * @author: Quarter
    * @return {SelectValue[] | SelectValue}
    */
   get syncedValue(): SelectValue[] | SelectValue {
@@ -176,7 +206,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 选中值
-   * @author: Quarter
    * @param {SelectValue[] | SelectValue} val 值
    * @return
    */
@@ -187,7 +216,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 是否有自定义标题
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasReference(): boolean {
@@ -196,7 +224,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -205,22 +232,20 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
     return {
-      "select-expand": this.expand === true,
-      "mode-multiple": this.multiple === true,
-      "s-select-clearable": this.clearable === true,
-      "status-disabled": this.disabled === true,
-      "status-readonly": this.readonly === true,
+      "s-tree-select--expand": this.expand === true,
+      "s-tree-select--multiple": this.multiple === true,
+      "s-tree-select--clearable": this.clearable === true,
+      "s-tree-select--disabled": this.disabled === true,
+      "s-tree-select--readonly": this.readonly === true,
     };
   }
 
   /**
    * @description: 自定义样式表
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get customStyle(): CustomStyle {
@@ -236,7 +261,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 识别符属性
-   * @author: Quarter
    * @return {String}
    */
   get idProperty(): string {
@@ -248,7 +272,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 标签属性
-   * @author: Quarter
    * @return {String}
    */
   get labelProperty(): string {
@@ -260,7 +283,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 子节点属性
-   * @author: Quarter
    * @return {String}
    */
   get childrenProperty(): string {
@@ -272,7 +294,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 过滤树结构数据
-   * @author: Quarter
    * @return {Array<SelectNodeConfig>}
    */
   get filterTree(): SelectNodeConfig[] {
@@ -287,20 +308,18 @@ export default class STreeSelect extends Mixins(Emitter) {
             treeItem.children = node[this.childrenProperty];
           }
           return treeItem;
-        } else {
-          return {
-            id: index,
-            label: "",
-          };
         }
+        return {
+          id: index,
+          label: "",
+        };
       });
     }
-    return new Array();
+    return [];
   }
 
   /**
    * @description: 是否存在选项
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasOption(): boolean {
@@ -309,29 +328,25 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 下拉箭头的类名
-   * @author: Quarter
    * @return {String}
    */
-  get arrowClassName(): string {
+  get arrowIconName(): string {
     if (
       this.clearable === true &&
       this.mouseOver === true &&
       this.enabled &&
       this.realValue.length !== 0
     ) {
-      return "s-icon-circle-close";
-    } else {
-      if (this.expand === true) {
-        return "s-icon-caret-top";
-      } else {
-        return "s-icon-caret-bottom";
-      }
+      return "close-circle";
     }
+    if (this.expand === true) {
+      return "chevron-up";
+    }
+    return "chevron-down";
   }
 
   /**
    * @description: 标签内容
-   * @author: Quarter
    * @return {String}
    */
   get labelName(): string {
@@ -344,7 +359,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 是否可见提示文字
-   * @author: Quarter
    * @return {Boolean}
    */
   get placeholderVisible(): boolean {
@@ -353,13 +367,12 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 真实的被选值
-   * @author: Quarter
    * @return {Array<SelectValue>}
    */
   get realValue(): SelectValue[] {
     if (Array.isArray(this.unsyncedValue) && Array.isArray(this.options)) {
-      const arr: SelectValue[] = new Array();
-      const options: SelectValue[] = this.options;
+      const arr: SelectValue[] = [];
+      const { options } = this;
       this.unsyncedValue.forEach((value: SelectValue) => {
         if (value === null || typeof value === "string" || typeof value === "number") {
           if (options.indexOf(value) !== -1) {
@@ -369,39 +382,40 @@ export default class STreeSelect extends Mixins(Emitter) {
       });
       return arr;
     }
-    return new Array();
+    return [];
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
-    this.$on("s-select-mount", (value: SelectValue, callback: (value: SelectValue[]) => void) => {
-      this.mountOption(value);
-      callback(this.unsyncedValue);
+    this.$on(
+      "s-tree-select__mount",
+      (value: SelectValue, callback: (value: SelectValue[]) => void) => {
+        this.handleOptionMount(value);
+        callback(this.unsyncedValue);
+      },
+    );
+    this.$on("s-tree-select__unmount", (value: SelectValue) => {
+      this.handleOptionUnmount(value);
     });
-    this.$on("s-select-unmount", (value: SelectValue) => {
-      this.unmountOption(value);
+    this.$on("s-tree-select__check", (value: SelectValue) => {
+      this.handleOptionCheck(value);
     });
-    this.$on("s-select-check", (value: SelectValue) => {
-      this.check(value);
+    this.$on("s-tree-select__remove", (value: SelectValue) => {
+      this.handleOptionRemove(value);
     });
-    this.$on("s-select-discheck", (value: SelectValue) => {
-      this.delete(value);
+    this.$on("s-tree-select__label-check", (label: string) => {
+      this.handleLabelCheck(label);
     });
-    this.$on("s-select-label-add", (label: string) => {
-      this.addLabel(label);
-    });
-    this.$on("s-select-label-delete", (label: string) => {
-      this.deleteLabel(label);
+    this.$on("s-tree-select__label-remove", (label: string) => {
+      this.handleLabelRmove(label);
     });
   }
 
   /**
    * @description: 监听传入选中列表发生变化
-   * @author: Quarter
    * @param {Array<FilterItemValue>} newValue 更改的值
    * @param {Array<FilterItemValue>} oldValue 原始值
    * @return
@@ -409,24 +423,34 @@ export default class STreeSelect extends Mixins(Emitter) {
   @Watch("value", {
     immediate: true,
   })
-  handleValueChange(newValue?: SelectValue[], oldValue?: SelectValue[]): void {
+  handleValueChange(newValue?: SelectValue[]): void {
     if (Array.isArray(newValue)) {
       this.unsyncedValue = newValue;
     } else if (typeof newValue === "string" || typeof newValue === "number" || newValue === null) {
       this.unsyncedValue = [newValue];
     }
-    this.broadcast("STreeOption", "s-select-update", [this.unsyncedValue]);
+    this.broadcast("STreeOption", "s-tree-option__update", [this.unsyncedValue]);
+  }
+
+  /**
+   * @description: 监听选中项列表发生变化
+   * @param {Array<FilterItemValue>} newValue 更改的值
+   * @return
+   */
+  @Watch("realValue", {
+    immediate: true,
+  })
+  handleRealValueChange(newValue?: SelectValue[]): void {
+    this.broadcast("STreeOption", "s-tree-option__update", [newValue]);
   }
 
   /**
    * @description: 监听展开状态
-   * @author: Quarter
    * @param {Boolean} newValue 更改的值
-   * @param {Boolean} oldValue 原始值
    * @return
    */
   @Watch("expand")
-  handleExpandChaneg(newValue: boolean, oldValue: boolean): void {
+  handleExpandChaneg(newValue: boolean): void {
     if (newValue === true) {
       this.$emit("expand");
     } else {
@@ -436,11 +460,10 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 选项挂载
-   * @author: Quarter
    * @param {SelectValue} value 选项的值
    * @return
    */
-  mountOption(value: SelectValue): void {
+  handleOptionMount(value: SelectValue): void {
     if (Array.isArray(this.options) && this.options.indexOf(value) === -1) {
       this.options.push(value);
     }
@@ -448,11 +471,10 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 选项卸载
-   * @author: Quarter
    * @param {SelectValue} value 选项的值
    * @return
    */
-  unmountOption(value: SelectValue): void {
+  handleOptionUnmount(value: SelectValue): void {
     if (Array.isArray(this.options) && this.options.indexOf(value) !== -1) {
       this.options.splice(this.options.indexOf(value));
     }
@@ -460,11 +482,10 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 添加某个标签
-   * @author: Quarter
    * @param {String} 标签
    * @return
    */
-  addLabel(label: string): void {
+  handleLabelCheck(label: string): void {
     if (typeof label === "string" && label !== "") {
       if (this.multiple === true) {
         if (this.label.indexOf(label) === -1) {
@@ -478,11 +499,10 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 删除某个标签
-   * @author: Quarter
    * @param {String} 标签
    * @return
    */
-  deleteLabel(label: string): void {
+  handleLabelRmove(label: string): void {
     if (typeof label === "string" && label !== "" && this.label.indexOf(label) !== -1) {
       let index: number = this.label.indexOf(label);
       while (index !== -1) {
@@ -494,14 +514,13 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 关闭选项标签
-   * @author: Quarter
    * @param {number} index 下标
    * @return
    */
-  closeOptionTag(index: number): void {
+  handleTagRemove(index: number): void {
     if (this.unsyncedValue.length > index && this.label.length > index) {
-      this.delete(this.unsyncedValue[index]);
-      this.deleteLabel(this.label[index]);
+      this.handleOptionRemove(this.unsyncedValue[index]);
+      this.handleLabelRmove(this.label[index]);
     }
   }
 
@@ -510,36 +529,34 @@ export default class STreeSelect extends Mixins(Emitter) {
    * @param {SelectItemValue} value 选中数值
    * @return
    */
-  check(value: SelectValue): void {
-    if (Array.isArray(this.unsyncedValue)) {
-      if (this.unsyncedValue.indexOf(value) === -1) {
-        if (this.multiple === true) {
-          this.unsyncedValue.push(value);
-        } else {
-          this.unsyncedValue = [value];
-          this.expand = false;
-        }
-        if (
-          typeof this.syncedValue === "string" ||
-          typeof this.syncedValue === "number" ||
-          (this.syncedValue === null && this.multiple === false) ||
-          (this.syncedValue === undefined && this.multiple === false)
-        ) {
-          const syncedValue: SelectValue =
-            this.unsyncedValue.length > 0 ? this.unsyncedValue[0] : null;
-          this.syncedValue = syncedValue;
-          this.$emit("input", syncedValue);
-          this.$emit("change", syncedValue);
-          this.broadcast("STreeOption", "s-select-update", [this.unsyncedValue]);
-        } else {
-          this.syncedValue = this.unsyncedValue;
-          this.$emit("input", this.unsyncedValue);
-          this.$emit("change", this.unsyncedValue, value);
-          this.broadcast("STreeOption", "s-select-update", [this.unsyncedValue]);
-        }
-        this.dispatch("SFormItem", "s-form-validate", ["change"]);
-      }
+  handleOptionCheck(value: SelectValue): void {
+    if (!Array.isArray(this.unsyncedValue) || this.unsyncedValue.includes(value)) {
+      return;
     }
+    if (this.multiple === true) {
+      this.unsyncedValue.push(value);
+    } else {
+      this.unsyncedValue = [value];
+      this.expand = false;
+    }
+    if (
+      typeof this.syncedValue === "string" ||
+      typeof this.syncedValue === "number" ||
+      (this.syncedValue === null && this.multiple === false) ||
+      (this.syncedValue === undefined && this.multiple === false)
+    ) {
+      const syncedValue: SelectValue = this.unsyncedValue.length > 0 ? this.unsyncedValue[0] : null;
+      this.syncedValue = syncedValue;
+      this.$emit("input", syncedValue);
+      this.$emit("change", syncedValue);
+      this.broadcast("STreeOption", "s-select-update", [this.unsyncedValue]);
+    } else {
+      this.syncedValue = this.unsyncedValue;
+      this.$emit("input", this.unsyncedValue);
+      this.$emit("change", this.unsyncedValue, value);
+      this.broadcast("STreeOption", "s-select-update", [this.unsyncedValue]);
+    }
+    this.dispatch("SFormItem", "s-form-validate", ["change"]);
   }
 
   /**
@@ -547,7 +564,7 @@ export default class STreeSelect extends Mixins(Emitter) {
    * @param {CheckboxValue} value 删除数值
    * @return
    */
-  delete(value: SelectValue): void {
+  handleOptionRemove(value: SelectValue): void {
     if (Array.isArray(this.unsyncedValue)) {
       if (
         this.unsyncedValue.length > 1 ||
@@ -583,7 +600,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 鼠标移出
-   * @author: Quarter
    * @return
    */
   mouseEneter(): void {
@@ -592,7 +608,6 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 鼠标移出
-   * @author: Quarter
    * @return
    */
   mouseLeave(): void {
@@ -601,23 +616,21 @@ export default class STreeSelect extends Mixins(Emitter) {
 
   /**
    * @description: 清空下拉框
-   * @author: Quarter
    * @return
    */
-  clearSelect(event: MouseEvent): void {
+  handleClear(event: MouseEvent): void {
     if (this.clearable === true && this.realValue.length > 0) {
-      this.unsyncedValue = new Array();
+      this.unsyncedValue = [];
       this.broadcast("STreeOption", "s-select-update", [this.unsyncedValue]);
       let syncedValue: SelectValue[] | SelectValue = null;
       if (this.multiple === true) {
-        syncedValue = new Array();
+        syncedValue = [];
       }
       this.syncedValue = syncedValue;
       this.$emit("input", syncedValue);
       this.$emit("change", syncedValue);
       this.$emit("clear");
       event.stopPropagation();
-      event.cancelBubble = true;
     }
   }
 }
@@ -625,125 +638,88 @@ export default class STreeSelect extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-tree-select {
-  color: inherit;
+  color: var(--s-text-primary);
   display: inline-flex;
 
-  .select-name {
-    font-size: 14px;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    display: inline-flex;
-    align-items: center;
+  &:not(:last-child) {
+    margin-right: var(--s-spacing-12);
+  }
+}
 
-    .select-arrow {
-      margin-left: 10px;
-    }
+.s-tree-select__input-container {
+  min-width: 5rem;
+  min-height: 3.4rem;
+  padding: 0 var(--s-spacing-12);
+  font-size: 1.4rem;
+  cursor: pointer;
+  user-select: none;
+  border-radius: var(--s-border-radius);
+  border: 1px solid var(--s-border-color);
+  box-sizing: border-box;
+  background-color: var(--s-background-primary);
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &:hover {
+    border-color: var(--s-brand-hover);
+  }
+}
+
+.s-tree-select__placeholder {
+  color: var(--s-text-placeholder);
+}
+
+.s-tree-select__arrow {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: var(--s-spacing-12);
+}
+
+.s-tree-select--multiple {
+  .s-tree-select__label {
+    padding: var(--s-spacing-4) 0;
+    display: flex;
+    flex-wrap: wrap;
   }
 
-  .select-input {
-    width: var(--select-container-width, fit-content);
-    min-width: 50px;
-    height: var(--select-container-height, 36px);
-    padding: 0 10px;
-    font-size: 14px;
-    line-height: initial;
-    border-radius: 4px;
-    border: 1px solid #d6e1e5;
-    cursor: pointer;
-    box-sizing: border-box;
-    background-color: #ffffff;
-    overflow: hidden;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .s-tag {
+    margin: 0.2rem;
+  }
+}
 
-    .select-placeholder {
-      color: #d6e1e5;
-    }
+.s-tree-select--disabled {
+  cursor: not-allowed;
 
-    .select-label {
-      color: #333333;
-    }
-
-    .select-arrow {
-      width: 20px;
-      height: 20px;
-      color: #666666;
-      font-size: 14px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-left: 5px;
-    }
+  .s-tree-select__input-container {
+    background-color: var(--s-background-secondary);
 
     &:hover {
-      border-color: #b7c1c5;
+      border-color: var(--s-border-color);
     }
   }
 
-  .option-list {
-    padding: 3px 0;
+  .s-tree-select__label,
+  .s-tree-select__arrow {
+    color: var(--s-text-disabled);
   }
+}
 
-  &:not(:last-child) {
-    margin-right: 10px;
+.s-tree-select--readonly:not(.s-tree-select--disabled) {
+  cursor: default;
+
+  .s-tree-select__input-container:hover {
+    border-color: var(--s-border-color);
   }
+}
 
-  &.mode-multiple {
-    .select-input {
-      height: initial;
-      min-height: var(--select-container-height, 36px);
-
-      .select-label {
-        padding: 5px 0;
-        user-select: none;
-
-        ul {
-          padding: 0;
-          list-style: none;
-          display: flex;
-          flex-wrap: wrap;
-          margin: 0;
-
-          li {
-            margin: 2px;
-          }
-        }
-      }
-    }
-  }
-
-  &.status-disabled {
-    .select-input {
-      cursor: default;
-      background-color: #f9f9f9;
-
-      .select-label {
-        color: #666666;
-      }
-
-      .select-arrow {
-        color: #d6e1e5;
-      }
-
-      &:hover {
-        border-color: #d6e1e5;
-      }
-    }
-  }
-
-  &:not(.status-disabled).status-readonly {
-    .select-input {
-      cursor: not-allowed;
-
-      .select-arrow {
-        display: none;
-      }
-
-      &:hover {
-        border-color: #d6e1e5;
-      }
-    }
-  }
+.s-tree-select__option-list {
+  padding: var(--s-spacing-4);
+  border-radius: var(--s-border-radius);
 }
 </style>

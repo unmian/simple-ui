@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-05 11:17:14
+ * @LastEditTime: 2022-12-13 15:32:55
  * @LastEditors: Quarter
  * @Description: 简易的头像组件
  * @FilePath: /simple-ui/packages/avatar/src/avatar.vue
@@ -25,13 +25,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { CustomClass, CustomStyle } from "@quarter/simple-ui";
+import { CustomClass, CustomStyle } from "@unmian/simple-ui";
 import { AvatarSize } from "./types";
 
 @Component({
   name: "SAvatar",
 })
-export default class SAvatar extends Vue {
+export default class Avatar extends Vue {
   $refs!: {
     avatar: HTMLDivElement; // 头像
     image: HTMLImageElement; // 头像图片
@@ -59,7 +59,6 @@ export default class SAvatar extends Vue {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -74,24 +73,16 @@ export default class SAvatar extends Vue {
 
   /**
    * @description: 自定义样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get customStyle(): CustomStyle {
     return {
-      width: typeof this.imageWidth === "number" ? this.imageWidth + "px" : "auto",
-      height: typeof this.imageHeight === "number" ? this.imageHeight + "px" : "auto",
-      "margin-top": this.imageMarginTop + "px",
-      "margin-left": this.imageMarginLeft + "px",
+      width: typeof this.imageWidth === "number" ? `${this.imageWidth  }px` : "auto",
+      height: typeof this.imageHeight === "number" ? `${this.imageHeight  }px` : "auto",
+      "margin-top": `${this.imageMarginTop  }px`,
+      "margin-left": `${this.imageMarginLeft  }px`,
     };
   }
-
-  /**
-   * @description: 生命周期函数
-   * @author: Quarter
-   * @return {*}
-   */
-  mounted(): void {}
 
   /**
    * @description: 处理加载完成逻辑
@@ -99,7 +90,7 @@ export default class SAvatar extends Vue {
    * @return
    */
   handleLoad(e: Event): void {
-    const avatar = this.$refs.avatar;
+    const {avatar} = this.$refs;
     const target = e.target as HTMLImageElement;
     if (avatar instanceof HTMLDivElement && target instanceof HTMLImageElement) {
       const targetWidth = avatar.clientWidth;
@@ -119,12 +110,11 @@ export default class SAvatar extends Vue {
 
   /**
    * @description: 图片加载错误
-   * @author: Quarter
    * @return
    */
   handleLoadError(): void {
     this.loadError = true;
-    const image: Vue | Element | (Vue | Element)[] | undefined = this.$refs.image;
+    const {image} = this.$refs;
     if (image instanceof HTMLImageElement) {
       const boundings: DOMRect = image.getBoundingClientRect();
       this.imageMarginTop = -boundings.width / 2;
@@ -137,7 +127,7 @@ export default class SAvatar extends Vue {
 <style lang="scss">
 .s-avatar {
   border-radius: 50%;
-  background-color: var(--s-gray-2);
+  background-color: var(--s-gray-200);
   overflow: hidden;
   justify-content: center;
   align-items: center;

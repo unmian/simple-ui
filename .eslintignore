@@ -2,7 +2,9 @@ build/
 coverage/
 dist/
 es/
+docs/
 lib/
+/types/
 node_modules/
 scripts/
 **/*.min.js

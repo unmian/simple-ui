@@ -1,104 +1,111 @@
 <!--
  * @Author: Quarter
  * @Date: 2021-02-24 08:51:55
- * @LastEditTime: 2022-06-07 17:08:24
+ * @LastEditTime: 2022-12-14 16:23:16
  * @LastEditors: Quarter
  * @Description: 简易的切换开关
  * @FilePath: /simple-ui/packages/switch/src/switch.vue
 -->
 <template>
-  <div
-    class="s-switch"
-    :class="customClass"
-    :style="customStyle"
-    @click="switchButton"
-  >
-    <div class="switch-wrapper">
-      <div class="switch-button">{{ switchLabel }}</div>
-    </div>
+  <div class="s-switch" :class="customClass" :style="customStyle" @click="switchButton">
+    <div class="s-switch__button">{{ switchLabel }}</div>
   </div>
 </template>
 
 <script lang="ts">
 import { Emitter } from "packages/mixins";
 import { CustomClass, CustomStyle, CommonSize } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   name: "SSwitch",
 })
-export default class SSwitch extends Mixins(Emitter) {
+export default class Switch extends Emitter {
+  // 宽度
   @Prop(String)
-  width?: string; // 宽度
+  readonly width?: string;
 
+  // 激活的文字
   @Prop(String)
-  activeLabel?: string; // 激活的文字
+  readonly activeLabel?: string;
 
+  // 激活的颜色
   @Prop(String)
-  activeColor?: string; // 激活的颜色
+  readonly activeColor?: string;
 
+  // 激活的值
   @Prop({
     type: [String, Number, Boolean],
     default: true,
   })
-  activeValue!: string | number | boolean; // 激活的值
+  readonly activeValue!: string | number | boolean;
 
+  // 未激活的文字
   @Prop(String)
-  inactiveLabel?: string; // 未激活的文字
+  readonly inactiveLabel?: string;
 
+  // 未激活的颜色
   @Prop(String)
-  inactiveColor?: string; // 未激活的颜色
+  readonly inactiveColor?: string;
 
+  // 未激活的值
   @Prop({
     type: [String, Number, Boolean],
     default: false,
   })
-  inactiveValue!: string | number | boolean; // 未激活的值
+  readonly inactiveValue!: string | number | boolean;
 
+  // 大小
   @Prop({
     type: String,
     default: "medium",
   })
-  size!: CommonSize; // 大小
+  readonly size!: CommonSize;
 
+  // 是否矩形
   @Prop({
     type: Boolean,
     default: false,
   })
-  square!: boolean; // 是否矩形
+  square!: boolean;
 
+  // 值
   @Prop({
     type: [String, Number, Boolean],
     default: false,
   })
-  value!: string | number | boolean; // 值
+  readonly value!: string | number | boolean;
 
+  // 比例
   @Prop([Number, String])
-  scale?: number | string; // 比例
+  scale?: number | string;
 
+  // 是否禁用
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled!: boolean; // 是否禁用
+  readonly disabled!: boolean;
 
+  // 是否只读
   @Prop({
     type: Boolean,
     default: false,
   })
-  readonly!: boolean; // 是否只读
+  readonly readonly!: boolean;
 
+  // 是否外部控制
   @Prop({
     type: Boolean,
     default: false,
   })
-  control!: boolean; // 是否外部控制
+  readonly control!: boolean;
 
-  insideActive = false; // 是否激活
+  // 是否激活
+  insideActive = false;
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {string|number|boolean}
    */
   get syncedValue(): string | number | boolean {
@@ -107,7 +114,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {string|number|boolean} val 值
    * @return
    */
@@ -117,7 +123,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 是否可用
-   * @author: Quarter
    * @return
    */
   get enabled(): boolean {
@@ -126,25 +131,23 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 自定义类
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
     return {
-      "size-mini": this.size === "mini",
-      "size-small": this.size === "small",
-      "size-medium": this.size === "medium",
-      "size-large": this.size === "large",
-      "status-active": this.unsyncedValue === true,
-      "status-disabled": this.disabled === true,
-      "status-readonly": this.readonly === true,
-      "square-switch": this.square === true,
+      "s-switch--size-mini": this.size === "mini",
+      "s-switch--size-small": this.size === "small",
+      "s-switch--size-medium": this.size === "medium",
+      "s-switch--size-large": this.size === "large",
+      "s-switch--active": this.unsyncedValue === true,
+      "s-switch--disabled": this.disabled === true,
+      "s-switch--readonly": this.readonly === true,
+      "s-switch--square": this.square === true,
     };
   }
 
   /**
    * @description: 自定义样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get customStyle(): CustomStyle {
@@ -164,7 +167,7 @@ export default class SSwitch extends Mixins(Emitter) {
         styles["--s-last-scale"] = `${100 - this.scale}%`;
       }
     }
-    const numberRegExp: RegExp = new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/);
+    const numberRegExp = new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/);
     if (typeof this.scale === "string" && numberRegExp.test(this.scale)) {
       const scaleNumber: number = parseFloat(this.scale);
       if (scaleNumber > 0 && scaleNumber < 100) {
@@ -177,7 +180,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 过滤的激活值
-   * @author: Quarter
    * @return {any}
    */
   get filterActiveValue(): any {
@@ -194,7 +196,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 过滤的未激活值
-   * @author: Quarter
    * @return {any}
    */
   get filterInactiveValue(): any {
@@ -211,7 +212,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 过滤的激活文本
-   * @author: Quarter
    * @return {String}
    */
   get filterActiveLabel(): string {
@@ -223,7 +223,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 过滤的未激活文本
-   * @author: Quarter
    * @return {String}
    */
   get filterInactiveLabel(): string {
@@ -235,20 +234,17 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 切换的标签
-   * @author: Quarter
    * @return {String}
    */
   get switchLabel(): string {
     if (this.unsyncedValue) {
       return this.filterActiveLabel;
-    } else {
-      return this.filterInactiveLabel;
     }
+    return this.filterInactiveLabel;
   }
 
   /**
    * @description: 设置未同步值
-   * @author: Quarter
    * @return {Boolean}
    */
   get unsyncedValue(): boolean {
@@ -257,15 +253,12 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 设置未同步值
-   * @author: Quarter
    * @param {boolean} val 值
    * @return
    */
   set unsyncedValue(val: boolean) {
     const filterValue: boolean = val !== false;
-    const customValue: any = filterValue
-      ? this.filterActiveValue
-      : this.filterInactiveValue;
+    const customValue: any = filterValue ? this.filterActiveValue : this.filterInactiveValue;
     if (this.insideActive !== filterValue) {
       this.syncedValue = customValue;
       this.$emit("input", customValue);
@@ -277,7 +270,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @return
    */
   @Watch("syncedValue", {
@@ -291,7 +283,6 @@ export default class SSwitch extends Mixins(Emitter) {
 
   /**
    * @description: 切换按钮
-   * @author: Quarter
    * @return
    */
   switchButton(): void {
@@ -299,9 +290,7 @@ export default class SSwitch extends Mixins(Emitter) {
       if (this.control) {
         this.$emit(
           "change",
-          !this.unsyncedValue
-            ? this.filterActiveValue
-            : this.filterInactiveValue
+          !this.unsyncedValue ? this.filterActiveValue : this.filterInactiveValue,
         );
       } else {
         this.unsyncedValue = !this.unsyncedValue;
@@ -313,161 +302,119 @@ export default class SSwitch extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-switch {
-  width: 60px;
-  height: 32px;
-  padding: 3px;
   cursor: pointer;
   user-select: none;
-  border-radius: 13px;
   box-sizing: border-box;
-  background-color: #f3f3f3;
+  background-color: var(--s-background-secondary);
+  box-shadow: 0 0 3px rgba($color: #000000, $alpha: 0.02) inset;
+  transition: padding 0.2s linear;
   overflow: hidden;
   display: flex;
   justify-content: flex-end;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  margin-right: var(--s-spacing-12);
 
-  &:not(.status-disabled):hover {
-    background-color: #eeeeee;
-    box-shadow: 0 0 3px rgba($color: #000000, $alpha: 0.02) inset;
+  .s-switch__button {
+    box-shadow: 0 0 3px rgba($color: #000000, $alpha: 0.1);
+  }
+}
 
-    .switch-wrapper .switch-button {
-      box-shadow: 0 0 3px rgba($color: #000000, $alpha: 0.1);
-    }
+.s-switch__button {
+  height: 100%;
+  color: var(--s-text-white);
+  white-space: nowrap;
+  background-color: var(--s-background-disabled);
+  box-sizing: border-box;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.s-switch--active .s-switch__button {
+  background-color: var(--s-brand-normal);
+  left: 0;
+}
+
+.s-switch--disabled {
+  cursor: not-allowed;
+
+  .s-switch__wrapper {
+    opacity: 0.5;
+  }
+}
+
+.s-switch--readonly:not(.s-switch--disabled) {
+  cursor: default;
+}
+
+.s-switch--square {
+  border-radius: var(-s-border-radius);
+}
+
+.s-switch--size-mini {
+  height: 2.4rem;
+  font-size: 1.2rem;
+  padding: 0.2rem 0.2rem 0.2rem 1.4rem;
+  border-radius: 1.2rem;
+
+  .s-switch__button {
+    min-width: 2rem;
+    padding: 0 0.5rem;
+    border-radius: 1rem;
   }
 
-  &.status-active {
-    justify-content: flex-start;
+  &.s-switch--active {
+    padding: 0.2rem 1.4rem 0.2rem 0.2rem;
+  }
+}
+
+.s-switch--size-small {
+  height: 3rem;
+  padding: 0.3rem 0.3rem 0.3rem 1.8rem;
+  font-size: 1.4rem;
+  border-radius: 1.5rem;
+
+  .s-switch__button {
+    min-width: 2.4rem;
+    padding: 0 0.6rem;
+    border-radius: 1.2rem;
   }
 
-  .switch-wrapper {
-    width: 100%;
-    height: 100%;
-    position: relative;
+  &.s-switch--active {
+    padding: 0.3rem 1.8rem 0.3rem 0.3rem;
+  }
+}
 
-    .switch-button {
-      width: var(--s-bar-scale, 60%);
-      height: 100%;
-      color: white;
-      font-size: 16px;
-      line-height: 26px;
-      border-radius: 13px;
-      text-align: center;
-      background-color: var(--inactive-color, #cccccc);
-      transition: left 0.3s ease, box-shadow 0.3s ease;
-      position: absolute;
-      top: 0;
-      left: var(--s-last-scale, 40%);
-    }
+.s-switch--size-medium {
+  height: 3.4rem;
+  padding: 0.3rem 0.3rem 0.3rem 2rem;
+  font-size: 1.6rem;
+  border-radius: 1.7rem;
+
+  .s-switch__button {
+    min-width: 2.8rem;
+    padding: 0 0.8rem;
+    border-radius: 1.4rem;
   }
 
-  &.status-active .switch-wrapper .switch-button {
-    background-color: var(--active-color, #549fff);
-    left: 0;
+  &.s-switch--active {
+    padding: 0.3rem 2rem 0.3rem 0.3rem;
+  }
+}
+
+.s-switch--size-large {
+  height: 3.8rem;
+  padding: 0.4rem 0.4rem 0.4rem 2.3rem;
+  font-size: 1.6rem;
+  border-radius: 1.9rem;
+
+  .s-switch__button {
+    min-width: 3rem;
+    padding: 0 0.8rem;
+    border-radius: 1.5rem;
   }
 
-  &.status-disabled {
-    cursor: default;
-    background-color: #f9f9f9;
-
-    .switch-wrapper {
-      opacity: 0.5;
-    }
-  }
-
-  &:not(.status-disabled).status-readonly {
-    cursor: not-allowed;
-  }
-
-  &.size-mini {
-    width: 45px;
-    height: 24px;
-    padding: 2px;
-    border-radius: 12px;
-
-    .switch-button {
-      font-size: 12px;
-      line-height: 20px;
-      border-radius: 10px;
-    }
-
-    &.square-switch {
-      border-radius: 2px;
-    }
-  }
-
-  &.size-small {
-    width: 55px;
-    height: 28px;
-    padding: 2px;
-    border-radius: 15px;
-
-    .switch-wrapper .switch-button {
-      font-size: 13px;
-      line-height: 24px;
-      border-radius: 12px;
-    }
-
-    &.square-switch {
-      border-radius: 4px;
-    }
-  }
-
-  &.size-medium {
-    width: 60px;
-    height: 32px;
-    padding: 3px;
-    border-radius: 16px;
-
-    .switch-wrapper .switch-button {
-      font-size: 16px;
-      line-height: 26px;
-      border-radius: 13px;
-    }
-
-    &.square-switch {
-      border-radius: 4px;
-    }
-  }
-
-  &.size-large {
-    width: 70px;
-    height: 34px;
-    padding: 3px;
-    border-radius: 20px;
-
-    .switch-wrapper .switch-button {
-      font-size: 18px;
-      line-height: 28px;
-      border-radius: 14px;
-    }
-
-    &.square-switch {
-      border-radius: 5px;
-    }
-  }
-
-  &.square-switch {
-    border-radius: 4px;
-
-    &.size-mini .switch-wrapper .switch-button {
-      border-radius: 2px;
-    }
-
-    &.size-small .switch-wrapper .switch-button {
-      border-radius: 2px;
-    }
-
-    &.size-medium .switch-wrapper .switch-button {
-      border-radius: 2px;
-    }
-
-    &.size-large .switch-wrapper .switch-button {
-      border-radius: 3px;
-    }
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
+  &.s-switch--active {
+    padding: 0.4rem 2.3rem 0.4rem 0.4rem;
   }
 }
 </style>

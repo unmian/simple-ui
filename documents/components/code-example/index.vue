@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-05-16 09:13:25
- * @LastEditTime: 2022-07-08 14:00:41
+ * @LastEditTime: 2022-12-13 15:15:30
  * @LastEditors: Quarter
  * @Description: 示例代码块
  * @FilePath: /simple-ui/documents/components/code-example/index.vue
@@ -54,11 +54,10 @@ export default class CodeExample extends Vue {
   // 示例代码
   code = "";
   // 自定义组件
-  customComponent = () => import(/* @vite-ignore */ this.$attrs.url + "");
+  customComponent = () => import(/* @vite-ignore */ `${this.$attrs.url}`);
 
   /**
    * @description: 干净的代码
-   * @author: Quarter
    * @return {string}
    */
   get filterCode(): string {
@@ -70,13 +69,12 @@ export default class CodeExample extends Vue {
 
   /**
    * @description: 声明周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
     this.loading++;
     if (import.meta.env.PROD) {
-      fetch(this.$attrs.url + "")
+      fetch(`${this.$attrs.url}`)
         .then((res) => res.text())
         .then((text) => {
           this.code = text;
@@ -85,7 +83,7 @@ export default class CodeExample extends Vue {
           this.loading--;
         });
     } else {
-      import(/* @vite-ignore */ this.$attrs.url + "?raw")
+      import(/* @vite-ignore */ `${this.$attrs.url}?raw`)
         .then((res) => {
           this.code = res.default;
         })

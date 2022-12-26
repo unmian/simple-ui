@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:56:34
+ * @LastEditTime: 2022-12-13 15:16:16
  * @Description: 展开动画文档
- * @FilePath: /simple-ui/documents/views/CollapseDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/CollapseDocument.vue
 -->
 <template>
   <div class="collapse-document">
@@ -61,7 +61,9 @@
                         justify-content: center;
                         align-items: center;
                       "
-                    >内容</div>
+                    >
+                      内容
+                    </div>
                   </div>
                 </collapse-transition>
               </div>
@@ -80,7 +82,9 @@
                         justify-content: center;
                         align-items: center;
                       "
-                    >内容</div>
+                    >
+                      内容
+                    </div>
                   </div>
                 </collapse-transition>
               </div>
@@ -105,77 +109,7 @@ import { Component, Vue } from "vue-property-decorator";
 export default class CollapseDocument extends Vue {
   boxOne = true; // 是否隐藏内容
   boxTow = true; // 是否隐藏内容
-  code = `
-<template>
-  <div>
-    <ul>
-      <li>
-        <s-button
-          outline
-          type="normal"
-          @click="boxOne = !boxOne"
-          >切换显示内容</s-button
-        >
-        <div style="width: 200px; height: 200px;margin-top: 30px;">
-          <collapse-transition>
-            <div v-show="boxOne">
-              <div
-                style="
-                  width: 200px;
-                  height: 200px;
-                  background-color: #c9a6f8;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                内容
-              </div>
-            </div>
-          </collapse-transition>
-        </div>
-      </li>
-      <li>
-        <s-button
-          outline
-          type="normal"
-          @click="boxTow = !boxTow"
-          >切换显示内容</s-button
-        >
-        <div style="width: 200px; height: 200px;margin-top: 30px;">
-          <collapse-transition align="horizontal">
-            <div v-show="boxTow">
-              <div
-                style="
-                  width: 200px;
-                  height: 200px;
-                  background-color: #c9a6f8;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-              >
-                内容
-              </div>
-            </div>
-          </collapse-transition>
-        </div>
-      </li>
-    </ul>
-  </div>
-</template>
-
-<script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class CollapseDocument extends Vue {
-  // 是否隐藏内容
-  private boxOne: boolean = true;
-  private boxTow: boolean = true;
-}
-</${"script"}>
-  `; // 示例代码
+  code = ""; // 示例代码
 }
 </script>
 

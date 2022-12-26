@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:56:40
+ * @LastEditTime: 2022-12-13 15:16:38
  * @Description: 冷却按钮文档
- * @FilePath: /simple-ui/documents/views/CoolButtonDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/CoolButtonDocument.vue
 -->
 <template>
   <div class="cool-button-document">
@@ -107,5 +107,4 @@ export default class CoolButtonDocument extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

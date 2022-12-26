@@ -34,7 +34,7 @@ export default defineConfig({
       documents: resolve(__dirname, "../documents"),
       icons: resolve(__dirname, "../icons"),
       packages: resolve(__dirname, "../packages"),
-      "@quarter/simple-ui": resolve(__dirname, "../packages"),
+      "@unmian/simple-ui": resolve(__dirname, "../packages"),
     },
   },
   plugins: [

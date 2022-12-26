@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:00:13
+ * @LastEditTime: 2022-12-13 15:18:06
  * @Description: 分页文档
- * @FilePath: /simple-ui/documents/views/PaginationDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/PaginationDocument.vue
 -->
 <template>
   <div class="pagination-document">

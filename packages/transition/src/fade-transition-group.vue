@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:20:47
+ * @LastEditTime: 2022-12-13 15:42:51
  * @LastEditors: Quarter
  * @Description: 渐隐过渡
  * @FilePath: /simple-ui/packages/transition/src/fade-transition-group.vue
@@ -44,7 +44,6 @@ export default class FadeTransitionGroup extends Vue {
 
   /**
    * @description: 过滤的过渡方式
-   * @author: Quarter
    * @return {String}
    */
   get filterTransition(): TransitionType {
@@ -64,14 +63,13 @@ export default class FadeTransitionGroup extends Vue {
 
   /**
    * @description: 过滤的持续时间
-   * @author: Quarter
    * @return {Number}
    */
   get filterDuration(): number {
     if (typeof this.duration === "number" && this.duration > 0) {
       return this.duration;
     } else if (typeof this.duration === "string") {
-      const numRegExp: RegExp = new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/);
+      const numRegExp = new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/);
       if (numRegExp.test(this.duration)) {
         const duration: number = parseFloat(this.duration);
         if (duration > 0) {
@@ -88,8 +86,10 @@ export default class FadeTransitionGroup extends Vue {
    * @return
    */
   beforeAnimation(el: HTMLElement): void {
+    // eslint-disable-next-line no-param-reassign
     el.style.animationTimingFunction = this.filterTransition;
-    el.style.animationDuration = this.filterDuration + "s";
+    // eslint-disable-next-line no-param-reassign
+    el.style.animationDuration = `${this.filterDuration  }s`;
   }
 
   /**
@@ -98,7 +98,9 @@ export default class FadeTransitionGroup extends Vue {
    * @return
    */
   afterAnimation(el: HTMLElement): void {
+    // eslint-disable-next-line no-param-reassign
     el.style.animationTimingFunction = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.animationDuration = "";
   }
 }

@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:07:56
+ * @LastEditTime: 2022-12-13 15:41:31
  * @LastEditors: Quarter
  * @Description: 简易的吸附组件
  * @FilePath: /simple-ui/packages/sticky/src/sticky.vue
@@ -32,7 +32,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   name: "SSticky",
 })
-export default class SSticky extends Vue {
+export default class Sticky extends Vue {
   @Prop({
     type: Boolean,
     default: false,
@@ -70,7 +70,6 @@ export default class SSticky extends Vue {
 
   /**
    * @description: 内容样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get contentStyle(): CustomStyle {
@@ -87,7 +86,6 @@ export default class SSticky extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -98,7 +96,6 @@ export default class SSticky extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -108,7 +105,6 @@ export default class SSticky extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy() {
@@ -121,11 +117,10 @@ export default class SSticky extends Vue {
 
   /**
    * @description: 查找最近的SScroll
-   * @author: Quarter
    * @return
    */
   querySScroll(): void {
-    let parent: Vue = this.$parent;
+    let parent: Vue | null = this.$parent;
     while (parent) {
       if (parent.$options.name === "SScroll") {
         this.scrollContainer = parent.$el;
@@ -137,52 +132,32 @@ export default class SSticky extends Vue {
 
   /*
    * @description: 判断吸附状态
-   * @author: Quarter
    * @return
    */
   judgeStickState(): void {
-    const scrollContainer: Element = this.scrollContainer;
-    const container: Element | Vue | Array<Element | Vue> | undefined =
-      this.$refs.container;
-    const content: Element | Vue | Array<Element | Vue> | undefined =
-      this.$refs.content;
+    const { scrollContainer } = this;
+    const { container } = this.$refs;
+    const { content } = this.$refs;
     if (container instanceof Element && content instanceof Element) {
-      const scrollContainerBounding: DOMRect =
-        scrollContainer.getBoundingClientRect();
+      const scrollContainerBounding: DOMRect = scrollContainer.getBoundingClientRect();
       const containerBounding: DOMRect = container.getBoundingClientRect();
       const contentBounding: DOMRect = content.getBoundingClientRect();
       if (this.position === "top") {
-        if (
-          scrollContainerBounding.top > containerBounding.top &&
-          this.isSticky === false
-        ) {
-          this.setTopStick(
-            scrollContainerBounding,
-            containerBounding,
-            contentBounding
-          );
-        } else if (
-          scrollContainerBounding.top < containerBounding.top &&
-          this.isSticky === true
-        ) {
+        if (scrollContainerBounding.top > containerBounding.top && this.isSticky === false) {
+          this.setTopStick(scrollContainerBounding, containerBounding, contentBounding);
+        } else if (scrollContainerBounding.top < containerBounding.top && this.isSticky === true) {
           this.resetStick();
         }
-      } else {
-        if (
-          scrollContainerBounding.bottom > containerBounding.bottom &&
-          this.isSticky === false
-        ) {
-          this.setBottomStick(
-            scrollContainerBounding,
-            containerBounding,
-            contentBounding
-          );
-        } else if (
-          scrollContainerBounding.bottom < containerBounding.bottom &&
-          this.isSticky === true
-        ) {
-          this.resetStick();
-        }
+      } else if (
+        scrollContainerBounding.bottom > containerBounding.bottom &&
+        this.isSticky === false
+      ) {
+        this.setBottomStick(scrollContainerBounding, containerBounding, contentBounding);
+      } else if (
+        scrollContainerBounding.bottom < containerBounding.bottom &&
+        this.isSticky === true
+      ) {
+        this.resetStick();
       }
     }
     const db: AnimationIndex = Reflect.get(window, ANIMATION_INDEX_DB);
@@ -191,45 +166,42 @@ export default class SSticky extends Vue {
 
   /**
    * @description: 设置顶部吸附
-   * @author: Quarter
    * @param {DOMRect} scroll 滚动区域尺寸
    * @param {DOMRect} container 容器尺寸
    * @param {DOMRect} content 内容尺寸
    * @return
    */
   setTopStick(scroll: DOMRect, container: DOMRect, content: DOMRect): void {
-    this.containerWidth = container.width + "px";
-    this.containerHeight = container.height + "px";
-    this.width = content.width + "px";
-    this.height = content.height + "px";
-    this.top = scroll.top + "px";
+    this.containerWidth = `${container.width}px`;
+    this.containerHeight = `${container.height}px`;
+    this.width = `${content.width}px`;
+    this.height = `${content.height}px`;
+    this.top = `${scroll.top}px`;
     this.bottom = "";
-    this.left = content.left + "px";
+    this.left = `${content.left}px`;
     this.isSticky = true;
   }
 
   /**
    * @description: 设置底部吸附
-   * @author: Quarter
    * @param {DOMRect} scroll 滚动区域尺寸
    * @param {DOMRect} container 容器尺寸
    * @param {DOMRect} content 内容尺寸
    * @return
    */
   setBottomStick(scroll: DOMRect, container: DOMRect, content: DOMRect): void {
-    this.containerWidth = container.width + "px";
-    this.containerHeight = container.height + "px";
-    this.width = content.width + "px";
-    this.height = content.height + "px";
+    this.containerWidth = `${container.width}px`;
+    this.containerHeight = `${container.height}px`;
+    this.width = `${content.width}px`;
+    this.height = `${content.height}px`;
     this.top = "";
-    this.bottom = scroll.bottom + "px";
-    this.left = content.left + "px";
+    this.bottom = `${scroll.bottom}px`;
+    this.left = `${content.left}px`;
     this.isSticky = true;
   }
 
   /**
    * @description: 重置吸附
-   * @author: Quarter
    * @return
    */
   resetStick(): void {

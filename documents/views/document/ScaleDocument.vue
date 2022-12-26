@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:01:01
+ * @LastEditTime: 2022-12-13 15:27:23
  * @Description: 缩放动画文档
- * @FilePath: /simple-ui/documents/views/ScaleDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/ScaleDocument.vue
 -->
 <template>
   <div class="scale-document">
@@ -49,7 +49,9 @@
                     justify-content: center;
                     align-items: center;
                   "
-                >内容</div>
+                >
+                  内容
+                </div>
               </div>
             </scale-transition>
           </div>
@@ -71,45 +73,8 @@ import { Component, Vue } from "vue-property-decorator";
 })
 export default class ScaleDocument extends Vue {
   boxVisible = true; // 是否显示
-  code = `
-<template>
-  <div>
-    <s-button outline type="normal" @click="boxVisible = !boxVisible"
-      >切换显示内容</s-button
-    >
-    <div style="width: 200px; height: 200px; margin-top: 30px">
-      <scale-transition>
-        <div v-show="boxVisible">
-          <div
-            style="
-              width: 200px;
-              height: 200px;
-              background-color: #c9a6f8;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            "
-          >
-            内容
-          </div>
-        </div>
-      </scale-transition>
-    </div>
-  </div>
-</template>
-
-<script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class ScaleDocument extends Vue {
-  // 是否显示
-  private boxVisible: boolean = true;
-}
-</${"script"}>
-  `; // 示例代码
+  code = ""; // 示例代码
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-07 19:10:50
+ * @LastEditTime: 2022-12-13 15:32:35
  * @LastEditors: Quarter
  * @Description: 管理系统标题栏组件
  * @FilePath: /simple-ui/documents/views/framework/common-framework/common-header/index.vue
@@ -22,7 +22,6 @@ import { Component, Prop, Vue } from "vue-property-decorator";
   name: "CommonHeader",
 })
 export default class CommonHeader extends Vue {
-
   @Prop({
     type: Boolean,
     default: true,

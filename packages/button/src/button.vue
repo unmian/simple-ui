@@ -2,13 +2,19 @@
  * @Author: Quarter
  * @Date: 2020-09-29 15:32:55
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-08 10:44:19
+ * @LastEditTime: 2022-12-13 18:46:59
  * @Description: 简易的按钮组件
  * @FilePath: /simple-ui/packages/button/src/button.vue
 -->
 <template>
-  <button class="s-button" :class="buttonClass" :disabled="disabled" @click="handleClick">
-    <icon v-if="icon" :name="icon"></icon>
+  <button
+    class="s-button"
+    :class="buttonClass"
+    :type="type"
+    :disabled="disabled"
+    @click="handleClick"
+  >
+    <s-icon v-if="icon" :name="icon"></s-icon>
     <span v-if="$slots.default && !justIcon" class="s-button__text">
       <slot></slot>
     </span>
@@ -17,44 +23,49 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { Icon } from "@quarter/simple-icons";
+import { Icon } from "@unmian/simple-icons";
 import { CustomClass, CommonSize } from "packages/types";
-import { ButtonShape, ButtonTheme, ButtonVariant } from "./types";
+import { ButtonShape, ButtonTheme, ButtonType, ButtonVariant } from "./types";
 
 @Component({
   name: "SButton",
   components: {
-    Icon,
+    SIcon: Icon,
   },
 })
-export default class SButton extends Vue {
+export default class Button extends Vue {
   // 按钮主题
   @Prop({ type: String, default: "default" })
-  theme!: ButtonTheme;
+  readonly theme!: ButtonTheme;
 
   // 按钮大小
   @Prop({ type: String, default: "medium" })
-  size!: CommonSize;
+  readonly size!: CommonSize;
 
   // 按钮变体
   @Prop({ type: String, default: "fill" })
-  variant!: ButtonVariant;
+  readonly variant!: ButtonVariant;
+
+  @Prop({
+    type: String,
+    default: "button",
+  })
+  readonly type!: ButtonType;
 
   // 按钮图标
   @Prop(String)
-  icon?: string;
+  readonly icon?: string;
 
   // 按钮形状
   @Prop({ type: String, default: "rectangle" })
-  shape!: ButtonShape;
+  readonly shape!: ButtonShape;
 
   // 按钮禁用状态
   @Prop({ type: Boolean, default: false })
-  disabled?: boolean;
+  readonly disabled?: boolean;
 
   /**
    * @description: 按钮类
-   * @author: Quarter
    * @return {CustomClass}
    */
   get buttonClass(): CustomClass {
@@ -87,7 +98,6 @@ export default class SButton extends Vue {
 
   /**
    * @description: 仅图标
-   * @author: Quarter
    * @return {boolean}
    */
   get justIcon(): boolean {
@@ -96,7 +106,6 @@ export default class SButton extends Vue {
 
   /**
    * @description: 点击事件
-   * @author: Quarter
    * @param {MouseEvent} event 事件
    * @return
    */

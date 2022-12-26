@@ -76,10 +76,6 @@
         "path": "/base/step"
       },
       {
-        "name": "弹出层",
-        "path": "/base/popover"
-      },
-      {
         "name": "图片容器",
         "path": "/base/image"
       },
@@ -231,7 +227,7 @@
       },
       {
         "name": "弹出层",
-        "path": "/notification/popup"
+        "path": "/notification/popover"
       }
     ]
   },

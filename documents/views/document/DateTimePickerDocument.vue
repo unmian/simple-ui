@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:56:48
+ * @LastEditTime: 2022-12-13 15:16:45
  * @Description: 日期选择器文档
- * @FilePath: /simple-ui/documents/views/DateTimePickerDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/DateTimePickerDocument.vue
 -->
 <template>
   <div class="date-picker-document">
@@ -158,9 +158,7 @@
             <td>-</td>
             <td>
               日期范围选择框的值，格式为
-              <br />yyyy-MM-dd hh:mm:ss
-              <br />-
-              yyyy-MM-dd hh:mm:ss
+              <br />yyyy-MM-dd hh:mm:ss <br />- yyyy-MM-dd hh:mm:ss
             </td>
           </tr>
           <tr>

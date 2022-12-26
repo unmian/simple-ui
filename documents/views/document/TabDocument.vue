@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-11 12:18:37
+ * @LastEditTime: 2022-12-13 15:28:50
  * @Description: 标签页文档
- * @FilePath: /simple-ui/documents/views/TabDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/TabDocument.vue
 -->
 <template>
   <div class="tab-document">
@@ -103,7 +103,7 @@
 
 <script lang="ts">
 import { DocumentPage } from "documents/components";
-import { MenuItem } from "@quarter/simple-ui";
+import { MenuItem } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -127,39 +127,7 @@ export default class TabDocument extends Vue {
       name: "用户中心",
     },
   ];
-  code = `
-<template>
-  <div>
-    <div style="margin-bottom: 30px;">横向标签页</div>
-    <s-tab :tabs="tabs"></s-tab>
-    <div style="margin-bottom: 30px;">横向标签页</div>
-    <s-tab align="vertical" :tabs="tabs"></s-tab>
-  </div>
-</template>
-
-<script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class TabDocument extends Vue {
-  // 标签页配置
-  private readonly tabs: MenuItem[] = [
-    {
-      name: "首页",
-    },
-    {
-      name: "数据目录",
-    },
-    {
-      name: "互动交流",
-    },
-    {
-      name: "用户中心",
-    },
-  ];
-}
-</${"script"}>
-  `; // 示例代码
+  code = ""; // 示例代码
 }
 </script>
 

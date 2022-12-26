@@ -1,13 +1,23 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-05 11:18:24
+ * @LastEditTime: 2022-12-14 17:29:27
  * @LastEditors: Quarter
  * @Description: 简易的下拉框组件
  * @FilePath: /simple-ui/packages/select/src/select.vue
 -->
 <template>
-  <div class="s-select" :class="customClass" :style="customStyle">
+  <div
+    class="s-select"
+    :class="{
+      's-select--expand': expand,
+      's-select--multiple': multiple === true,
+      's-select-clearable': clearable === true,
+      's-select--disabled': disabled === true,
+      's-select--readonly': readonly === true,
+      's-select--filter': filter,
+    }"
+  >
     <s-popover
       :hide-arrow="hideArrow"
       :special-class="specialClass"
@@ -17,58 +27,66 @@
       <template #reference>
         <div
           v-if="hasReference"
-          class="select-name"
+          class="s-select__input-container"
           @mouseenter="mouseEneter"
           @mouseleave="mouseLeave"
         >
-          <div class="select-label">
+          <div class="s-select__label">
             <slot name="reference"></slot>
           </div>
-          <div v-if="showArrow" class="select-arrow" @click="clearSelect">
-            <i :class="arrowClassName"></i>
+          <div v-if="showArrow" class="s-select__arrow" @click="handleClear">
+            <icon :name="arrowIconName"></icon>
           </div>
         </div>
-        <div v-else class="select-input" @mouseenter="mouseEneter" @mouseleave="mouseLeave">
-          <div v-if="placeholderVisible" class="select-placeholder">
+        <div
+          v-else
+          class="s-select__input-container"
+          :style="{
+            width,
+            minHeight: height,
+          }"
+          @mouseenter="mouseEneter"
+          @mouseleave="mouseLeave"
+        >
+          <div v-if="placeholderVisible" class="s-select__placeholder">
             <template v-if="filter">
               <s-input
+                :height="`calc(${height} - 2px)`"
                 v-model="filterKeyword"
-                :placeholder="placeholder"
+                :placeholder="readonly ? readonlyPlaceholder : placeholder"
                 @click.native.stop
                 @focus="expand = true"
               ></s-input>
             </template>
-            <template v-else>{{ placeholder }}</template>
+            <template v-else>{{ readonly ? readonlyPlaceholder : placeholder }}</template>
           </div>
-          <div v-else class="select-label">
+          <div v-else class="s-select__label">
             <template v-if="multiple">
-              <ul @click.stop>
-                <li v-for="config of optionCheckedList" :key="`tag-${config.id}`">
-                  <s-tag
-                    mode="light"
-                    :show-close="!disabled"
-                    external
-                    @close="uncheck(config.value)"
-                    >{{ config.label }}</s-tag
-                  >
-                </li>
-              </ul>
+              <s-tag
+                :show-close="!disabled && !readonly"
+                external
+                v-for="config of optionCheckedList"
+                :key="`tag-${config.id}`"
+                @click.native.stop
+                @close="handleOptionUncheck(config.value)"
+                >{{ config.label }}</s-tag
+              >
             </template>
             <template v-else>{{ labelName }}</template>
           </div>
-          <div class="select-arrow" @click="clearSelect">
-            <i :class="arrowClassName"></i>
+          <div class="s-select__arrow" @click="handleClear">
+            <icon :name="arrowIconName"></icon>
           </div>
         </div>
       </template>
-      <div v-if="optionList.length > 0" class="s-option-list" style="padding: 2px 0">
-        <s-scroll full :style="{ 'max-height': listHeight }">
+      <div v-if="optionList.length > 0" class="s-select__option-list">
+        <s-scroll full show-bar :style="{ 'max-height': listHeight }">
           <div
-            class="s-option"
-            :class="{ 'item-checked': config.checked }"
+            class="s-select__option-item"
+            :class="{ 's-select__option-checked': config.checked }"
             v-for="config of filterOptionList"
-            :key="`s-${config.id}`"
-            @click="check(config.value)"
+            :key="`s-option-${config.id}`"
+            @click="handleOptionCheck(config.value)"
           >
             {{ config.label }}
           </div>
@@ -80,51 +98,74 @@
 </template>
 
 <script lang="ts">
-import { Input, InputValue } from "packages/input";
+import { Icon } from "@unmian/simple-icons";
+import { InputValue } from "packages/input";
 import { Emitter } from "packages/mixins";
-import { CustomClass, CustomStyle } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { SelectValue, OptionConfig, OptionConfigs } from "./types";
 
 @Component({
   name: "SSelect",
+  components: {
+    Icon,
+  },
 })
-export default class SSelect extends Mixins(Emitter) {
-  @Prop(String)
-  width?: string; // 宽度
-
-  @Prop(String)
-  height?: string; // 高度
-
+export default class Select extends Emitter {
+  // 宽度
   @Prop({
     type: String,
-    default: "300px",
+    default: "16rem",
   })
-  listHeight!: string; // 列表高度
+  width!: string;
 
+  // 高度
+  @Prop({
+    type: String,
+    default: "3.4rem",
+  })
+  height!: string;
+
+  // 列表高度
+  @Prop({
+    type: String,
+    default: "36rem",
+  })
+  listHeight!: string;
+
+  // 选中值
   @Prop({
     type: [Array, String, Number, Boolean],
     default: null,
   })
-  value!: SelectValue[] | SelectValue; // 选中值
+  value!: SelectValue[] | SelectValue;
 
+  // 是否可以过滤
   @Prop({
     type: Boolean,
     default: false,
   })
-  filter!: boolean; // 是否可以过滤
+  filter!: boolean;
 
+  // 是否支持复选
   @Prop({
     type: Boolean,
     default: false,
   })
-  multiple!: boolean; // 是否支持复选
+  multiple!: boolean;
 
+  // 提示文本
   @Prop({
     type: String,
     default: "请选择",
   })
-  placeholder?: string; // 提示文本
+  placeholder?: string;
+
+  // 只读提示文本
+  @Prop({
+    type: String,
+    default: "",
+  })
+  readonlyPlaceholder?: string;
 
   @Prop({
     type: Boolean,
@@ -150,24 +191,30 @@ export default class SSelect extends Mixins(Emitter) {
   })
   readonly!: boolean; // 是否只读
 
+  // 隐藏箭头
   @Prop({
     type: Boolean,
     default: false,
   })
-  hideArrow!: boolean; // 隐藏箭头
+  hideArrow!: boolean;
 
+  // 自定义类名
   @Prop(String)
-  specialClass?: string; // 自定义类名
+  specialClass?: string;
 
-  options: OptionConfigs = {}; // 所有的值域集合
-  filterKeyword: InputValue = null; // 筛选词
-  expand = false; // 展开
-  mouseOver = false; // 鼠标是否在下拉框
-  unsyncedValue: SelectValue[] = []; // 不同步的值
+  // 所有的值域集合
+  options: OptionConfigs = {};
+  // 筛选词
+  filterKeyword: InputValue = null;
+  // 展开
+  expand = false;
+  // 鼠标是否在下拉框
+  mouseOver = false;
+  // 不同步的值
+  unsyncedValue: SelectValue[] = [];
 
   /**
    * @description: 选中值
-   * @author: Quarter
    * @return {SelectValue[] | SelectValue}
    */
   get syncedValue(): SelectValue[] | SelectValue {
@@ -176,7 +223,6 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 选中值
-   * @author: Quarter
    * @param {SelectValue[] | SelectValue} val
    * @return
    */
@@ -187,7 +233,6 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 是否有自定义标题
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasReference(): boolean {
@@ -196,7 +241,6 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -204,62 +248,26 @@ export default class SSelect extends Mixins(Emitter) {
   }
 
   /**
-   * @description: 自定义类名
-   * @author: Quarter
-   * @return {CustomClass}
-   */
-  get customClass(): CustomClass {
-    return {
-      "select-expand": this.expand === true,
-      "mode-multiple": this.multiple === true,
-      "s-select-clearable": this.clearable === true,
-      "status-disabled": this.disabled === true,
-      "status-readonly": this.readonly === true,
-      "filter-select": this.filter !== false,
-    };
-  }
-
-  /**
-   * @description: 自定义样式表
-   * @author: Quarter
-   * @return {CustomStyle}
-   */
-  get customStyle(): CustomStyle {
-    const styles: CustomStyle = {};
-    if (typeof this.width === "string") {
-      styles["--select-container-width"] = this.width;
-    }
-    if (typeof this.height === "string") {
-      styles["--select-container-height"] = this.height;
-    }
-    return styles;
-  }
-
-  /**
    * @description: 下拉箭头的类名
-   * @author: Quarter
    * @return {String}
    */
-  get arrowClassName(): string {
+  get arrowIconName(): string {
     if (
       this.clearable === true &&
       this.mouseOver === true &&
       this.enabled &&
       this.realValue.length !== 0
     ) {
-      return "s-icon-circle-close";
-    } else {
-      if (this.expand === true) {
-        return "s-icon-caret-top";
-      } else {
-        return "s-icon-caret-bottom";
-      }
+      return "close-circle";
     }
+    if (this.expand === true) {
+      return "chevron-up";
+    }
+    return "chevron-down";
   }
 
   /**
    * @description: 是否可见提示文字
-   * @author: Quarter
    * @return {Boolean}
    */
   get placeholderVisible(): boolean {
@@ -271,14 +279,15 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 选项列表
-   * @author: Quarter
    * @return {Array<OptionConfig>}
    */
   get optionList(): OptionConfig[] {
     return Object.values(this.options).map((option: OptionConfig) => {
       if (Array.isArray(this.unsyncedValue) && this.unsyncedValue.indexOf(option.value) > -1) {
+        // eslint-disable-next-line no-param-reassign
         option.checked = true;
       } else {
+        // eslint-disable-next-line no-param-reassign
         option.checked = false;
       }
       return option;
@@ -287,35 +296,31 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 可见的选项列表
-   * @author: Quarter
    * @return {Array<OptionConfig>}
    */
   get filterOptionList(): OptionConfig[] {
     if (this.filter && typeof this.filterKeyword === "string") {
-      const filterRegExp: RegExp = new RegExp(this.filterKeyword);
+      const filterRegExp = new RegExp(this.filterKeyword);
       return this.optionList.filter((option: OptionConfig) =>
         filterRegExp.test(option.label || ""),
       );
-    } else {
-      return this.optionList;
     }
+    return this.optionList;
   }
 
   /**
    * @description: 选中项文字列表
-   * @author: Quarter
    * @return {Array<String>}
    */
   get optionCheckedList(): OptionConfig[] {
     if (Array.isArray(this.optionList)) {
       return this.optionList.filter((option: OptionConfig) => option.checked);
     }
-    return new Array();
+    return [];
   }
 
   /**
    * @description: 标签内容
-   * @author: Quarter
    * @return {String}
    */
   get labelName(): string {
@@ -332,12 +337,11 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 真实的被选值
-   * @author: Quarter
    * @return {Array<SelectValue>}
    */
   get realValue(): SelectValue[] {
     if (Array.isArray(this.unsyncedValue) && Array.isArray(this.optionList)) {
-      const arr: SelectValue[] = new Array();
+      const arr: SelectValue[] = [];
       const options: SelectValue[] = this.optionList.map((option: OptionConfig) => option.value);
       this.unsyncedValue.forEach((value: SelectValue) => {
         if (value === null || typeof value === "string" || typeof value === "number") {
@@ -348,12 +352,11 @@ export default class SSelect extends Mixins(Emitter) {
       });
       return arr;
     }
-    return new Array();
+    return [];
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -376,7 +379,6 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 监听传入选中列表发生变化
-   * @author: Quarter
    * @param {Array<FilterItemValue>} newValue 更改的值
    * @param {Array<FilterItemValue>} oldValue 原始值
    * @return
@@ -386,24 +388,23 @@ export default class SSelect extends Mixins(Emitter) {
   })
   handleValueChange(newValue?: SelectValue | SelectValue[]): void {
     if (Array.isArray(newValue)) {
-      this.unsyncedValue = new Array().concat(newValue);
+      this.unsyncedValue = [...newValue];
     } else if (typeof newValue === "string" || typeof newValue === "number" || newValue === null) {
       this.unsyncedValue = [newValue];
     } else {
-      this.unsyncedValue = new Array();
+      this.unsyncedValue = [];
     }
     this.broadcast("SOption", "s-select-update", [this.unsyncedValue]);
   }
 
   /**
    * @description: 监听展开状态
-   * @author: Quarter
    * @param {Boolean} newValue 更改的值
    * @param {Boolean} oldValue 原始值
    * @return
    */
   @Watch("expand")
-  handleExpandChange(newValue: boolean, oldValue: boolean): void {
+  handleExpandChange(newValue: boolean): void {
     if (newValue === true) {
       this.$emit("expand");
     } else {
@@ -416,7 +417,7 @@ export default class SSelect extends Mixins(Emitter) {
    * @param {SelectItemValue} value 选中数值
    * @return
    */
-  check(value: SelectValue): void {
+  handleOptionCheck(value: SelectValue): void {
     if (this.filter) {
       this.filterKeyword = null;
     }
@@ -456,7 +457,7 @@ export default class SSelect extends Mixins(Emitter) {
    * @param {CheckboxValue} value 删除数值
    * @return
    */
-  uncheck(value: SelectValue): void {
+  handleOptionUncheck(value: SelectValue): void {
     if (Array.isArray(this.unsyncedValue)) {
       if (
         this.unsyncedValue.length > 1 ||
@@ -492,7 +493,6 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 鼠标移出
-   * @author: Quarter
    * @return
    */
   mouseEneter(): void {
@@ -501,7 +501,6 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 鼠标移出
-   * @author: Quarter
    * @return
    */
   mouseLeave(): void {
@@ -510,23 +509,21 @@ export default class SSelect extends Mixins(Emitter) {
 
   /**
    * @description: 清空下拉框
-   * @author: Quarter
    * @return
    */
-  clearSelect(event: MouseEvent): void {
+  handleClear(event: MouseEvent): void {
     if (this.clearable === true && this.realValue.length > 0) {
-      this.unsyncedValue = new Array();
+      this.unsyncedValue = [];
       this.broadcast("SOption", "s-select-update", [this.unsyncedValue]);
       let syncedValue: SelectValue[] | SelectValue = null;
       if (this.multiple === true) {
-        syncedValue = new Array();
+        syncedValue = [];
       }
       this.syncedValue = syncedValue;
       this.$emit("input", syncedValue);
       this.$emit("change", syncedValue);
       this.$emit("clear");
       event.stopPropagation();
-      event.cancelBubble = true;
     }
   }
 }
@@ -537,157 +534,143 @@ export default class SSelect extends Mixins(Emitter) {
   color: inherit;
   display: inline-flex;
 
-  .select-name {
-    font-size: 14px;
-    cursor: pointer;
-    transition: color 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-
-    .select-arrow {
-      margin-left: 10px;
-    }
+  .s-select__arrow {
+    margin-left: var(--s-spacing-8);
   }
 
-  .select-input {
-    width: var(--select-container-width, fit-content);
-    min-width: 50px;
-    height: var(--select-container-height, 36px);
-    padding: 0 10px;
-    font-size: 14px;
+  .s-select__input-container {
+    padding: 0 var(--s-spacing-12);
+    font-size: 1.4rem;
     line-height: initial;
-    border-radius: 4px;
-    border: 1px solid #d6e1e5;
+    border-radius: var(--s-border-radius);
+    border: 1px solid var(--s-border-color);
     cursor: pointer;
     box-sizing: border-box;
-    background-color: #ffffff;
     overflow: hidden;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    .select-placeholder {
-      color: #d6e1e5;
-    }
-
-    .select-label {
-      color: #333333;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .select-arrow {
-      width: 20px;
-      height: 20px;
-      color: #666666;
-      font-size: 14px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-left: 5px;
-    }
-
     &:hover {
-      border-color: #b7c1c5;
+      border-color: var(--s-brand-hover);
     }
+  }
+
+  .s-select__placeholder {
+    color: var(--s-text-placeholder);
+  }
+
+  .s-select__label {
+    color: var(--s-text-primary);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .s-select__arrow {
+    width: 2rem;
+    color: var(--s-text-primary);
+    font-size: 14px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: var(--s-spacing-8);
   }
 
   &:not(:last-child) {
-    margin-right: 10px;
-  }
-
-  &.filter-select {
-    .s-input {
-      margin-left: -10px;
-
-      .input-content,
-      .input-content:hover {
-        border-color: transparent;
-      }
-    }
-  }
-
-  &.mode-multiple {
-    .select-input {
-      height: initial;
-      min-height: var(--select-container-height, 36px);
-
-      .select-label {
-        padding: 5px 0;
-        user-select: none;
-
-        ul {
-          padding: 0;
-          list-style: none;
-          display: flex;
-          flex-wrap: wrap;
-          margin: 0;
-
-          li {
-            margin: 2px;
-          }
-        }
-      }
-    }
-  }
-
-  &.status-disabled {
-    .select-input {
-      cursor: default;
-      background-color: #f9f9f9;
-
-      .select-label {
-        color: #666666;
-      }
-
-      .select-arrow {
-        color: #d6e1e5;
-      }
-
-      &:hover {
-        border-color: #d6e1e5;
-      }
-    }
-  }
-
-  &:not(.status-disabled).status-readonly {
-    .select-input {
-      cursor: not-allowed;
-
-      .select-arrow {
-        display: none;
-      }
-
-      &:hover {
-        border-color: #d6e1e5;
-      }
-    }
+    margin-right: var(--s-spacing-12);
   }
 }
 
-.s-option-list {
-  padding: 3px 0;
+.s-select--filter {
+  .s-select__input-container {
+    padding-left: 0;
+  }
 
-  .s-option {
-    padding: 12px 20px;
-    color: #999999;
-    font-size: 14px;
+  .s-select__label {
+    padding: 0 var(--s-spacing-12);
+  }
+
+  .s-input__content {
+    border-width: 0;
+  }
+}
+
+.s-select--multiple {
+
+  .s-select__label {
+    padding: var(--s-spacing-4) 0;
+    user-select: none;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+.s-tag {
+  margin: 0.2rem;
+}
+}
+
+.s-select--disabled {
+  .s-select__input-container {
+    cursor: not-allowed;
+    background-color: var(--s-background-secondary);
+
+    &:hover {
+      border-color: var(--s-border-color);
+    }
+  }
+
+  .s-select__label {
+    color: var(--s-text-disabled);
+  }
+
+  .s-select__arrow {
+    color: var(--s-text-disabled);
+  }
+}
+
+.s-select--readonly:not(.s-select--disabled) {
+  .s-select__input-container {
     cursor: default;
 
-    &:not(.item-checked) {
+    &:hover {
+      border-color: var(--s-border-color);
+    }
+  }
+
+  .s-select__arrow {
+    display: none;
+  }
+}
+
+.s-select__option-list {
+  padding: var(--s-spacing-4);
+  box-sizing: border-box;
+
+  .s-select__option-item {
+    padding: var(--s-spacing-8) var(--s-spacing-16);
+    color: var(--s-text-primary);
+    font-size: 1.4rem;
+    cursor: default;
+    border-radius: var(--s-border-radius);
+
+    &:not(.s-select__option-checked) {
       cursor: pointer;
 
       &:hover {
-        color: #008cfe;
-        background-color: rgba(100, 100, 100, 0.08);
+        color: var(--s-brand-hover);
+        background-color: var(--s-background-secondary);
       }
     }
 
-    &.item-checked {
-      color: #0079fe;
-      background-color: rgba(84, 159, 255, 0.08);
+    &:nth-child(n + 2) {
+      margin-top: var(--s-spacing-4);
     }
+  }
+
+  .s-select__option-checked {
+    color: var(--s-brand-normal);
+    background-color: var(--s-background-secondary);
   }
 }
 </style>

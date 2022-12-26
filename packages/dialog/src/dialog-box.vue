@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:41:15
+ * @LastEditTime: 2022-12-13 15:34:24
  * @LastEditors: Quarter
  * @Description: 简易的弹窗组件
  * @FilePath: /simple-ui/packages/dialog/src/dialog-box.vue
@@ -25,9 +25,13 @@
         <div class="dialog-header" ref="dialogHeader">
           <div class="dialog-title">{{ title }}</div>
           <div class="dialog-close">
-            <s-button type="normal" @click="closeDialog">
-              <i class="s-icon-close"></i>
-            </s-button>
+            <s-button
+              variant="plain"
+              size="small"
+              shape="square"
+              icon="close-lg"
+              @click="closeDialog"
+            ></s-button>
           </div>
         </div>
         <div class="dialog-content" ref="dialogContent" :style="{ maxHeight }">
@@ -50,7 +54,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 @Component({
   name: "SDialogBox",
 })
-export default class SDialogBox extends Vue {
+export default class DialogBox extends Vue {
   @Prop(String)
   width?: string; // 弹窗宽度
 
@@ -88,7 +92,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 是否显示弹窗
-   * @author: Quarter
    * @return {boolean}
    */
   get syncedVisible(): boolean {
@@ -97,7 +100,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 是否显示弹窗
-   * @author: Quarter
    * @param {boolean} val 值
    * @return
    */
@@ -107,7 +109,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -123,7 +124,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy() {
@@ -136,7 +136,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 监听外部传入参数变化
-   * @author: Quarter
    * @return
    */
   @Watch("visible")
@@ -154,7 +153,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 监听内部显隐的变化
-   * @author: Quarter
    * @param {Boolean} newValue 变化后的值
    * @return
    */
@@ -170,7 +168,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 通过蒙版关闭弹窗
-   * @author: Quarter
    * @return
    */
   shadowCloseDialog(): void {
@@ -181,7 +178,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closeDialog(): void {
@@ -198,7 +194,6 @@ export default class SDialogBox extends Vue {
 
   /**
    * @description: 弹窗尺寸监控
-   * @author: Quarter
    * @return
    */
   calcDialogSize(): void {
@@ -206,8 +201,7 @@ export default class SDialogBox extends Vue {
       this.$refs.dialogContainer instanceof HTMLElement &&
       this.$refs.dialogContent instanceof HTMLElement
     ) {
-      const container: DOMRect =
-        this.$refs.dialogContainer.getBoundingClientRect();
+      const container: DOMRect = this.$refs.dialogContainer.getBoundingClientRect();
       let header: DOMRect | undefined;
       if (this.$refs.dialogHeader instanceof HTMLElement) {
         header = this.$refs.dialogHeader.getBoundingClientRect();
@@ -216,10 +210,7 @@ export default class SDialogBox extends Vue {
       this.dialogWidth = container.width;
       this.dialogHeight = container.height;
       if ((header ? header.height : 0) + content.height > container.height) {
-        if (
-          container.height ===
-          window.document.documentElement.clientHeight * 0.8
-        ) {
+        if (container.height === window.document.documentElement.clientHeight * 0.8) {
           this.height = "80%";
         }
       } else {
@@ -251,8 +242,8 @@ export default class SDialogBox extends Vue {
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-color: var(--dialog-shadow, rgba(51, 64, 84, 0.5));
-    backdrop-filter: blur(2px);
+    background-color: var(--s-background-primary);
+    opacity: 0.8;
     position: absolute;
     top: 0;
     left: 0;
@@ -261,53 +252,39 @@ export default class SDialogBox extends Vue {
   .dialog-container {
     max-width: 100%;
     max-height: 100%;
-    border-radius: var(--dialog-radius, 6px);
+    border-radius: var(--s-border-radius);
+    box-shadow: var(--s-shadow-1);
+    background-color: var(--s-background-primary);
     box-sizing: border-box;
-    box-shadow: 0px 3px 6px 0px rgba(20, 24, 27, 0.5);
-    background-color: #ffffff;
     overflow: hidden;
     position: relative;
+  }
 
-    .dialog-header {
-      width: 100%;
-      height: 45px;
-      padding: 0 10px 0 20px;
-      background-color: #f9f9f9;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  .dialog-header {
+    width: 100%;
+    height: 4.5rem;
+    padding: 0 var(--s-spacing-16);
+    background-color: var(--s-background-secondary);
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-      .dialog-title {
-        min-width: 100px;
-        color: #666666;
-        font-size: 14px;
-      }
+  .dialog-title {
+    min-width: 10rem;
+  }
 
-      .dialog-close button {
-        width: 24px;
-        height: 24px;
-        padding: 0;
-        color: rgba($color: #999999, $alpha: 0.5);
-        font-size: 20px;
-        text-align: center;
+  .dialog-close button {
+    padding: 0;
+    text-align: center;
+  }
 
-        i {
-          margin: 0;
-        }
-
-        &:hover {
-          color: rgba($color: #000000, $alpha: 0.85);
-        }
-      }
-    }
-
-    .dialog-content {
-      max-height: calc(100% - 45px);
-      padding: var(--dialog-padding, 20px);
-      box-sizing: border-box;
-      overflow: hidden;
-    }
+  .dialog-content {
+    max-height: calc(100% - 4.5rem);
+    padding: var(--s-spacing-16);
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .global-mode {

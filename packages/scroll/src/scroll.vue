@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:53:30
+ * @LastEditTime: 2022-12-13 15:41:11
  * @LastEditors: Quarter
  * @Description: 简易的滚动条
  * @FilePath: /simple-ui/packages/scroll/src/scroll.vue
@@ -37,11 +37,7 @@
         @mousedown="horizontalBarClickHander"
       ></div>
     </div>
-    <div
-      v-if="ifVerticalBar"
-      class="vertical-bar-wrap"
-      :class="{ 'bar-drag': verticalBarDrag }"
-    >
+    <div v-if="ifVerticalBar" class="vertical-bar-wrap" :class="{ 'bar-drag': verticalBarDrag }">
       <div
         class="vertical-bar"
         :class="{ 'bar-show': verticalBarVisible }"
@@ -65,7 +61,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   name: "SScroll",
 })
-export default class SScroll extends Vue {
+export default class Scroll extends Vue {
   @Prop({
     type: Boolean,
     default: false,
@@ -103,7 +99,6 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 高度字符串
-   * @author: Quarter
    * @return {String|undefined}
    */
   get heightStr(): string | undefined {
@@ -115,22 +110,15 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 安全的颜色
-   * @author: Quarter
    * @return
    */
   get safeColor(): string {
-    const hexColor: RegExp = new RegExp(/^#[0-9a-fA-F]{6}$/);
-    const rgbColor: RegExp = new RegExp(/^rgb\(([0-9]{1,3},){2}[0-9]{1,3}\)$/);
-    const rgbaColor: RegExp = new RegExp(
-      /^rgba\(([0-9]{1,3},){3}((0(\.[0-9]+){0,1})|1)\)$/
-    );
+    const hexColor = new RegExp(/^#[0-9a-fA-F]{6}$/);
+    const rgbColor = new RegExp(/^rgb\(([0-9]{1,3},){2}[0-9]{1,3}\)$/);
+    const rgbaColor = new RegExp(/^rgba\(([0-9]{1,3},){3}((0(\.[0-9]+){0,1})|1)\)$/);
     if (typeof this.color === "string" && this.color) {
       const color: string = this.color.replace(/\s/g, "");
-      if (
-        hexColor.test(color) ||
-        rgbColor.test(color) ||
-        rgbaColor.test(color)
-      ) {
+      if (hexColor.test(color) || rgbColor.test(color) || rgbaColor.test(color)) {
         return color;
       }
     }
@@ -139,7 +127,6 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created() {
@@ -150,7 +137,6 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted() {
@@ -164,7 +150,6 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy() {
@@ -174,22 +159,10 @@ export default class SScroll extends Vue {
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
     }
-    window.document.removeEventListener(
-      "mousemove",
-      this.horizontalBarMousemoveHander
-    );
-    window.document.removeEventListener(
-      "mouseup",
-      this.horizontalBarMouseupHander
-    );
-    window.document.removeEventListener(
-      "mousemove",
-      this.verticalBarMousemoveHander
-    );
-    window.document.removeEventListener(
-      "mouseup",
-      this.verticalBarMouseupHander
-    );
+    window.document.removeEventListener("mousemove", this.horizontalBarMousemoveHander);
+    window.document.removeEventListener("mouseup", this.horizontalBarMouseupHander);
+    window.document.removeEventListener("mousemove", this.verticalBarMousemoveHander);
+    window.document.removeEventListener("mouseup", this.verticalBarMouseupHander);
     const db: AnimationIndex = Reflect.get(window, ANIMATION_INDEX_DB);
     const index: number | undefined = db[this.key];
     if (typeof index === "number") {
@@ -199,7 +172,6 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 滚动
-   * @author: Quarter
    * @param {Number} top 上侧滚动
    * @param {Number} left 左侧滚动
    * @return
@@ -222,32 +194,27 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 初始化观察器
-   * @author: Quarter
    * @return
    */
   initObserver(): void {
-    this.resizeObserver = new ResizeObserver(
-      (entries: ResizeObserverEntry[], observer: ResizeObserver) => {
-        for (const entry of entries) {
-          if (entry.target === this.$el.parentNode) {
-            this.resetHeight();
-          } else {
-            this.calcContainerSize();
-          }
+    this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+      for (const entry of entries) {
+        if (entry.target === this.$el.parentNode) {
+          this.resetHeight();
+        } else {
+          this.calcContainerSize();
         }
       }
-    );
-    this.mutationObserver = new MutationObserver(
-      (mutations: MutationRecord[], observer: MutationObserver) => {
-        for (const mutation of mutations) {
-          if (mutation.target === this.$el.parentNode) {
-            this.resetHeight();
-          } else {
-            this.calcContainerSize();
-          }
+    });
+    this.mutationObserver = new MutationObserver((mutations: MutationRecord[]) => {
+      for (const mutation of mutations) {
+        if (mutation.target === this.$el.parentNode) {
+          this.resetHeight();
+        } else {
+          this.calcContainerSize();
         }
       }
-    );
+    });
     if (this.$el.parentElement instanceof Element) {
       this.resizeObserver.observe(this.$el.parentElement);
       this.mutationObserver.observe(this.$el.parentElement, {
@@ -262,7 +229,6 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 高度重置
-   * @author: Quarter
    * @return
    */
   resetHeight(): void {
@@ -271,19 +237,13 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 计算容器和滚动条尺寸
-   * @author: Quarter
    * @return
    */
   calcContainerSize(): void {
-    const container: Vue | Element | (Vue | Element)[] | undefined =
-      this.$refs.container;
+    const { container } = this.$refs;
     const parentContainer: HTMLElement | null = this.$el.parentElement;
-    if (
-      container instanceof Element &&
-      parentContainer instanceof HTMLElement
-    ) {
-      const parentStyle: CSSStyleDeclaration =
-        getComputedStyle(parentContainer);
+    if (container instanceof Element && parentContainer instanceof HTMLElement) {
+      const parentStyle: CSSStyleDeclaration = getComputedStyle(parentContainer);
       const parentHeight: number =
         parentContainer.clientHeight -
         parseFloat(parentStyle.paddingTop) -
@@ -296,22 +256,19 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 计算滚动条位置
-   * @author: Quarter
    * @return
    */
   calcBarSizeAndPosition(): void {
-    const container: Vue | Element | (Vue | Element)[] | undefined =
-      this.$refs.container;
+    const { container } = this.$refs;
     if (container instanceof Element) {
       // 判断并计算横向滚动条
       if (container.scrollWidth > container.clientWidth) {
         this.ifHorizontalBar = true;
         this.horizontalBarWidth = Math.floor(
-          (container.clientWidth / container.scrollWidth) *
-            container.clientWidth
+          (container.clientWidth / container.scrollWidth) * container.clientWidth,
         );
         const horizontalBarDistance: number = Math.floor(
-          (container.scrollLeft / container.scrollWidth) * container.clientWidth
+          (container.scrollLeft / container.scrollWidth) * container.clientWidth,
         );
         if (horizontalBarDistance !== this.horizontalBarDistance) {
           this.horizontalBarVisible = true;
@@ -330,12 +287,10 @@ export default class SScroll extends Vue {
       if (container.scrollHeight > container.clientHeight) {
         this.ifVerticalBar = true;
         this.verticalBarWidth = Math.floor(
-          (container.clientHeight / container.scrollHeight) *
-            container.clientHeight
+          (container.clientHeight / container.scrollHeight) * container.clientHeight,
         );
         const verticalBarDistance: number = Math.floor(
-          (container.scrollTop / container.scrollHeight) *
-            container.clientHeight
+          (container.scrollTop / container.scrollHeight) * container.clientHeight,
         );
         if (verticalBarDistance !== this.verticalBarDistance) {
           this.verticalBarVisible = true;
@@ -357,7 +312,6 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 横向滚动条拖拽事件
-   * @author: Quarter
    * @param {MouseEvent} event 事件
    * @return {type}
    */
@@ -365,30 +319,20 @@ export default class SScroll extends Vue {
     this.horizontalBarDrag = true;
     this.scrollBarMousedownPosition = event;
     window.document.onselectstart = () => false;
-    window.document.addEventListener(
-      "mousemove",
-      this.horizontalBarMousemoveHander
-    );
-    window.document.addEventListener(
-      "mouseup",
-      this.horizontalBarMouseupHander
-    );
+    window.document.addEventListener("mousemove", this.horizontalBarMousemoveHander);
+    window.document.addEventListener("mouseup", this.horizontalBarMouseupHander);
   }
 
   /**
    * @description: 横向滚动条鼠标移动事件
-   * @author: Quarter
    * @param {MouseEvent} event 事件
    * @return
    */
   horizontalBarMousemoveHander(event: MouseEvent): void {
-    const moveDistance: number =
-      event.screenX - (this.scrollBarMousedownPosition?.screenX || 0);
-    const container: Vue | Element | (Vue | Element)[] | undefined =
-      this.$refs.container;
+    const moveDistance: number = event.screenX - (this.scrollBarMousedownPosition?.screenX || 0);
+    const { container } = this.$refs;
     if (container instanceof Element) {
-      const scrollDistance: number =
-        (moveDistance / container.clientWidth) * container.scrollWidth;
+      const scrollDistance: number = (moveDistance / container.clientWidth) * container.scrollWidth;
       container.scrollLeft += scrollDistance;
     }
     this.scrollBarMousedownPosition = event;
@@ -396,25 +340,17 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 横向滚动条鼠标抬起事件
-   * @author: Quarter
    * @return
    */
   horizontalBarMouseupHander(): void {
     this.horizontalBarDrag = false;
     window.document.onselectstart = null;
-    window.document.removeEventListener(
-      "mousemove",
-      this.horizontalBarMousemoveHander
-    );
-    window.document.removeEventListener(
-      "mouseup",
-      this.horizontalBarMouseupHander
-    );
+    window.document.removeEventListener("mousemove", this.horizontalBarMousemoveHander);
+    window.document.removeEventListener("mouseup", this.horizontalBarMouseupHander);
   }
 
   /**
    * @description: 纵向滚动条拖拽事件
-   * @author: Quarter
    * @param {MouseEvent} event 事件
    * @return
    */
@@ -422,24 +358,18 @@ export default class SScroll extends Vue {
     this.verticalBarDrag = true;
     this.scrollBarMousedownPosition = event;
     window.document.onselectstart = () => false;
-    window.document.addEventListener(
-      "mousemove",
-      this.verticalBarMousemoveHander
-    );
+    window.document.addEventListener("mousemove", this.verticalBarMousemoveHander);
     window.document.addEventListener("mouseup", this.verticalBarMouseupHander);
   }
 
   /**
    * @description: 纵向滚动条鼠标移动事件
-   * @author: Quarter
    * @param {MouseEvent} event 事件
    * @return
    */
   verticalBarMousemoveHander(event: MouseEvent): void {
-    const moveDistance: number =
-      event.screenY - (this.scrollBarMousedownPosition?.screenY || 0);
-    const container: Vue | Element | (Vue | Element)[] | undefined =
-      this.$refs.container;
+    const moveDistance: number = event.screenY - (this.scrollBarMousedownPosition?.screenY || 0);
+    const { container } = this.$refs;
     if (container instanceof Element) {
       const scrollDistance: number =
         (moveDistance / container.clientHeight) * container.scrollHeight;
@@ -450,25 +380,17 @@ export default class SScroll extends Vue {
 
   /**
    * @description: 纵向滚动条鼠标抬起事件
-   * @author: Quarter
    * @return
    */
   verticalBarMouseupHander(): void {
     this.verticalBarDrag = false;
     window.document.onselectstart = null;
-    window.document.removeEventListener(
-      "mousemove",
-      this.verticalBarMousemoveHander
-    );
-    window.document.removeEventListener(
-      "mouseup",
-      this.verticalBarMouseupHander
-    );
+    window.document.removeEventListener("mousemove", this.verticalBarMousemoveHander);
+    window.document.removeEventListener("mouseup", this.verticalBarMouseupHander);
   }
 
   /**
    * @description: 滚动事件
-   * @author: Quarter
    * @param {UIEvent} e 事件
    * @return
    */
@@ -510,9 +432,8 @@ export default class SScroll extends Vue {
     .vertical-bar {
       border-radius: 4px;
       background-color: #393939;
-      transition: width 0.2s ease-in-out, height 0.2s ease-in-out,
-        border-radius 0.2s ease-in-out, background-color 0.2s ease-in-out,
-        opacity 0.2s ease-in-out;
+      transition: width 0.2s ease-in-out, height 0.2s ease-in-out, border-radius 0.2s ease-in-out,
+        background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
       opacity: 0;
       position: absolute;
 

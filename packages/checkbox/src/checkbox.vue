@@ -1,71 +1,81 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:29:48
+ * @LastEditTime: 2022-12-15 16:24:03
  * @LastEditors: Quarter
  * @Description: 复选框组件
  * @FilePath: /simple-ui/packages/checkbox/src/checkbox.vue
 -->
 <template>
-  <div class="s-checkbox" :class="customClass" @click="check">
-    <div class="checkbox-icon">
-      <div class="inactive-view"></div>
-      <div class="active-view">
-        <i class="s-icon-check"></i>
+  <div class="s-checkbox" :class="customClass" @click="handleCheck">
+    <div class="s-checkbox__symbol">
+      <div class="s-checkbox__inactive-symbol"></div>
+      <div class="s-checkbox__active-symbol">
+        <icon name="check"></icon>
       </div>
     </div>
-    <div v-if="hasSlot" class="checkbox-text">
+    <div v-if="hasSlot" class="s-checkbox__label">
       <slot></slot>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Emitter } from "packages/mixins";
 import { CustomClass } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { CheckboxValue } from "./types";
 
 @Component({
   name: "SCheckbox",
+  components: {
+    Icon,
+  },
 })
-export default class SCheckbox extends Mixins(Emitter) {
+export default class Checkbox extends Emitter {
+  // 复选框的值
   @Prop({
     type: [String, Number, Boolean],
     default: null,
   })
-  label!: CheckboxValue; // 复选框的值
+  readonly label!: CheckboxValue;
 
+  // 单个使用的时候是否选中
   @Prop({
     type: Boolean,
     default: false,
   })
-  checked!: boolean; // 单个使用的时候是否选中
+  readonly checked!: boolean;
 
+  // 是否禁用点击事件
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled?: boolean; // 是否禁用点击事件
+  readonly disabled?: boolean;
 
+  // 是否受控
   @Prop({
     type: Boolean,
     default: false,
   })
-  alone!: boolean; // 是否受控
+  readonly alone!: boolean;
 
+  // 是否只读
   @Prop({
     type: Boolean,
     default: false,
   })
-  readonly!: boolean; // 是否只读
+  readonly readonly!: boolean;
 
-  checkStatus = false; // 被选中状态
-  CheckboxValue: CheckboxValue[] = []; // 复选框组的值
+  // 被选中状态
+  checkStatus = false;
+  // 复选框组的值
+  CheckboxValue: CheckboxValue[] = [];
 
   /**
    * @description: 单个使用的时候是否选中
-   * @author: Quarter
    * @return {boolean}
    */
   get syncedChecked(): boolean {
@@ -74,7 +84,6 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 单个使用的时候是否选中
-   * @author: Quarter
    * @param {boolean} val 值
    * @return
    */
@@ -84,20 +93,18 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
     return {
-      "status-checked": this.checkStatus === true,
-      "status-disabled": this.disabled === true,
-      "status-readonly": this.readonly === true,
+      "s-checkbox--checked": this.checkStatus === true,
+      "s-checkbox--disabled": this.disabled === true,
+      "s-checkbox--readonly": this.readonly === true,
     };
   }
 
   /**
    * @description: 是否有插槽内容
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasSlot(): boolean {
@@ -106,7 +113,6 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 是否可用
-   * @author: Quarter
    * @return
    */
   get enabled(): boolean {
@@ -115,7 +121,6 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -132,15 +137,12 @@ export default class SCheckbox extends Mixins(Emitter) {
           this.CheckboxValue = value;
         }
       });
-      this.dispatch("SCheckboxGroup", "s-checkbox-register", [
-        this.registerCheckbox,
-      ]);
+      this.dispatch("SCheckboxGroup", "s-checkbox-register", [this.registerCheckbox]);
     }
   }
 
   /**
    * @description: 监听选中变化
-   * @author: Quarter
    * @param {Boolean} newValue 变化的值
    * @return
    */
@@ -155,7 +157,6 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 监听值的变化
-   * @author: Quarter
    * @return
    */
   @Watch("label", {
@@ -163,11 +164,7 @@ export default class SCheckbox extends Mixins(Emitter) {
   })
   handleLabelChange(): void {
     if (Array.isArray(this.CheckboxValue) && this.alone === false) {
-      if (
-        typeof this.label === "string" ||
-        typeof this.label === "number" ||
-        this.label === null
-      ) {
+      if (typeof this.label === "string" || typeof this.label === "number" || this.label === null) {
         if (this.CheckboxValue.indexOf(this.label) === -1) {
           this.checkStatus = false;
         } else {
@@ -179,7 +176,6 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 更新复选框状态
-   * @author: Quarter
    * @param {type} newValue 改变的值
    * @return
    */
@@ -188,11 +184,7 @@ export default class SCheckbox extends Mixins(Emitter) {
   })
   handleCheckboxValueChange(newValue?: CheckboxValue[]): void {
     if (Array.isArray(newValue) && this.alone === false) {
-      if (
-        typeof this.label === "string" ||
-        typeof this.label === "number" ||
-        this.label === null
-      ) {
+      if (typeof this.label === "string" || typeof this.label === "number" || this.label === null) {
         if (newValue.indexOf(this.label) === -1) {
           this.checkStatus = false;
         } else {
@@ -204,17 +196,13 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 注册复选框组
-   * @author: Quarter
    * @param {Array<CheckboxValue>} value 选中的值
    * @return
    */
   registerCheckbox(value?: CheckboxValue[]): void {
     if (Array.isArray(value)) {
       this.CheckboxValue = value;
-      if (
-        this.label !== undefined &&
-        this.CheckboxValue.indexOf(this.label) > -1
-      ) {
+      if (this.label !== undefined && this.CheckboxValue.indexOf(this.label) > -1) {
         this.syncedChecked = true;
       }
     }
@@ -222,12 +210,11 @@ export default class SCheckbox extends Mixins(Emitter) {
 
   /**
    * @description: 切换选中状态
-   * @author: Quarter
    * @return
    */
-  check(event?: MouseEvent | boolean): void {
+   handleCheck(event?: MouseEvent | boolean): void {
     if (this.enabled) {
-      const checkStatus: boolean = !this.checkStatus;
+      const checkStatus = !this.checkStatus;
       if (this.alone === false) {
         this.syncedChecked = checkStatus;
         this.$emit("change", checkStatus, this.label);
@@ -240,16 +227,12 @@ export default class SCheckbox extends Mixins(Emitter) {
         }
         if (
           this.label !== undefined &&
-          (this.label === null ||
-            typeof this.label === "string" ||
-            typeof this.label === "number")
+          (this.label === null || typeof this.label === "string" || typeof this.label === "number")
         ) {
           if (checkStatus === true) {
             this.dispatch("SCheckboxGroup", "s-checkbox-checked", [this.label]);
           } else {
-            this.dispatch("SCheckboxGroup", "s-checkbox-dischecked", [
-              this.label,
-            ]);
+            this.dispatch("SCheckboxGroup", "s-checkbox-dischecked", [this.label]);
           }
         }
         this.checkStatus = checkStatus;
@@ -263,89 +246,85 @@ export default class SCheckbox extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-checkbox {
-  color: #333333;
-  font-size: 14px;
+  color: var(--s-text-primary);
+  font-size: 1.4rem;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  margin-right: var(--s-spacing-16);
+}
 
-  .checkbox-icon {
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
-    overflow: hidden;
-    box-sizing: border-box;
-    position: relative;
+.s-checkbox__symbol {
+  width: 1.6rem;
+  height: 1.6rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  position: relative;
+}
 
-    .inactive-view,
-    .active-view {
-      width: 100%;
-      height: 100%;
-      font-size: 14px;
-      font-weight: bolder;
-      border-radius: 2px;
-      box-sizing: border-box;
-      transition: transform 0.2s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+.s-checkbox__inactive-symbol,
+.s-checkbox__active-symbol {
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+  border-radius: var(--s-border-radius);
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
-    .inactive-view {
-      border: 1px solid #d6e1e5;
-      background-color: #ffffff;
-      transform: scale(1);
-    }
+.s-checkbox__inactive-symbol {
+  border: 1px solid var(--s-border-color);
+  background-color: var(--s-background-primary);
+  transform: scale(1);
+}
 
-    .active-view {
-      color: #ffffff;
-      background-color: #549fff;
-      transform: scale(0);
-    }
+.s-checkbox__active-symbol {
+  color: var(--s-text-white);
+  background-color: var(--s-brand-normal);
+  transform: scale(0);
+}
+
+.s-checkbox__label {
+  color: inherit;
+  font-size: inherit;
+  margin-left: var(--s-spacing-12);
+}
+
+.s-checkbox--checked {
+  color: var(--s-brand-normal);
+
+  .s-checkbox__active-symbol {
+    transform: scale(1);
+  }
+}
+
+.s-checkbox--disabled {
+  color: var(--s-text-disabled);
+  cursor: not-allowed;
+
+  .s-checkbox__inactive-symbol {
+    background-color: var(--s-background-disabled);
+  }
+  .s-checkbox__active-symbol {
+    background-color: var(--s-brand-disabled);
   }
 
-  .checkbox-text {
-    color: inherit;
-    font-size: inherit;
-    margin-left: 10px;
+  &.s-checkbox--checked {
+   color: var(--s-brand-disabled);
   }
+}
 
-  &.status-checked {
-    .active-view {
-      transform: scale(1);
-    }
-  }
+.s-checkbox--readonly:not(.s-checkbox--disabled) {
+  cursor: default;
 
-  &.status-disabled {
-    cursor: not-allowed;
-
-    .inactive-view,
-    .active-view {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .active-view {
-      color: rgba(0, 0, 0, 0.3);
-    }
-  }
-
-  &:not(.status-disabled).status-readonly {
-    cursor: not-allowed;
-
-    &.status-checked .checkbox-text {
-      color: #549fff;
-    }
-
-    .inactive-view {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-  }
-
-  &:not(:last-of-type) {
-    margin-right: 30px;
+  .s-checkbox__inactive-symbol {
+    background-color: var(--s-background-secondary);
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-05 11:21:02
+ * @LastEditTime: 2022-12-13 15:34:18
  * @LastEditors: Quarter
  * @Description: 简易的日期时间范围选择器
  * @FilePath: /simple-ui/packages/date-time-picker/src/date-time-ranger-picker.vue
@@ -82,7 +82,7 @@ import { Input } from "packages/input";
 import { Emitter } from "packages/mixins";
 import { Popover } from "packages/popover";
 import { dateFormate } from "packages/util";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import SDateTimePickerPopover from "./date-time-picker-popover.vue";
 
 @Component({
@@ -93,7 +93,7 @@ import SDateTimePickerPopover from "./date-time-picker-popover.vue";
     SDateTimePickerPopover,
   },
 })
-export default class SDateTimeRangerPicker extends Mixins(Emitter) {
+export default class DateTimeRangerPicker extends Emitter {
   @Prop(String)
   width?: string; // 宽度
 
@@ -154,7 +154,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {string}
    */
   get syncedValue(): string | undefined {
@@ -163,7 +162,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {string} val 值
    * @return
    */
@@ -175,7 +173,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -184,15 +181,12 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 区间最小值
-   * @author: Quarter
    * @return
    */
   get min(): number {
     if (Array.isArray(this.interval) && typeof this.interval[0] === "string") {
       const minStr: string = this.interval[0];
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/,
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(minStr)) {
         return new Date(minStr).getTime();
       }
@@ -202,15 +196,12 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 区间最大值
-   * @author: Quarter
    * @return
    */
   get max(): number {
     if (Array.isArray(this.interval) && typeof this.interval[1] === "string") {
       const maxStr: string = this.interval[1];
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/,
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(maxStr)) {
         return new Date(maxStr).getTime();
       }
@@ -220,65 +211,55 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 复合最小值
-   * @author: Quarter
    * @return {Number}
    */
   get complexMin(): number {
     if (this.min > this.left) {
       return this.min;
-    } else {
-      return this.left;
     }
+    return this.left;
   }
 
   /**
    * @description: 复合最大值
-   * @author: Quarter
    * @return {Number}
    */
   get complexMax(): number {
     if (this.max !== 0 && this.max < this.right) {
       return this.max;
-    } else {
-      return this.right;
     }
+    return this.right;
   }
 
   /**
    * @description: 左区间
-   * @author: Quarter
    * @return {Number}
    */
   get left(): number {
     if (this.unsyncedStartValue < this.leftInterval) {
       return new Date(dateFormate(this.leftInterval, "yyyy-MM-dd 00:00:00")).getTime();
-    } else {
-      return new Date(dateFormate(this.unsyncedStartValue, "yyyy-MM-dd 00:00:00")).getTime();
     }
+    return new Date(dateFormate(this.unsyncedStartValue, "yyyy-MM-dd 00:00:00")).getTime();
   }
 
   /**
    * @description: 右区间
-   * @author: Quarter
    * @return {Number}
    */
   get right(): number {
     if (this.unsyncedEndValue === 0) {
       if (this.rightInterval === 0) {
         return 0;
-      } else {
-        return new Date(dateFormate(this.rightInterval, "yyyy-MM-dd 00:00:00")).getTime();
       }
+      return new Date(dateFormate(this.rightInterval, "yyyy-MM-dd 00:00:00")).getTime();
     } else if (this.unsyncedEndValue > this.rightInterval && this.rightInterval !== 0) {
       return new Date(dateFormate(this.rightInterval, "yyyy-MM-dd 00:00:00")).getTime();
-    } else {
-      return new Date(dateFormate(this.unsyncedEndValue, "yyyy-MM-dd 00:00:00")).getTime();
     }
+    return new Date(dateFormate(this.unsyncedEndValue, "yyyy-MM-dd 00:00:00")).getTime();
   }
 
   /**
    * @description: 开始日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get startDateTimeStr(): string | undefined {
@@ -289,11 +270,11 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
     ) {
       return dateFormate(this.unsyncedStartValue, this.formate);
     }
+    return undefined;
   }
 
   /**
    * @description: 结束日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get endDateTimeStr(): string | undefined {
@@ -304,22 +285,22 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
     ) {
       return dateFormate(this.unsyncedEndValue, this.formate);
     }
+    return undefined;
   }
 
   /**
    * @description: 开始日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get dateTimeStr(): string | undefined {
     if (this.startDateTimeStr && this.endDateTimeStr) {
       return `${this.startDateTimeStr} ${this.separator} ${this.endDateTimeStr}`;
     }
+    return undefined;
   }
 
   /**
    * @description: 是否显示清除
-   * @author: Quarter
    * @return {Boolean}
    */
   get canClear(): boolean {
@@ -328,7 +309,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -337,7 +317,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeUpdate(): void {
@@ -346,7 +325,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return
    */
@@ -392,7 +370,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 更新同步的值
-   * @author: Quarter
    * @return
    */
   @Watch("dateTimeStr")
@@ -405,13 +382,12 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 计算输入框的宽高
-   * @author: Quarter
    * @return
    */
   calcInputWidth(): void {
-    const input: Vue | Element | (Vue | Element)[] | undefined = this.$refs.input;
-    const icon: Vue | Element | (Vue | Element)[] | undefined = this.$refs.icon;
-    const separator: Vue | Element | (Vue | Element)[] | undefined = this.$refs.separator;
+    const { input } = this.$refs;
+    const { icon } = this.$refs;
+    const { separator } = this.$refs;
     if (input instanceof Element && icon instanceof Element && separator instanceof Element) {
       const inputStyle: CSSStyleDeclaration = getComputedStyle(input);
       const spaceWidth: number =
@@ -427,7 +403,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 清空值
-   * @author: Quarter
    * @return
    */
   clearValue(): void {
@@ -440,7 +415,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 切换弹窗显示
-   * @author: Quarter
    * @param {Boolean} visible 是否显示
    * @return
    */
@@ -457,7 +431,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closePopover(): void {
@@ -468,7 +441,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认弹窗
-   * @author: Quarter
    * @return
    */
   confirmPopover(): void {
@@ -499,7 +471,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 更新左区间值
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -509,7 +480,6 @@ export default class SDateTimeRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 更新右区间值
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */

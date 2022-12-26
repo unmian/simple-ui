@@ -1,119 +1,154 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:44:56
+ * @LastEditTime: 2022-12-15 18:07:36
  * @LastEditors: Quarter
  * @Description: 简易的输入框组件
  * @FilePath: /simple-ui/packages/input/src/input.vue
 -->
 <template>
-  <div class="s-input" :class="customClass" :style="customStyle">
-    <div ref="prefix" v-if="hasPrefix" class="input-prefix">
+  <div
+    class="s-input"
+    :class="{
+      's-input--focused': isFocused,
+      's-input--clearable': canClear,
+      's-input--disabled': disabled === true,
+      's-input--readonly': readonly === true,
+    }"
+    :style="{
+      width,
+      height,
+    }"
+  >
+    <div ref="prefix" v-if="hasPrefix" class="s-input__prefix">
       <slot name="prefix"></slot>
     </div>
-    <div class="input-content">
-      <div v-if="placeholderVisible" class="input-placeholder">
-        {{ placeholder }}
-      </div>
-      <div v-if="hasIcon" ref="icon" class="input-icon">
+    <div class="s-input__content">
+      <div v-if="hasIcon" ref="icon" class="s-input__icon">
         <slot name="icon"></slot>
       </div>
-      <input
-        v-model="unsyncedValue"
-        ref="input"
-        :type="inputType"
-        :maxlength="maxlength"
-        :autocomplete="autocomplete"
-        :disabled="!enabled"
-        @focus.stop="focusInput"
-        @blur.stop="blurInput"
-        @keydown.stop="exposeEvent($event, 'keydown')"
-        @keyup.stop="exposeEvent($event, 'keyup')"
-        @keypress.stop="exposeEvent($event, 'keypress')"
-      />
-      <div v-if="counterEnable" ref="counter" class="input-counter">
+      <div class="s-input__container">
+        <div v-if="placeholderVisible" class="s-input__placeholder">
+          {{ readonly ? readonlyPlaceholder : placeholder }}
+        </div>
+        <input
+          v-model="unsyncedValue"
+          ref="input"
+          :type="inputType"
+          :maxlength="maxlength"
+          :autocomplete="autocomplete"
+          :disabled="!enabled"
+          @focus.stop="focusInput"
+          @blur.stop="blurInput"
+          @keydown.stop="exposeEvent($event, 'keydown')"
+          @keyup.stop="exposeEvent($event, 'keyup')"
+          @keypress.stop="exposeEvent($event, 'keypress')"
+        />
+      </div>
+      <div v-if="counterEnable" ref="counter" class="s-input__counter">
         {{ counterStr }}
       </div>
-      <div
-        v-if="clearable"
-        v-show="canClear"
-        class="input-clear"
-        @click.stop="clearInput"
-      >
-        <i class="s-icon-circle-close"></i>
+      <div v-if="clearable" v-show="canClear" class="s-input__clear" @click.stop="handleClear">
+        <icon name="close-circle"></icon>
       </div>
     </div>
-    <div ref="suffix" v-if="hasSuffix" class="input-suffix">
+    <div ref="suffix" v-if="hasSuffix" class="s-input__suffix">
       <slot name="suffix"></slot>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { ANIMATION_INDEX_DB } from "packages/constants";
 import { UUID } from "packages/util";
 import { Emitter } from "packages/mixins";
-import { AnimationIndex, CustomClass, CustomStyle } from "packages/types";
-import { Vue, Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { AnimationIndex } from "packages/types";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { InputValue } from "./types";
 
 @Component({
   name: "SInput",
+  components: {
+    Icon,
+  },
 })
-export default class SInput extends Mixins(Emitter) {
+export default class Input extends Emitter {
+  // 输入框的值
   @Prop({
-    type: String,
+    type: [String, Number],
     default: null,
   })
-  value?: string | null; // 输入框的值
+  readonly value?: string | number | null;
 
+  // 输入框宽度
+  @Prop({
+    type: String,
+    default: "16rem",
+  })
+  readonly width?: string;
+
+  // 输入框高度
+  @Prop({
+    type: String,
+    default: "3.4rem",
+  })
+  readonly height?: string;
+
+  // 文本框类型
   @Prop(String)
-  width?: string; // 输入框宽度
+  readonly type?: string;
 
+  // 文本框提示文本
   @Prop(String)
-  height?: string; // 输入框高度
+  readonly placeholder?: string;
 
+  // 只读下的文本框提示文本
   @Prop(String)
-  type?: string; // 文本框类型
+  readonly readonlyPlaceholder?: string;
 
+  // 自动填充
   @Prop(String)
-  placeholder?: string; // 文本框提示文本
+  readonly autocomplete?: string;
 
-  @Prop(String)
-  autocomplete?: string; // 自动填充
-
+  // 最大输入大小
   @Prop(Number)
-  maxlength?: number; // 最大输入大小
+  readonly maxlength?: number;
 
+  // 是否显示计数器
   @Prop({
     type: Boolean,
     default: true,
   })
-  showCounter?: boolean; // 是否显示计数器
+  readonly showCounter?: boolean;
 
+  // 是否禁用
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled?: boolean; // 是否禁用
+  readonly disabled?: boolean;
 
+  // 是否只读
   @Prop({
     type: Boolean,
     default: false,
   })
-  readonly?: boolean; // 是否只读
+  readonly readonly?: boolean;
 
+  // 是否可以清空
   @Prop({
     type: Boolean,
     default: false,
   })
-  clearable?: boolean; // 是否可以清空
+  readonly clearable?: boolean;
 
+  // 强制可以清空
   @Prop({
     type: Boolean,
     default: false,
   })
-  forceClear?: boolean; // 强制可以清空
+  readonly forceClear?: boolean;
 
   key = UUID(); // 帧运算
   unsyncedValue = ""; // 不同步的值
@@ -126,11 +161,10 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 输入框的值
-   * @author: Quarter
    * @return {string}
    */
   get syncedValue(): string {
-    if (undefined !== this.value && null !== this.value) {
+    if (undefined !== this.value && this.value !== null) {
       return this.value.toString();
     }
     return "";
@@ -138,7 +172,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 输入框的值
-   * @author: Quarter
    * @param {InputValue} val 值
    * @return
    */
@@ -151,7 +184,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -159,56 +191,7 @@ export default class SInput extends Mixins(Emitter) {
   }
 
   /**
-   * @description: 自定义类名
-   * @author: Quarter
-   * @return {CustomClass}
-   */
-  get customClass(): CustomClass {
-    return {
-      "status-focused": this.isFocused,
-      "status-disabled": this.disabled === true,
-      "status-readonly": this.readonly === true,
-      "status-clearable": this.canClear === true,
-    };
-  }
-
-  /**
-   * @description: 自定义样式表
-   * @author: Quarter
-   * @return {CustomStyle}
-   */
-  get customStyle(): CustomStyle {
-    const styles: CustomStyle = {};
-    if (typeof this.width === "string") {
-      styles["--input-container-width"] = this.width;
-    }
-    if (typeof this.height === "string") {
-      styles["--input-container-height"] = this.height;
-    }
-    styles["--input-content-width"] = `calc(100% - ${
-      this.prefixWidth + this.suffixWidth
-    }px)`;
-    const counterWidth: number =
-      this.$refs.counter instanceof Element
-        ? this.$refs.counter.clientWidth
-        : 0;
-    styles[
-      "--input-width"
-    ] = `calc(100% - ${this.counterWidth}px - ${this.iconWidth}px)`;
-    const input: Element | Vue | Array<Element | Vue> | undefined =
-      this.$refs.input;
-    if (input instanceof Element) {
-      const inputStyle: CSSStyleDeclaration = getComputedStyle(input);
-      styles[
-        "--input-placeholder-padding"
-      ] = `calc(${inputStyle.paddingLeft} + ${this.iconWidth}px)`;
-    }
-    return styles;
-  }
-
-  /**
    * @description: 文本框类型
-   * @author: Quarter
    * @return {String}
    */
   get inputType(): string {
@@ -220,16 +203,14 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 是否显示提示内容
-   * @author: Quarter
    * @return {Boolean}
    */
   get placeholderVisible(): boolean {
-    return typeof this.placeholder === "string" && this.unsyncedValue === "";
+    return this.unsyncedValue === "";
   }
 
   /**
    * @description: 是否启用计数器
-   * @author: Quarter
    * @return {Boolean}
    */
   get counterEnable(): boolean {
@@ -238,20 +219,16 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 计数器内容
-   * @author: Quarter
    * @return {String}
    */
   get counterStr(): string {
     this.counterWidth =
-      this.$refs.counter instanceof Element
-        ? this.$refs.counter.getBoundingClientRect().width
-        : 0;
+      this.$refs.counter instanceof Element ? this.$refs.counter.getBoundingClientRect().width : 0;
     return `${this.unsyncedValue.length}/${this.maxlength}`;
   }
 
   /**
    * @description: 是否存在前缀内容
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasPrefix(): boolean {
@@ -260,7 +237,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 是否存在后缀内容
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasSuffix(): boolean {
@@ -269,7 +245,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 是否存在图标
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasIcon(): boolean {
@@ -278,20 +253,17 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 是否显示清除图标
-   * @author: Quarter
    * @return {Boolean}
    */
   get canClear(): boolean {
     if (this.forceClear) {
       return !!this.clearable && this.unsyncedValue !== "";
-    } else {
-      return !!this.clearable && this.enabled && this.unsyncedValue !== "";
     }
+    return !!this.clearable && this.enabled && this.unsyncedValue !== "";
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -299,10 +271,7 @@ export default class SInput extends Mixins(Emitter) {
       Reflect.set(window, ANIMATION_INDEX_DB, {});
     }
     this.unsyncedValue = this.syncedValue;
-    if (
-      typeof this.maxlength === "number" &&
-      this.unsyncedValue.length > this.maxlength
-    ) {
+    if (typeof this.maxlength === "number" && this.unsyncedValue.length > this.maxlength) {
       this.unsyncedValue = this.unsyncedValue.slice(0, this.maxlength);
       this.syncedValue = this.unsyncedValue;
     }
@@ -310,17 +279,15 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
-    this.initObserver();
-    this.calcComponentWidth();
+    // this.initObserver();
+    // this.calcComponentWidth();
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -331,7 +298,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 监控传入值的变化
-   * @author: Quarter
    * @return
    */
   @Watch("value")
@@ -341,7 +307,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 监听输入框值变化
-   * @author: Quarter
    * @return
    */
   @Watch("unsyncedValue")
@@ -351,13 +316,12 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 初始化观察器
-   * @author: Quarter
    * @return
    */
   initObserver(): void {
     const db: AnimationIndex = Reflect.get(window, ANIMATION_INDEX_DB);
     db[this.key] = requestAnimationFrame(this.calcComponentWidth);
-    this.eleObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+    this.eleObserver = new ResizeObserver(() => {
       this.calcComponentWidth();
     });
     if (this.$refs.prefix instanceof HTMLDivElement) {
@@ -376,7 +340,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 输入框获取焦点
-   * @author: Quarter
    * @return
    */
   focusInput(): void {
@@ -387,7 +350,6 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 输入框失去焦点
-   * @author: Quarter
    * @return
    */
   blurInput(): void {
@@ -398,29 +360,21 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 监听输入框值变化
-   * @author: Quarter
    * @return
    */
   calcComponentWidth(): void {
     this.prefixWidth =
-      this.$refs.prefix instanceof Element
-        ? this.$refs.prefix.getBoundingClientRect().width
-        : 0;
+      this.$refs.prefix instanceof Element ? this.$refs.prefix.getBoundingClientRect().width : 0;
     this.suffixWidth =
-      this.$refs.suffix instanceof Element
-        ? this.$refs.suffix.getBoundingClientRect().width
-        : 0;
+      this.$refs.suffix instanceof Element ? this.$refs.suffix.getBoundingClientRect().width : 0;
     this.iconWidth =
-      this.$refs.icon instanceof Element
-        ? this.$refs.icon.getBoundingClientRect().width
-        : 0;
+      this.$refs.icon instanceof Element ? this.$refs.icon.getBoundingClientRect().width : 0;
     const db: AnimationIndex = Reflect.get(window, ANIMATION_INDEX_DB);
     db[this.key] = requestAnimationFrame(this.calcComponentWidth);
   }
 
   /**
    * @description: 暴露事件
-   * @author: Quarter
    * @return
    */
   exposeEvent(event: Event, eventName: string): void {
@@ -432,10 +386,9 @@ export default class SInput extends Mixins(Emitter) {
 
   /**
    * @description: 清除输入框
-   * @author: Quarter
    * @return
    */
-  clearInput(): void {
+  handleClear(): void {
     this.unsyncedValue = "";
     this.$emit("clear", this.unsyncedValue);
   }
@@ -444,52 +397,55 @@ export default class SInput extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-input {
-  width: var(--input-container-width, 100%);
-  height: var(--input-container-height, 36px);
   font-size: 14px;
-  border-radius: 4px;
+  color: var(--s-text-primary);
   cursor: default;
   box-sizing: border-box;
-  background-color: #ffffff;
+  border-color: var(--s-border-color);
+  border-radius: var(--s-bborder-radius);
+  background-color: var(--s-background-primary);
   overflow: hidden;
   display: inline-flex;
   flex-wrap: wrap;
 
   > div:first-of-type {
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    border-top-left-radius: var(--s-border-radius);
+    border-bottom-left-radius: var(--s-border-radius);
   }
 
   > div:last-of-type {
-    border-top-right-radius: 4px;
-    border-bottom-right-radius: 4px;
+    border-top-right-radius: var(--s-border-radius);
+    border-bottom-right-radius: var(--s-border-radius);
   }
 
-  .input-prefix,
-  .input-suffix {
+  .s-input__prefix,
+  .s-input__suffix {
     height: 100%;
-    padding: 5px 15px;
-    color: #909399;
-    border: 1px solid #d6e1e5;
+    color: var(--s-text-secondary);
+    border: 1px solid;
+    border-color: inherit;
     box-sizing: border-box;
-    background-color: #f5f7fa;
+    background-color: var(--s-background-secondary);
     overflow: hidden;
     display: flex;
     align-items: center;
   }
 
-  .input-prefix {
+  .s-input__prefix {
+    padding: var(--s-spacing-4) var(--s-spacing-8) var(--s-spacing-4) var(--s-spacing-12);
     border-right: none;
   }
 
-  .input-suffix {
+  .s-input__suffix {
+    padding: var(--s-spacing-4) var(--s-spacing-12) var(--s-spacing-4) var(--s-spacing-8);
     border-left: none;
   }
 
-  .input-content {
-    width: var(--input-content-width, 100%);
+  .s-input__content {
     height: 100%;
-    border: 1px solid #d6e1e5;
+    flex: 1;
+    border: 1px solid;
+    border-color: inherit;
     box-sizing: border-box;
     transition: border 0.2s ease;
     overflow: hidden;
@@ -497,119 +453,139 @@ export default class SInput extends Mixins(Emitter) {
     align-items: center;
     position: relative;
 
-    .input-placeholder {
-      width: 100%;
-      height: 100%;
-      padding: 0 10px;
-      padding-left: var(--input-placeholder-padding, 10px);
-      color: #d6e1e5;
-      font-size: inherit;
-      line-height: var(--input-container-height, 35px);
-      box-sizing: border-box;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .input-icon {
-      width: 25px;
-      padding-left: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    input {
-      width: var(--input-width, 100%);
-      height: 100%;
-      padding: 0 10px;
-      color: #333333;
-      font-size: inherit;
-      text-align: inherit;
-      border: none;
-      outline-color: rgba($color: #000000, $alpha: 0);
-      background: none;
-      box-sizing: border-box;
-      display: block;
-      position: relative;
-    }
-
-    .input-counter {
-      padding: 0 10px;
-      color: #b7c1c5;
-      font-size: 12px;
-    }
-
-    .input-clear {
-      padding: 0 10px;
-      height: var(--input-container-height, 35px);
-      color: #b7c1c5;
-      line-height: var(--input-container-height, 35px);
-      background-color: #ffffff;
-      cursor: pointer;
-      opacity: 0;
-      position: absolute;
-      top: 0;
-      right: 0;
-
-      &:hover {
-        color: #666666;
-      }
-    }
-
     &:hover {
-      border-color: #b7c1c5;
+      border-color: var(--s-brand-hover);
 
-      .input-clear {
+      .s-input__clear {
         opacity: 1;
       }
     }
   }
 
-  &:not(.status-disabled).status-focused .input-content,
-  &:not(.status-disabled).status-focused .input-content:hover {
-    border-color: #549fff;
+  .s-input__icon {
+    padding-left: var(--s-spacing-12);
+    color: var(--s-text-placeholder);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  &.status-disabled .input-content {
-    cursor: not-allowed !important;
-    background-color: #f9f9f9;
+  .s-input__container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .s-input__placeholder {
+    width: 100%;
+    height: 100%;
+    padding: 0 var(--s-spacing-12);
+    color: var(--s-text-placeholder);
+    font-size: inherit;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  input {
+    width: var(--input-width, 100%);
+    height: 100%;
+    padding: 0 var(--s-spacing-12);
+    color: inherit;
+    font-size: inherit;
+    text-align: inherit;
+    border: none;
+    outline-color: rgba($color: #000000, $alpha: 0);
+    background: none;
+    box-sizing: border-box;
+    display: block;
+    position: relative;
+  }
+
+  .s-input__counter {
+    padding: 0 var(--s-spacing-8);
+    color: var(--s-text-placeholder);
+    font-size: 1.2rem;
+    user-select: none;
+  }
+
+  .s-input__clear {
+    padding: 0 var(--s-spacing-8);
+    height: 100%;
+    color: var(--s-text-placeholder);
+    font-size: 1.6rem;
+    cursor: pointer;
+    background-color: var(--s-background-primary);
+    opacity: 0;
+    display: inline-flex;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    &:hover {
+      color: var(--s-brand-hover);
+    }
+  }
+
+  &:not(:last-child) {
+    margin-right: var(--s-spacing-12);
+  }
+}
+
+.s-input--focused:not(.s-input--disabled) .s-input__content,
+.s-input--focused:not(.s-input--disabled) .s-input__content:hover {
+  border-color: var(--s-brand-normal);
+
+  .s-input__icon {
+    color: var(--s-text-primary);
+  }
+}
+
+.s-input--disabled {
+  color: var(--s-text-disabled);
+  cursor: not-allowed !important;
+
+  .s-input__content {
+    background-color: var(--s-background-disabled);
 
     input {
-      color: #666666;
       cursor: not-allowed !important;
     }
 
     &:hover {
-      border-color: #d6e1e5;
+      border-color: var(--s-border-color);
     }
   }
 
-  &:not(.status-disabled).status-readonly {
+  .s-input__icon {
+    color: var(--s-text-disabled);
+  }
+}
+
+.s-input--readonly:not(.s-input--disabled) {
+  cursor: default;
+
+  input,
+  .s-input__placeholder {
     cursor: default;
+  }
 
-    input,
-    .input-placeholder {
-      cursor: default;
+  .s-input__content {
+    &:hover {
+      border-color: var(--s-border-color);
     }
 
-    .input-content {
-      &:hover {
-        border-color: #d6e1e5;
-      }
-
-      .input-counter {
-        display: none;
-      }
+    .s-input__counter {
+      display: none;
     }
   }
+}
 
-  &.status-clearable .input-content:hover .input-counter {
-    opacity: 0;
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
-  }
+.s-input--clearable .s-input__content:hover .s-input__counter {
+  opacity: 0;
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:13:14
+ * @LastEditTime: 2022-12-13 15:42:22
  * @LastEditors: Quarter
  * @Description: 时间范围选择器弹窗
  * @FilePath: /simple-ui/packages/time-picker/src/time-ranger-picker-popover.vue
@@ -51,7 +51,7 @@ import { TimeConfig } from "./types";
     STimeSelector,
   },
 })
-export default class STimeRangerPickerPopover extends Vue {
+export default class TimeRangerPickerPopover extends Vue {
   @Prop({
     type: String,
     default: "hh:mm:ss",
@@ -88,12 +88,11 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 过滤的日期
-   * @author: Quarter
    * @return {String}
    */
   get filterDate(): string {
     if (typeof this.date === "string") {
-      const dateRegExp: RegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
       if (dateRegExp.test(this.date)) {
         return this.date;
       }
@@ -103,47 +102,42 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 最小时间限制
-   * @author: Quarter
    * @return {Number}
    */
   get minTime(): number | undefined {
     if (typeof this.min === "string") {
-      const timeRegExp: RegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
+      const timeRegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (timeRegExp.test(this.min)) {
-        return new Date(DEFAULT_DATE + " " + this.min).getTime();
+        return new Date(`${DEFAULT_DATE} ${this.min}`).getTime();
       }
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(this.min)) {
         return new Date(this.min).getTime();
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 最大时间限制
-   * @author: Quarter
    * @return {Number}
    */
   get maxTime(): number | undefined {
     if (typeof this.max === "string") {
-      const timeRegExp: RegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
+      const timeRegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (timeRegExp.test(this.max)) {
-        return new Date(DEFAULT_DATE + " " + this.max).getTime();
+        return new Date(`${DEFAULT_DATE} ${this.max}`).getTime();
       }
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(this.max)) {
         return new Date(this.max).getTime();
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 开始时间最大限制
-   * @author: Quarter
    * @return {String}
    */
   get filterStartMaxTime(): string | undefined {
@@ -151,45 +145,36 @@ export default class STimeRangerPickerPopover extends Vue {
       const { hour, minute, second } = this.insideEndTime;
       if (hour !== 0 || minute !== 0 || second !== 0) {
         const hourStr: string =
-          new Array(2 - (hour || 0).toString().length).fill(0).join("") +
-          (hour || 0).toString();
+          new Array(2 - (hour || 0).toString().length).fill(0).join("") + (hour || 0).toString();
         const minuteStr: string =
           new Array(2 - (minute || 0).toString().length).fill(0).join("") +
           (minute || 0).toString();
         const secondStr: string =
           new Array(2 - (second || 0).toString().length).fill(0).join("") +
           (second || 0).toString();
-        const timeStr: string = `${hourStr}:${minuteStr}:${secondStr}`;
-        if (
-          new Date(`${this.filterDate} ${timeStr}`).getTime() < this.maxTime
-        ) {
+        const timeStr = `${hourStr}:${minuteStr}:${secondStr}`;
+        if (new Date(`${this.filterDate} ${timeStr}`).getTime() < this.maxTime) {
           return timeStr;
-        } else {
-          return dateFormate(this.maxTime, "hh:mm:ss");
         }
-      } else {
         return dateFormate(this.maxTime, "hh:mm:ss");
       }
-    } else {
-      const { hour, minute, second } = this.insideEndTime;
-      if (hour !== 0 || minute !== 0 || second !== 0) {
-        const hourStr: string =
-          new Array(2 - (hour || 0).toString().length).fill(0).join("") +
-          (hour || 0).toString();
-        const minuteStr: string =
-          new Array(2 - (minute || 0).toString().length).fill(0).join("") +
-          (minute || 0).toString();
-        const secondStr: string =
-          new Array(2 - (second || 0).toString().length).fill(0).join("") +
-          (second || 0).toString();
-        return `${hourStr}:${minuteStr}:${secondStr}`;
-      }
+      return dateFormate(this.maxTime, "hh:mm:ss");
     }
+    const { hour, minute, second } = this.insideEndTime;
+    if (hour !== 0 || minute !== 0 || second !== 0) {
+      const hourStr: string =
+        new Array(2 - (hour || 0).toString().length).fill(0).join("") + (hour || 0).toString();
+      const minuteStr: string =
+        new Array(2 - (minute || 0).toString().length).fill(0).join("") + (minute || 0).toString();
+      const secondStr: string =
+        new Array(2 - (second || 0).toString().length).fill(0).join("") + (second || 0).toString();
+      return `${hourStr}:${minuteStr}:${secondStr}`;
+    }
+    return undefined;
   }
 
   /**
    * @description: 结束时间最小限制
-   * @author: Quarter
    * @return {String}
    */
   get filterEndMinTime(): string | undefined {
@@ -197,45 +182,36 @@ export default class STimeRangerPickerPopover extends Vue {
       const { hour, minute, second } = this.insideStartTime;
       if (hour !== 0 || minute !== 0 || second !== 0) {
         const hourStr: string =
-          new Array(2 - (hour || 0).toString().length).fill(0).join("") +
-          (hour || 0).toString();
+          new Array(2 - (hour || 0).toString().length).fill(0).join("") + (hour || 0).toString();
         const minuteStr: string =
           new Array(2 - (minute || 0).toString().length).fill(0).join("") +
           (minute || 0).toString();
         const secondStr: string =
           new Array(2 - (second || 0).toString().length).fill(0).join("") +
           (second || 0).toString();
-        const timeStr: string = `${hourStr}:${minuteStr}:${secondStr}`;
-        if (
-          new Date(`${this.filterDate} ${timeStr}`).getTime() > this.minTime
-        ) {
+        const timeStr = `${hourStr}:${minuteStr}:${secondStr}`;
+        if (new Date(`${this.filterDate} ${timeStr}`).getTime() > this.minTime) {
           return timeStr;
-        } else {
-          return dateFormate(this.minTime, "hh:mm:ss");
         }
-      } else {
         return dateFormate(this.minTime, "hh:mm:ss");
       }
-    } else {
-      const { hour, minute, second } = this.insideStartTime;
-      if (hour !== 0 || minute !== 0 || second !== 0) {
-        const hourStr: string =
-          new Array(2 - (hour || 0).toString().length).fill(0).join("") +
-          (hour || 0).toString();
-        const minuteStr: string =
-          new Array(2 - (minute || 0).toString().length).fill(0).join("") +
-          (minute || 0).toString();
-        const secondStr: string =
-          new Array(2 - (second || 0).toString().length).fill(0).join("") +
-          (second || 0).toString();
-        return `${hourStr}:${minuteStr}:${secondStr}`;
-      }
+      return dateFormate(this.minTime, "hh:mm:ss");
     }
+    const { hour, minute, second } = this.insideStartTime;
+    if (hour !== 0 || minute !== 0 || second !== 0) {
+      const hourStr: string =
+        new Array(2 - (hour || 0).toString().length).fill(0).join("") + (hour || 0).toString();
+      const minuteStr: string =
+        new Array(2 - (minute || 0).toString().length).fill(0).join("") + (minute || 0).toString();
+      const secondStr: string =
+        new Array(2 - (second || 0).toString().length).fill(0).join("") + (second || 0).toString();
+      return `${hourStr}:${minuteStr}:${secondStr}`;
+    }
+    return undefined;
   }
 
   /**
    * @description: 小时列表
-   * @author: Quarter
    * @return {Array<String>}
    */
   get hourArr(): string[] {
@@ -247,7 +223,6 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 分钟列表
-   * @author: Quarter
    * @return {Array<String>}
    */
   get minuteArr(): string[] {
@@ -259,7 +234,6 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 监听开始时间的变化
-   * @author: Quarter
    * @return
    */
   @Watch("startTime", {
@@ -288,7 +262,6 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 监听结束时间的变化
-   * @author: Quarter
    * @return
    */
   @Watch("endTime", {
@@ -317,7 +290,6 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 初始化
-   * @author: Quarter
    * @return
    */
   init(): void {
@@ -335,7 +307,6 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 关闭弹出层
-   * @author: Quarter
    * @return
    */
   closePopover(): void {
@@ -344,14 +315,11 @@ export default class STimeRangerPickerPopover extends Vue {
 
   /**
    * @description: 确认时间
-   * @author: Quarter
    * @return
    */
   confirmPopover(): void {
     if (this.$refs.startTimeSelector instanceof STimeSelector) {
-      const startTime: Date = new Date(
-        this.$refs.startTimeSelector.confirmValue()
-      );
+      const startTime: Date = new Date(this.$refs.startTimeSelector.confirmValue());
       this.insideStartTime = {
         hour: startTime.getHours(),
         minute: startTime.getMinutes(),

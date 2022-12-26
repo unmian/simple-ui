@@ -1,27 +1,36 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-04-08 03:35:33
- * @LastEditTime: 2022-06-07 17:25:40
+ * @LastEditTime: 2022-12-14 17:29:49
  * @LastEditors: Quarter
  * @Description: 树形下拉框选项组件
  * @FilePath: /simple-ui/packages/tree-select/src/tree-option.vue
 -->
 <template>
-  <div v-if="node" class="s-tree-option" :class="customClass">
-    <div class="current-node" :style="nodeStyle">
+  <div
+    v-if="node"
+    class="s-tree-option"
+    :class="{
+      's-tree-option--checked': isChecked,
+    }"
+  >
+    <div class="s-tree-option__node" :style="nodeStyle">
       <div class="node-arrow">
         <s-button
           :class="{ 'roll-down': filterExpand }"
           v-if="hasChildren"
+          variant="plain"
+          shape="circle"
+          size="small"
+          icon="chevron-right"
           @click="switchNodeList"
         >
-          <i class="s-icon-caret-right"></i>
         </s-button>
       </div>
-      <div class="node-info" @click="checkOptionItem">{{ node.label }}</div>
+      <div class="s-tree-option__node-info" @click="handleOptionCheck">{{ node.label }}</div>
     </div>
     <collapse-transition>
-      <div class="node-list" v-if="hasChildren" v-show="filterExpand">
+      <div class="s-tree-option__node-list" v-if="hasChildren" v-show="filterExpand">
         <s-tree-option
           v-for="node of filterSubNodes"
           :key="`node-item-${node.id}`"
@@ -35,42 +44,51 @@
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Emitter } from "packages/mixins";
 import { SelectValue } from "packages/select";
 import { TreeProp } from "packages/tree";
-import { CustomClass, CustomStyle } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { CustomStyle } from "packages/types";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { SelectNodeConfig } from "./types";
 
 @Component({
   name: "STreeOption",
+  components: {
+    Icon,
+  },
 })
-export default class STreeOption extends Mixins(Emitter) {
+export default class TreeOption extends Emitter {
+  // 参数配置
   @Prop({
     type: Object,
     default: () => ({}),
   })
-  props!: TreeProp; // 参数配置
+  readonly props!: TreeProp;
 
+  // 筛选项值
   @Prop({
     type: Object,
     required: true,
   })
-  node!: SelectNodeConfig; // 筛选项值
+  readonly node!: SelectNodeConfig;
 
+  // 子节点层数
   @Prop({
     type: Number,
     default: 1,
   })
-  nodeIndex!: number; // 子节点层数
+  readonly nodeIndex!: number;
 
-  checked = false; // 选中项
-  selectValue: SelectValue[] = []; // 下拉框选中的值
-  expand = false; // 展开下拉框
+  // 选中项
+  isChecked = false;
+  // 下拉框选中的值
+  selectValue: SelectValue[] = [];
+  // 展开下拉框
+  expand = false;
 
   /**
    * @description: 识别符属性
-   * @author: Quarter
    * @return {String}
    */
   get idProperty(): string {
@@ -82,7 +100,6 @@ export default class STreeOption extends Mixins(Emitter) {
 
   /**
    * @description: 标签属性
-   * @author: Quarter
    * @return {String}
    */
   get labelProperty(): string {
@@ -94,7 +111,6 @@ export default class STreeOption extends Mixins(Emitter) {
 
   /**
    * @description: 子节点属性
-   * @author: Quarter
    * @return {String}
    */
   get childrenProperty(): string {
@@ -105,27 +121,11 @@ export default class STreeOption extends Mixins(Emitter) {
   }
 
   /**
-   * @description: 自定义类名
-   * @author: Quarter
-   * @return {CustomClass}
-   */
-  get customClass(): CustomClass {
-    return {
-      "item-checked": this.checked === true,
-    };
-  }
-
-  /**
    * @description: 过滤的展开值
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasChildren(): boolean {
-    if (
-      this.node &&
-      Array.isArray(this.node.children) &&
-      this.node.children.length > 0
-    ) {
+    if (this.node && Array.isArray(this.node.children) && this.node.children.length > 0) {
       return true;
     }
     return false;
@@ -133,7 +133,6 @@ export default class STreeOption extends Mixins(Emitter) {
 
   /**
    * @description: 过滤子节点
-   * @author: Quarter
    * @return {Array<TreeNodeConfig>}
    */
   get filterSubNodes(): SelectNodeConfig[] {
@@ -148,20 +147,18 @@ export default class STreeOption extends Mixins(Emitter) {
             treeItem.children = node[this.childrenProperty];
           }
           return treeItem;
-        } else {
-          return {
-            id: index,
-            label: "",
-          };
         }
+        return {
+          id: index,
+          label: "",
+        };
       });
     }
-    return new Array();
+    return [];
   }
 
   /**
    * @description: 过滤的展开值
-   * @author: Quarter
    * @return {Boolean}
    */
   get filterExpand(): boolean {
@@ -170,7 +167,6 @@ export default class STreeOption extends Mixins(Emitter) {
 
   /**
    * @description: 列表样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get nodeStyle(): CustomStyle {
@@ -183,11 +179,10 @@ export default class STreeOption extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
-    this.$on("s-select-update", (value: SelectValue[]) => {
+    this.$on("s-tree-option__update", (value: SelectValue[]) => {
       if (Array.isArray(value)) {
         this.selectValue = value;
       }
@@ -197,7 +192,7 @@ export default class STreeOption extends Mixins(Emitter) {
       typeof this.node.id === "string" ||
       typeof this.node.id === "number"
     ) {
-      this.dispatch("STreeSelect", "s-select-mount", [
+      this.dispatch("STreeSelect", "s-tree-select__mount", [
         this.node.id,
         (value: SelectValue[]) => {
           if (Array.isArray(value)) {
@@ -210,7 +205,6 @@ export default class STreeOption extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -219,41 +213,33 @@ export default class STreeOption extends Mixins(Emitter) {
       typeof this.node.id === "string" ||
       typeof this.node.id === "number"
     ) {
-      this.dispatch("STreeSelect", "s-select-unmount", [this.node.id]);
+      this.dispatch("STreeSelect", "s-tree-select__unmount", [this.node.id]);
     }
   }
 
   /**
    * @description: 更新复选框状态
-   * @author: Quarter
    * @return
    */
   @Watch("selectValue", {
     immediate: true,
   })
-  handlerSelectValueChange(): void {
-    if (Array.isArray(this.selectValue)) {
-      if (
-        typeof this.node.id === "string" ||
-        typeof this.node.id === "number" ||
-        this.node.id === null
-      ) {
-        if (this.selectValue.indexOf(this.node.id) === -1) {
-          this.checked = false;
-          this.dispatch("STreeSelect", "s-select-label-delete", [
-            this.node.label,
-          ]);
-        } else {
-          this.checked = true;
-          this.dispatch("STreeSelect", "s-select-label-add", [this.node.label]);
-        }
-      }
+  handlerSelectValueChange(selectValue: SelectValue[]): void {
+    if (!Array.isArray(selectValue)) {
+      return;
+    }
+    const { id } = this.node;
+    if (selectValue.includes(id)) {
+      this.isChecked = true;
+      this.dispatch("STreeSelect", "s-tree-select__label-check", [this.node.label]);
+    } else {
+      this.isChecked = false;
+      this.dispatch("STreeSelect", "s-tree-select__label-remove", [this.node.label]);
     }
   }
 
   /**
    * @description: 切换子节点列表
-   * @author: Quarter
    * @return
    */
   switchNodeList(): void {
@@ -262,15 +248,14 @@ export default class STreeOption extends Mixins(Emitter) {
 
   /**
    * @description: 点击选项
-   * @author: Quarter
    * @return
    */
-  checkOptionItem(): void {
+  handleOptionCheck(): void {
     if (this.node.id !== undefined) {
-      if (this.checked === true) {
-        this.dispatch("STreeSelect", "s-select-discheck", [this.node.id]);
+      if (this.isChecked === true) {
+        this.dispatch("STreeSelect", "s-tree-select__remove", [this.node.id]);
       } else {
-        this.dispatch("STreeSelect", "s-select-check", [this.node.id]);
+        this.dispatch("STreeSelect", "s-tree-select__check", [this.node.id]);
       }
     }
   }
@@ -279,71 +264,68 @@ export default class STreeOption extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-tree-option {
-  color: #999999;
-  font-size: 14px;
+  color: var(--s-text-primary);
+  font-size: 1.4rem;
   cursor: default;
 
-  .current-node {
-    padding: 0 16px 0 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  &:nth-child(n + 2) {
+    margin-top: var(--s-spacing-4);
+  }
+}
 
-    .node-arrow {
-      width: 26px;
-      height: 26px;
+.s-tree-option__node {
+  padding: var(--s-spacing-8) var(--s-spacing-16) var(--s-spacing-8) var(--s-spacing-8);
+  border-radius: var(--s-border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-      .s-button {
-        width: 26px;
-        min-width: initial;
-        height: 26px;
-        padding: 0;
-        color: #666666;
-        border-radius: 13px;
-        transition: background-color 0.2s ease-in-out,
-          transform 0.2s ease-in-out;
+  &:hover {
+    background-color: var(--s-background-secondary);
 
-        i {
-          margin: 0;
-        }
-
-        &.roll-down {
-          transform: rotate(90deg);
-        }
-
-        &:hover {
-          background-color: rgba($color: #000000, $alpha: 0.05);
-        }
-      }
-    }
-
-    .node-info {
-      width: calc(100% - 36px);
-      padding: 12px 0;
-      box-sizing: border-box;
+    .s-tree-option__node-info {
+      color: var(--s-brand-hover);
     }
   }
 
-  &:not(.item-checked) > .current-node {
-    .node-info {
-      cursor: pointer;
+  .node-arrow {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
 
-      &:hover {
-        color: #008cfe;
-      }
+  .s-button {
+    transition: transform 0.2s ease-in-out;
+
+    &.roll-down {
+      transform: rotate(90deg);
     }
+  }
+
+  .s-tree-option__node-info {
+    flex: 1;
+    box-sizing: border-box;
+  }
+}
+
+/* &:not(.s-tree-option--checked) > .s-tree-option__node {
+  .s-tree-option__node-info {
+    cursor: pointer;
 
     &:hover {
-      background-color: rgba(100, 100, 100, 0.08);
+      color: #008cfe;
     }
   }
 
-  &.item-checked > .current-node {
-    background-color: rgba(84, 159, 255, 0.08);
+  &:hover {
+    background-color: rgba(100, 100, 100, 0.08);
+  }
+} */
 
-    .node-info {
-      color: #0079fe;
-    }
+.s-tree-option--checked > .s-tree-option__node {
+  background-color: var(--s-background-secondary);
+
+  .s-tree-option__node-info {
+    color: var(--s-brand-normal);
   }
 }
 </style>

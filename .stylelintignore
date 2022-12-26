@@ -3,6 +3,7 @@ build/
 dist/
 coverage/
 es/
+docs/
 lib/
 scripts/
 **/*.min.css

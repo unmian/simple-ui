@@ -1,20 +1,21 @@
 /*
  * @Author: Quarter
  * @Date: 2022-04-08 02:20:53
- * @LastEditTime: 2022-04-11 11:14:29
+ * @LastEditTime: 2022-12-14 09:11:20
  * @LastEditors: Quarter
  * @Description: 水印组件入口
  * @FilePath: /simple-ui/packages/water-mark/index.ts
  */
-import SWaterMark from "./src/water-mark.vue";
+import WaterMark from "./src/water-mark.vue";
 import Vue, { PluginObject, VueConstructor } from "vue";
 
-export default {
+const plugin: PluginObject<any> = {
   install: (vue: VueConstructor<Vue>): void => {
-    vue.component("SWaterMark", SWaterMark);
+    vue.component("SWaterMark", WaterMark);
   },
-} as PluginObject<any>;
-
-export {
-  SWaterMark,
 };
+
+type WaterMarkInstance = InstanceType<typeof WaterMark>;
+
+export default plugin;
+export { WaterMark, WaterMarkInstance };

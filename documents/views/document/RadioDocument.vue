@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:00:45
+ * @LastEditTime: 2022-12-13 15:27:17
  * @Description: 单选框文档
- * @FilePath: /simple-ui/documents/views/RadioDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/RadioDocument.vue
 -->
 <template>
   <div class="radio-document">
@@ -180,7 +180,7 @@
 </template>
 
 <script lang="ts">
-import { RadioValue } from "@quarter/simple-ui";
+import { RadioValue } from "@unmian/simple-ui";
 import { DocumentPage } from "documents/components";
 import { Component, Vue } from "vue-property-decorator";
 
@@ -276,5 +276,4 @@ ${"export default Vue.extend"}({
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

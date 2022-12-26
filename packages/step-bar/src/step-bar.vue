@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:05:38
+ * @LastEditTime: 2022-12-13 15:41:26
  * @LastEditors: Quarter
  * @Description: 简易的步骤条
  * @FilePath: /simple-ui/packages/step-bar/src/step-bar.vue
@@ -50,7 +50,7 @@ import { StepItem } from "./types";
 @Component({
   name: "SStepBar",
 })
-export default class SStepBar extends Vue {
+export default class StepBar extends Vue {
   @Prop({
     type: Array,
     default: () => [],
@@ -83,7 +83,6 @@ export default class SStepBar extends Vue {
 
   /**
    * @description: 当前选中值
-   * @author: Quarter
    * @return {number}
    */
   get syncActive(): number {
@@ -95,7 +94,6 @@ export default class SStepBar extends Vue {
 
   /**
    * @description: 当前选中值
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -105,7 +103,6 @@ export default class SStepBar extends Vue {
 
   /**
    * @description: 步骤条
-   * @author: Quarter
    * @return {Array<StepItem>}
    */
   get thisSteps(): StepItem[] {
@@ -117,7 +114,6 @@ export default class SStepBar extends Vue {
 
   /**
    * @description: 过滤的是否自定义
-   * @author: Quarter
    * @return {Boolean}
    */
   get filterCustom(): boolean {
@@ -126,7 +122,6 @@ export default class SStepBar extends Vue {
 
   /**
    * @description: 过滤的可以变更
-   * @author: Quarter
    * @return {Boolean}
    */
   get filterCanChange(): boolean {
@@ -147,68 +142,56 @@ export default class SStepBar extends Vue {
 
   /**
    * @description: 线的样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get lineStyle(): CustomStyle {
     return {
-      width: 100 - 100 / this.thisSteps.length + "%",
-      left: 100 / this.thisSteps.length / 2 + "%",
+      width: `${100 - 100 / this.thisSteps.length  }%`,
+      left: `${100 / this.thisSteps.length / 2  }%`,
     };
   }
 
   /**
    * @description: 项的样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get itemStyle(): CustomStyle {
     return {
-      width: 100 / this.thisSteps.length + "%",
+      width: `${100 / this.thisSteps.length  }%`,
     };
   }
 
   /**
    * @description: 激活类
-   * @author: Quarter
    * @return {CustomClass}
    */
   activeClass(index: number): CustomClass {
     return {
-      active:
-        typeof this.syncActive === "number" ? index <= this.syncActive : false,
-      current:
-        typeof this.syncActive === "number" ? index === this.syncActive : false,
+      active: typeof this.syncActive === "number" ? index <= this.syncActive : false,
+      current: typeof this.syncActive === "number" ? index === this.syncActive : false,
     };
   }
 
   /**
    * @description: 是否激活
-   * @author: Quarter
    * @param {Number} index 下标
    * @return {Boolean}
    */
   isActive(index: number): boolean {
-    return typeof this.syncActive === "number"
-      ? index <= this.syncActive
-      : false;
+    return typeof this.syncActive === "number" ? index <= this.syncActive : false;
   }
 
   /**
    * @description: 是否当前
-   * @author: Quarter
    * @param {Number} index 下标
    * @return {Boolean}
    */
   isCurrent(index: number): boolean {
-    return typeof this.syncActive === "number"
-      ? index === this.syncActive
-      : false;
+    return typeof this.syncActive === "number" ? index === this.syncActive : false;
   }
 
   /**
    * @description: 修改步骤
-   * @author: Quarter
    * @param {Number} index 下标
    * @return
    */

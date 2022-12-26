@@ -1,28 +1,17 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:45:05
+ * @LastEditTime: 2022-12-13 15:40:04
  * @LastEditors: Quarter
  * @Description: 消息提示容器组件
  * @FilePath: /simple-ui/packages/message/src/message-box.vue
 -->
 <template>
   <transition name="message-fade">
-    <div
-      class="s-message-box"
-      v-show="visible"
-      :class="customClass"
-      :style="{ zIndex }"
-    >
-      <div class="message-icon">
-        <i :class="iconName"></i>
-      </div>
-      <div class="message-content">{{ message }}</div>
-      <div class="message-close" @click="close">
-        <button>
-          <i class="s-icon-close"></i>
-        </button>
-      </div>
+    <div class="s-message-box" v-show="visible" :class="customClass" :style="{ zIndex }">
+      <s-message :theme="messageType">
+        {{ message }}
+      </s-message>
     </div>
   </transition>
 </template>
@@ -31,9 +20,13 @@
 import { CustomClass, CommonType } from "packages/types";
 import variables from "packages/variables";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import Message from "./message.vue";
 
 @Component({
   name: "SMessageBox",
+  components: {
+    SMessage: Message,
+  },
 })
 export default class MessageBox extends Vue {
   @Prop(String)
@@ -69,15 +62,11 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 安全的类型
-   * @author: Quarter
    * @return {CommonType}
    */
   get safeType(): CommonType {
     const types: CommonType[] = ["info", "warning", "success", "error"];
-    if (
-      typeof this.messageType === "string" &&
-      types.indexOf(this.messageType) > -1
-    ) {
+    if (typeof this.messageType === "string" && types.indexOf(this.messageType) > -1) {
       return this.messageType;
     }
     return "info";
@@ -85,7 +74,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 安全的延迟时间
-   * @author: Quarter
    * @return {Number}
    */
   get safeDuration(): number {
@@ -97,7 +85,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 自定义类
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -111,7 +98,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 图标的名称
-   * @author: Quarter
    * @return {String}
    */
   get iconName(): string | undefined {
@@ -124,12 +110,13 @@ export default class MessageBox extends Vue {
         return "s-icon-success";
       case "error":
         return "s-icon-error";
+      default:
+        return undefined;
     }
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -143,7 +130,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -155,7 +141,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   close(): void {
@@ -168,7 +153,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 销毁弹窗
-   * @author: Quarter
    * @return
    */
   destroyElement(): void {
@@ -182,76 +166,19 @@ export default class MessageBox extends Vue {
 
 <style lang="scss">
 .s-message-box {
-  width: 400px;
   height: 50px;
   padding: 0 20px;
   border-radius: 4px;
   box-sizing: border-box;
   transition: opacity 0.3s ease, transform 0.3s ease;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   position: fixed;
   top: 15px;
   left: 50%;
   margin-left: -200px;
-
-  .message-icon {
-    width: 30px;
-    display: flex;
-    align-items: center;
-  }
-
-  .message-content {
-    width: calc(100% - 90px);
-    font-size: 14px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-
-  .message-close {
-    width: 60px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-
-    button {
-      padding: 2px 5px;
-      color: inherit;
-      border: none;
-      cursor: pointer;
-      background: none;
-      transition: transform 0.2s ease;
-
-      &:hover {
-        transform: scale(1.3);
-      }
-    }
-  }
-
-  &.type-info {
-    color: #909399;
-    border: 1px solid rgba($color: #909399, $alpha: 0.2);
-    background-color: #f4f4f5;
-  }
-
-  &.type-warning {
-    color: #ffa32e;
-    border: 1px solid rgba($color: #ffa32e, $alpha: 0.2);
-    background-color: #fef6ec;
-  }
-
-  &.type-success {
-    color: #67c23a;
-    border: 1px solid rgba($color: #67c23a, $alpha: 0.2);
-    background-color: #f1f9ec;
-  }
-
-  &.type-error {
-    color: #f56c6c;
-    border: 1px solid rgba($color: #f56c6c, $alpha: 0.2);
-    background-color: #fdf1f0;
-  }
 
   &:nth-of-type(n + 2) {
     margin-top: 12px;

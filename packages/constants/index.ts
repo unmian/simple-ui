@@ -7,6 +7,6 @@
  * @FilePath: /simple-ui/src/simple-ui/constants/index.ts
  */
 
-export const MESSAGE_BOX_SPACING: number = 12;
-export const DEFAULT_DATE: string = "2100-01-01";
-export const ANIMATION_INDEX_DB: string = "__SIMPLE_UI_ANIMATION_INDEX_DB";
+export const MESSAGE_BOX_SPACING = 12;
+export const DEFAULT_DATE = "2100-01-01";
+export const ANIMATION_INDEX_DB = "__SIMPLE_UI_ANIMATION_INDEX_DB";

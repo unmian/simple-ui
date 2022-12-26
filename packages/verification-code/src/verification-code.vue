@@ -1,19 +1,14 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:27:49
+ * @LastEditTime: 2022-12-13 15:43:30
  * @LastEditors: Quarter
  * @Description: 简易的验证码组件
  * @FilePath: /simple-ui/packages/verification-code/src/verification-code.vue
 -->
 <template>
   <div class="s-verification-code" :style="{ width: width, height: height }">
-    <canvas
-      ref="codeCanvas"
-      :width="width"
-      :height="height"
-      @click="generate()"
-    ></canvas>
+    <canvas ref="codeCanvas" :width="width" :height="height" @click="generate()"></canvas>
   </div>
 </template>
 
@@ -23,7 +18,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   name: "SVerificationCode",
 })
-export default class SVerificationCode extends Vue {
+export default class VerificationCode extends Vue {
   @Prop({
     type: String,
     default: "100px",
@@ -65,7 +60,6 @@ export default class SVerificationCode extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -74,7 +68,6 @@ export default class SVerificationCode extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -83,23 +76,17 @@ export default class SVerificationCode extends Vue {
 
   /**
    * @description: 生成随机验证码
-   * @author: Quarter
    * @return
    */
   generate(): void {
-    let length: number = 4;
-    if (
-      typeof this.length === "number" &&
-      this.length >= 2 &&
-      this.length <= 20
-    ) {
+    let length = 4;
+    if (typeof this.length === "number" && this.length >= 2 && this.length <= 20) {
       length = this.length;
     }
     if (Array.isArray(this.characterArray) && this.characterArray.length > 0) {
       let randomCharacter = "";
       for (let i = 0; i < length; i++) {
-        const char: string =
-          this.characterArray[this.randomNumber(this.characterArray.length)];
+        const char: string = this.characterArray[this.randomNumber(this.characterArray.length)];
         randomCharacter += char;
       }
       this.randomCharacter = randomCharacter;
@@ -109,7 +96,6 @@ export default class SVerificationCode extends Vue {
 
   /**
    * @description: 验证字符串
-   * @author: Quarter
    * @param {String} code 待验证的字符串
    * @return {Promise<void>}
    */
@@ -119,22 +105,19 @@ export default class SVerificationCode extends Vue {
         if (this.randomCharacter === code) {
           resolve();
         }
-      } else {
-        if (this.randomCharacter.toUpperCase() === code.toUpperCase()) {
+      } else if (this.randomCharacter.toUpperCase() === code.toUpperCase()) {
           resolve();
         }
-      }
       reject();
     });
   }
 
   /**
    * @description: 生成字符集
-   * @author: Quarter
    * @return
    */
   createCharacterArray(): void {
-    const characterArray: string[] = new Array();
+    const characterArray: string[] = [];
     for (let i = 0; i < 10; i++) {
       characterArray.push(i.toString());
     }
@@ -147,7 +130,6 @@ export default class SVerificationCode extends Vue {
 
   /**
    * @description: 生成随机数
-   * @author: Quarter
    * @param {Number} max 最大数
    * @param {Number} min 最小数
    * @return {String}
@@ -157,16 +139,15 @@ export default class SVerificationCode extends Vue {
       if (typeof min === "number") {
         const distance: number = max - min;
         return Math.floor(Math.random() * distance) + min;
-      } else {
+      } 
         return Math.floor(Math.random() * max);
-      }
+      
     }
     return 0;
   }
 
   /**
    * @description: 生成一种颜色
-   * @author: Quarter
    * @return {String}
    */
   generateColor(): string {
@@ -178,45 +159,32 @@ export default class SVerificationCode extends Vue {
 
   /**
    * @description: 绘制验证码
-   * @author: Quarter
    * @return
    */
   drawVerificationCode(): void {
-    if (
-      typeof this.randomCharacter === "string" &&
-      this.randomCharacter.length > 0
-    ) {
-      const canvas: Element | Vue | Array<Element | Vue> | undefined =
-        this.$refs.codeCanvas;
+    if (typeof this.randomCharacter === "string" && this.randomCharacter.length > 0) {
+      const canvas: Element | Vue | Array<Element | Vue> | undefined = this.$refs.codeCanvas;
       if (canvas instanceof Element) {
-        const ctx: CanvasRenderingContext2D | null = (
-          canvas as HTMLCanvasElement
-        ).getContext("2d");
+        const ctx: CanvasRenderingContext2D | null = (canvas as HTMLCanvasElement).getContext("2d");
         if (ctx) {
           const canvasWidth: number = canvas.scrollWidth;
           const canvasHeight: number = canvas.scrollHeight;
           ctx.clearRect(0, 0, canvasWidth, canvasHeight);
           // 绘制干扰线
-          let lines: number = 3;
+          let lines = 3;
           if (typeof this.lines === "number") {
             lines = this.lines;
           }
           for (let i = 0; i < lines; i++) {
             ctx.beginPath();
-            ctx.moveTo(
-              this.randomNumber(canvasWidth),
-              this.randomNumber(canvasHeight)
-            );
-            ctx.lineTo(
-              this.randomNumber(canvasWidth),
-              this.randomNumber(canvasHeight)
-            );
+            ctx.moveTo(this.randomNumber(canvasWidth), this.randomNumber(canvasHeight));
+            ctx.lineTo(this.randomNumber(canvasWidth), this.randomNumber(canvasHeight));
             ctx.strokeStyle = this.generateColor();
             ctx.closePath();
             ctx.stroke();
           }
           // 绘制干扰点
-          let points: number = 20;
+          let points = 20;
           if (typeof this.points === "number") {
             points = this.points;
           }
@@ -227,31 +195,23 @@ export default class SVerificationCode extends Vue {
               this.randomNumber(canvasHeight),
               1,
               0,
-              2 * Math.PI
+              2 * Math.PI,
             );
             ctx.fillStyle = this.generateColor();
             ctx.closePath();
             ctx.fill();
           }
           // 绘制验证码
-          const randomCharacter: string = this.randomCharacter;
-          const itemDistance: number = Math.floor(
-            canvasWidth / this.randomCharacter.length
-          );
+          const {randomCharacter} = this;
+          const itemDistance: number = Math.floor(canvasWidth / this.randomCharacter.length);
           for (let i = 0; i < this.randomCharacter.length; i++) {
             const character: string = randomCharacter[i];
             ctx.beginPath();
             const fontSize: number = this.randomNumber(30, 16);
-            ctx.font = fontSize + "px 微软雅黑";
+            ctx.font = `${fontSize  }px 微软雅黑`;
             ctx.fillStyle = this.generateColor();
-            const xRandomDistance: number = this.randomNumber(
-              Math.ceil(itemDistance / 2)
-            );
-            ctx.fillText(
-              character,
-              itemDistance * i + xRandomDistance,
-              fontSize
-            );
+            const xRandomDistance: number = this.randomNumber(Math.ceil(itemDistance / 2));
+            ctx.fillText(character, itemDistance * i + xRandomDistance, fontSize);
             ctx.closePath();
           }
         }

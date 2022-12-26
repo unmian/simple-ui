@@ -1,131 +1,140 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-05 11:22:52
+ * @LastEditTime: 2022-12-15 17:47:16
  * @LastEditors: Quarter
  * @Description: 简易的日期选择器
  * @FilePath: /simple-ui/packages/date-picker/src/date-picker.vue
 -->
 <template>
-  <div class="s-date-picker" :class="{ 'status-disabled': disabled, 'status-readonly': readonly }">
-    <s-popover
-      ref="datePickerPopover"
-      border-radius="4px"
-      @switch="switchPopover"
-      :disabled="!enabled"
-    >
+  <div
+    class="s-date-picker"
+    :class="{ 's-date-picker--disabled': disabled, 's-date-picker--readonly': readonly }"
+  >
+    <popover ref="datePickerPopover" :disabled="!enabled" @switch="switchPopover">
       <s-input
         :width="width"
         :height="height"
         :value="dateStr"
-        :placeholder="placeholder"
+        :readonly-placeholder="filterPlaceholder"
         :disabled="disabled"
-        readonly
+        :readonly="inputReadonly"
         force-clear
         :clearable="enabled"
         slot="reference"
         @clear="clearValue"
       >
         <template #icon>
-          <i class="s-icon-calendar-outline" style="color: #d6e1e5"></i>
+          <icon name="calendar-days"></icon>
         </template>
       </s-input>
-      <div class="date-picker-popover">
-        <s-date-picker-popover
+      <div class="s-date-picker__popover">
+        <date-picker-popover
           ref="datePicker"
           :value="unsyncedValue"
           :min="min"
           :max="max"
           :day-picker="dayPicker"
-        ></s-date-picker-popover>
+        ></date-picker-popover>
         <div class="picker-footer">
-          <s-button type="cancel" @click="closePopover">取消</s-button>
-          <s-button v-if="quick" size="small" type="normal" @click="confirmTheDayBeforeYestarday"
+          <s-button size="small" theme="cancel" @click="closePopover">取消</s-button>
+          <s-button v-if="quick" size="small" theme="default" @click="confirmTheDayBeforeYestarday"
             >前天</s-button
           >
-          <s-button v-if="quick" size="small" type="normal" @click="confirmYestarday"
+          <s-button v-if="quick" size="small" type="default" @click="confirmYestarday"
             >昨天</s-button
           >
-          <s-button v-if="quick" size="small" type="confirm" @click="confirmToday">今天</s-button>
-          <s-button type="confirm" @click="confirmPopover">确定</s-button>
+          <s-button v-if="quick" size="small" type="default" @click="confirmToday">今天</s-button>
+          <s-button size="small" theme="primary" @click="confirmPopover">确定</s-button>
         </div>
       </div>
-    </s-popover>
+    </popover>
   </div>
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Button } from "packages/button";
 import { Input } from "packages/input";
 import { Emitter } from "packages/mixins";
 import { Popover } from "packages/popover";
 import { dateFormate } from "packages/util";
-import SDatePickerPopover from "./date-picker-popover.vue";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import DatePickerPopover from "./date-picker-popover.vue";
 
 @Component({
   name: "SDatePicker",
   components: {
-    SPopover: Popover,
+    Icon,
+    DatePickerPopover,
     SInput: Input,
     SButton: Button,
-    SDatePickerPopover,
+    Popover,
   },
 })
-export default class SDatePicker extends Mixins(Emitter) {
+export default class DatePicker extends Emitter {
+  // 宽度
   @Prop(String)
-  width?: string; // 宽度
+  readonly width?: string;
 
+  // 高度
   @Prop(String)
-  height?: string; // 高度
+  readonly height?: string;
 
+  // 提示文字
   @Prop({
     type: String,
     default: "请选择日期",
   })
-  placeholder!: string; // 提示文字
+  readonly placeholder!: string;
 
+  // 同步的值
   @Prop({
     type: String,
     default: null,
   })
-  value!: string | null; // 同步的值
+  readonly value!: string | null;
 
+  // 区间
   @Prop({
     type: Array,
     default: undefined,
   })
-  interval?: string[]; // 区间
+  readonly interval?: string[];
 
+  // 格式化字符串
   @Prop({
     type: String,
     default: "yyyy-MM-dd",
   })
-  formate!: string; // 格式化字符串
+  readonly formate!: string;
 
+  // 是否显示快捷操作
   @Prop({
     type: Boolean,
     default: false,
   })
-  quick!: boolean; // 是否显示快捷操作
+  readonly quick!: boolean;
 
+  // 是否禁用
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled!: boolean; // 是否禁用
+  readonly disabled!: boolean;
 
+  // 是否只读
   @Prop({
     type: Boolean,
     default: false,
   })
-  readonly!: boolean; // 是否只读
+  readonly readonly!: boolean;
 
-  unsyncedValue = 0; // 当前日期
+  // 当前日期
+  unsyncedValue = 0;
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {string|null}
    */
   get syncedValue(): string | null {
@@ -134,7 +143,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {string|null} val 值
    * @return
    */
@@ -145,7 +153,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -153,13 +160,34 @@ export default class SDatePicker extends Mixins(Emitter) {
   }
 
   /**
+   * @description: 输入框是否只读
+   * @return {boolean}
+   */
+  get inputReadonly(): boolean {
+    if (this.disabled) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * @description: 过滤的提示文本
+   * @return {string}
+   */
+  get filterPlaceholder(): string {
+    if (this.disabled || this.readonly) {
+      return "";
+    }
+    return this.placeholder;
+  }
+
+  /**
    * @description: 日选择
-   * @author: Quarter
    * @return {Boolean}
    */
   get dayPicker(): boolean {
     if (typeof this.formate === "string") {
-      const dayRegExp: RegExp = new RegExp(/d+/);
+      const dayRegExp = new RegExp(/d+/);
       return dayRegExp.test(this.formate);
     }
     return true;
@@ -167,7 +195,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get dateStr(): string | undefined {
@@ -178,19 +205,19 @@ export default class SDatePicker extends Mixins(Emitter) {
     ) {
       return dateFormate(this.unsyncedValue, this.formate);
     }
+    return undefined;
   }
 
   /**
    * @description: 最小值
-   * @author: Quarter
    * @return {Number}
    */
   get min(): number {
     if (Array.isArray(this.interval) && typeof this.interval[0] === "string") {
       const minStr: string = this.interval[0];
-      const dateRegExp: RegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
       if (dateRegExp.test(minStr)) {
-        return new Date(minStr + " 00:00:00").getTime();
+        return new Date(`${minStr} 00:00:00`).getTime();
       }
     }
     return 0;
@@ -198,15 +225,14 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 最大值
-   * @author: Quarter
    * @return {Number}
    */
   get max(): number {
     if (Array.isArray(this.interval) && typeof this.interval[1] === "string") {
       const maxStr: string = this.interval[1];
-      const dateRegExp: RegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
       if (dateRegExp.test(maxStr)) {
-        return new Date(maxStr + " 00:00:00").getTime();
+        return new Date(`${maxStr} 00:00:00`).getTime();
       }
     }
     return 0;
@@ -214,7 +240,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return
    */
@@ -224,7 +249,7 @@ export default class SDatePicker extends Mixins(Emitter) {
   handleValueChange(timeStr: string): void {
     if (typeof timeStr === "string") {
       const formateStr: string = this.formateStandardTimeStr(timeStr);
-      const dateRegExp: RegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
       if (dateRegExp.test(formateStr)) {
         const date: Date = new Date(formateStr);
         if (date.getTime() !== this.unsyncedValue) {
@@ -240,7 +265,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 监听选中值变化
-   * @author: Quarter
    * @param {Number} timeStamp 时间戳
    * @return
    */
@@ -263,7 +287,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 格式化标准时间字符串
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return {String}
    */
@@ -282,7 +305,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 清空值
-   * @author: Quarter
    * @return
    */
   clearValue(): void {
@@ -291,19 +313,17 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 切换弹窗显示
-   * @author: Quarter
    * @param {Boolean} visible 是否显示
    * @return
    */
   switchPopover(visible: boolean): void {
-    if (visible === true && this.$refs.datePicker instanceof SDatePickerPopover) {
+    if (visible === true && this.$refs.datePicker instanceof DatePickerPopover) {
       this.$refs.datePicker.init();
     }
   }
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closePopover(): void {
@@ -314,7 +334,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认使用前天
-   * @author: Quarter
    * @return
    */
   confirmTheDayBeforeYestarday(): void {
@@ -323,7 +342,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认使用昨天
-   * @author: Quarter
    * @return
    */
   confirmYestarday(): void {
@@ -332,7 +350,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认使用今天
-   * @author: Quarter
    * @return
    */
   confirmToday(): void {
@@ -341,7 +358,6 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认快捷时间
-   * @author: Quarter
    * @param {Number} timestamp 时间戳
    * @return
    */
@@ -358,11 +374,10 @@ export default class SDatePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认弹窗
-   * @author: Quarter
    * @return
    */
   confirmPopover(): void {
-    if (this.$refs.datePicker instanceof SDatePickerPopover) {
+    if (this.$refs.datePicker instanceof DatePickerPopover) {
       const value: number | undefined = this.$refs.datePicker.getSelectorValue();
       if (typeof value === "number") {
         this.unsyncedValue = value;
@@ -379,65 +394,28 @@ export default class SDatePicker extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-date-picker {
-  .s-input .input-content {
-    border-color: #d6e1e5;
-    background-color: #ffffff;
+  display: inline-flex;
 
-    .input-icon {
-      padding-left: 5px;
+  &:not(.s-date-picker--disabled):not(.s-date-picker--readonly):hover {
+    .s-input--readonly:not(.s-input--disabled) .s-input__content {
+      border-color: var(--s-brand-hover);
     }
 
-    input {
-      padding-left: 5px;
-      color: #333333;
+    &:not(:last-child) {
+      margin-right: 10px;
     }
-
-    &:hover {
-      border-color: #b7c1c5;
-    }
-  }
-
-  &.status-disabled {
-    .s-input .input-content {
-      cursor: not-allowed;
-      background-color: #f9f9f9;
-
-      input {
-        color: #666666;
-        cursor: not-allowed;
-      }
-
-      &:hover {
-        border-color: #d6e1e5;
-      }
-    }
-  }
-
-  &:not(.status-disabled).status-readonly {
-    .s-input .input-content {
-      cursor: default;
-
-      input {
-        cursor: default;
-      }
-
-      &:hover {
-        border-color: #d6e1e5;
-      }
-    }
-  }
-
-  &:not(:last-child) {
-    margin-right: 10px;
   }
 }
 
-.date-picker-popover {
+.s-date-picker--disabled {
+  cursor: not-allowed;
+}
+
+.s-date-picker__popover {
   .picker-footer {
     width: 100%;
-    height: 45px;
-    padding: 0 5px;
-    border-top: 1px solid #d6e1e5;
+    padding: var(--s-spacing-8);
+    border-top: 1px solid var(--s-border-color);
     box-sizing: border-box;
     display: flex;
     justify-content: flex-end;

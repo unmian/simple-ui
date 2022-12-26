@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:42:06
+ * @LastEditTime: 2022-12-13 17:38:30
  * @LastEditors: Quarter
  * @Description: 文件选择按钮组件
  * @FilePath: /simple-ui/packages/file-button/src/file-button.vue
@@ -10,20 +10,15 @@
   <div class="s-file-button">
     <div class="operation-list">
       <s-button
-        :fill="fill"
-        :outline="outline"
+        :variant="variant"
+        :theme="theme"
         :size="size"
-        :type="type"
-        :round="round"
+        :shape="shape"
+        :icon="icon"
         :disabled="disabledStatus"
       >
         {{ text }}
-        <input
-          type="file"
-          @change="changeFile"
-          :multiple="multiple"
-          :disabled="disabledStatus"
-        />
+        <input type="file" @change="changeFile" :multiple="multiple" :disabled="disabledStatus" />
       </s-button>
       <div class="other-operation">
         <slot name="operation"></slot>
@@ -54,10 +49,10 @@
 </template>
 
 <script lang="ts">
-import { Button, ButtonType } from "packages/button";
+import { Button, ButtonShape, ButtonSize, ButtonTheme, ButtonVariant } from "packages/button";
 import { Emitter } from "packages/mixins";
-import { FileSource, FileValue, CommonSize } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { FileSource, FileValue } from "packages/types";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   name: "SFileButton",
@@ -65,73 +60,66 @@ import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
     SButton: Button,
   },
 })
-export default class SFileButton extends Mixins(Emitter) {
+export default class FileButton extends Emitter {
+  // 组件值
   @Prop({
     type: [Object, Array],
     default: () => [],
   })
-  value!: FileValue; // 组件值
+  value!: FileValue;
 
+  // 是否复选
   @Prop({
     type: Boolean,
     default: false,
   })
-  multiple!: boolean; // 是否复选
+  multiple!: boolean;
 
+  // 提示信息
   @Prop({
     type: String,
     default: null,
   })
-  tip!: string | null; // 提示信息
+  tip!: string | null;
 
-  @Prop({
-    type: Boolean,
-    default: false,
-  })
-  fill!: boolean; // 是否填充
+  // 按钮主题
+  @Prop(String)
+  theme?: ButtonTheme;
 
-  @Prop({
-    type: Boolean,
-    default: false,
-  })
-  outline!: boolean; // 是否框线
+  // 按钮变体
+  @Prop(String)
+  variant?: ButtonVariant;
 
-  @Prop({
-    type: String,
-    default: "medium",
-  })
-  size!: CommonSize; // 按钮大小
+  // 按钮形状
+  @Prop(String)
+  shape?: ButtonShape;
 
+  // 按钮大小
+  @Prop(String)
+  size?: ButtonSize;
+
+  // 圆角图标
+  @Prop(String)
+  icon?: string;
+
+  // 是否禁用
+  @Prop(Boolean)
+  disabled?: boolean;
+
+  // 文本
   @Prop({
     type: String,
     default: "选择文件",
   })
-  text?: string; // 文本
+  text?: string;
 
-  @Prop({
-    type: String,
-    default: "normal",
-  })
-  type!: ButtonType; // 按钮类型
-
-  @Prop({
-    type: Boolean,
-    default: false,
-  })
-  round!: boolean; // 圆角按钮
-
-  @Prop({
-    type: Boolean,
-    default: false,
-  })
-  disabled!: boolean; // 按钮类型
-
-  files: File[] = []; // 文件列表
-  imageSrc: FileSource[] = []; // 图片路径
+  // 文件列表
+  files: File[] = [];
+  // 图片路径
+  imageSrc: FileSource[] = [];
 
   /**
    * @description: 组件值
-   * @author: Quarter
    * @return {FileValue}
    */
   get syncedValue(): FileValue {
@@ -140,7 +128,6 @@ export default class SFileButton extends Mixins(Emitter) {
 
   /**
    * @description: 组件值
-   * @author: Quarter
    * @param {FileValue} val 值
    * @return
    */
@@ -150,7 +137,6 @@ export default class SFileButton extends Mixins(Emitter) {
 
   /**
    * @description: 图片的个数
-   * @author: Quarter
    * @return {Number}
    */
   get fileCounter(): number {
@@ -159,20 +145,17 @@ export default class SFileButton extends Mixins(Emitter) {
 
   /**
    * @description: 禁用状态
-   * @author: Quarter
    * @return {Boolean}
    */
-  get disabledStatus(): boolean {
+  get disabledStatus(): boolean | undefined {
     if (this.multiple) {
       return this.disabled;
-    } else {
-      return this.disabled || this.fileCounter >= 1;
     }
+    return this.disabled || this.fileCounter >= 1;
   }
 
   /**
    * @description: 监听文件的变化
-   * @author: Quarter
    * @return
    */
   @Watch("files")
@@ -181,48 +164,49 @@ export default class SFileButton extends Mixins(Emitter) {
       this.syncedValue = this.files;
       this.$emit("change", this.files);
       this.$emit("input", this.files);
+    } else if (this.files.length > 0) {
+      this.syncedValue = this.files[0];
+      this.$emit("change", this.files[0]);
+      this.$emit("input", this.files[0]);
     } else {
-      if (this.files.length > 0) {
-        this.syncedValue = this.files[0];
-        this.$emit("change", this.files[0]);
-        this.$emit("input", this.files[0]);
-      } else {
-        this.syncedValue = null;
-        this.$emit("change", null);
-        this.$emit("input", null);
-      }
+      this.syncedValue = null;
+      this.$emit("change", null);
+      this.$emit("input", null);
     }
     this.dispatch("SFormItem", "s-form-validate", ["change"]);
   }
 
   /**
    * @description: 清空内容
-   * @author: Quarter
    * @return
    */
   clear(): void {
-    this.files = new Array();
-    this.imageSrc = new Array();
+    this.files = [];
+    this.imageSrc = [];
   }
 
   /**
    * @description: 选中文件变化
-   * @author: Quarter
    * @param {Event} event 事件
    * @return
    */
   changeFile(event: Event) {
     if (event) {
-      const target: any = event.target;
-      if (target && target.nodeName === "INPUT" && target.type === "file") {
-        const files: File[] = Array.from(target.files);
+      const { target } = event;
+      if (
+        target instanceof Element &&
+        target.nodeName === "INPUT" &&
+        (target as HTMLInputElement).type === "file"
+      ) {
+        const files: File[] = Array.from((target as HTMLInputElement).files || []);
         if (Array.isArray(files) && files.length > 0) {
           if (this.multiple) {
             this.files = Array.from(new Set(this.files.concat(files)));
           } else {
             const file: File = files[0];
             this.files.splice(this.files.length - 1, 1, file);
-            target.value = null;
+            (target as HTMLInputElement).files = null;
+            (target as HTMLInputElement).value = "";
           }
         }
       }
@@ -231,7 +215,6 @@ export default class SFileButton extends Mixins(Emitter) {
 
   /**
    * @description: 删除文件
-   * @author: Quarter
    * @param {Number} index 下标
    * @return
    */
@@ -244,49 +227,33 @@ export default class SFileButton extends Mixins(Emitter) {
 
   /**
    * @description: 计算文件大小
-   * @author: Quarter
    * @return {String}
    */
   calcFileSize(bytes: number): string | undefined {
     if (typeof bytes === "number") {
-      if (bytes >= 1024) {
-        bytes = bytes / 1024;
-        if (bytes >= 1024) {
-          bytes = bytes / 1024;
-          if (bytes >= 1024) {
-            bytes = bytes / 1024;
-            if (bytes >= 1024) {
-              bytes = bytes / 1024;
-              return this.parseSize(bytes, "TB");
-            } else {
-              return this.parseSize(bytes, "GB");
-            }
-          } else {
-            return this.parseSize(bytes, "MB");
-          }
-        } else {
-          return this.parseSize(bytes, "KB");
-        }
-      } else {
-        return this.parseSize(bytes, "B");
+      const sizeList = ["B", "KB", "MB", "GB", "TB"];
+      let index = 0;
+      let temp = bytes;
+      while (temp >= 1024 && index < sizeList.length) {
+        temp /= 1024;
+        index += 1;
       }
+      return this.parseSize(temp, sizeList[index]);
     }
   }
 
   /**
    * @description: 格式化文件大小
-   * @author: Quarter
    * @param {Number} size 文件大小
    * @param {String} unit 单位
    * @return
    */
   parseSize(size: number, unit: string): string {
-    const dotRegExp: RegExp = new RegExp(/\.[0-9]{3,}$/);
+    const dotRegExp = new RegExp(/\.[0-9]{3,}$/);
     if (dotRegExp.test(size.toString())) {
       return `${(Math.round(size * 100) / 100).toFixed(2)} ${unit}`;
-    } else {
-      return `${size} ${unit}`;
     }
+    return `${size} ${unit}`;
   }
 }
 </script>

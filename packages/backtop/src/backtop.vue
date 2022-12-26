@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-06 17:20:38
+ * @LastEditTime: 2022-12-13 15:33:05
  * @LastEditors: Quarter
  * @Description: 返回顶部
  * @FilePath: /simple-ui/packages/backtop/src/backtop.vue
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Icon } from "@quarter/simple-icons";
+import { Icon } from "@unmian/simple-icons";
 import { ScaleTransition } from "packages/transition";
 import type { CustomClass } from "packages/types";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
@@ -34,9 +34,9 @@ import type { BacktopSize } from "./types";
     ScaleTransition,
   },
 })
-export default class SBacktop extends Vue {
+export default class Backtop extends Vue {
   @Prop([Number, String, Array])
-  offset?: number | string | (number | string | undefined)[]; // 偏移量
+  offset?: number | string | Array<number | string | undefined>; // 偏移量
 
   @Prop({
     type: String,
@@ -49,7 +49,7 @@ export default class SBacktop extends Vue {
 
   @Prop({
     type: String,
-    default: "short-up",
+    default: "mouse",
   })
   icon?: string; // 图标
 
@@ -62,45 +62,44 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 距离底部的距离
-   * @author: Quarter
    * @return {string}
    */
   get bottom(): string | undefined {
-    if ("number" === typeof this.offset) {
+    if (typeof this.offset === "number") {
       return `${this.offset}px`;
-    } else if ("string" === typeof this.offset) {
+    } else if (typeof this.offset === "string") {
       return this.offset;
     } else if (Array.isArray(this.offset) && this.offset.length >= 2) {
-      if ("number" === typeof this.offset[0]) {
+      if (typeof this.offset[0] === "number") {
         return `${this.offset[0]}px`;
-      } else if ("string" === typeof this.offset[0]) {
+      } else if (typeof this.offset[0] === "string") {
         return this.offset[0];
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 距离底部的距离
-   * @author: Quarter
    * @return {string}
    */
   get right(): string | undefined {
-    if ("number" === typeof this.offset) {
+    if (typeof this.offset === "number") {
       return `${this.offset}px`;
-    } else if ("string" === typeof this.offset) {
+    } else if (typeof this.offset === "string") {
       return this.offset;
     } else if (Array.isArray(this.offset) && this.offset.length >= 2) {
-      if ("number" === typeof this.offset[1]) {
+      if (typeof this.offset[1] === "number") {
         return `${this.offset[1]}px`;
       } else if (typeof this.offset[1] === "string") {
         return this.offset[1];
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 图标尺寸
-   * @author: Quarter
    * @return
    */
   get iconSize(): number {
@@ -118,7 +117,6 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 自定义类
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -131,7 +129,6 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -141,7 +138,6 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -151,14 +147,13 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 查找目标元素
-   * @author: Quarter
    * @return {Element}
    */
   queryTargetElement(): Element {
     if (this.target instanceof Element) {
       return this.target;
     }
-    if ("string" === typeof this.target) {
+    if (typeof this.target === "string") {
       const el = document.querySelector(this.target);
       if (el instanceof Element) {
         return el;
@@ -172,7 +167,6 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 监听目标元素入参的变化
-   * @author: Quarter
    * @param {Element} el 元素
    * @param {Element|undefined} oldEl 元素
    * @return
@@ -191,7 +185,6 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 监听目标元素的变化
-   * @author: Quarter
    * @param {Element} el 元素
    * @param {Element|undefined} oldEl 元素
    * @return
@@ -210,11 +203,10 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 判断是否显示
-   * @author: Quarter
    * @return
    */
   judgeScrollTopVisible(e: Event): void {
-    const target = e.target;
+    const {target} = e;
     if (target instanceof Element && target === this.targetElement) {
       if (target.scrollTop < 200) {
         this.visible = false;
@@ -226,7 +218,6 @@ export default class SBacktop extends Vue {
 
   /**
    * @description: 滚动到顶层
-   * @author: Quarter
    * @return
    */
   scrollTop(): void {

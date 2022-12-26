@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-08 14:32:01
+ * @LastEditTime: 2022-12-13 15:15:47
  * @LastEditors: Quarter
  * @Description: 文档页
  * @FilePath: /simple-ui/documents/components/document-page/index.vue
@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts">
-import { MenuItem } from "@quarter/simple-ui";
+import { MenuItem } from "@unmian/simple-ui";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component({
@@ -126,7 +126,6 @@ export default class DocumentPage extends Vue {
 
   /**
    * @description: 菜单列表
-   * @author: Quarter
    * @return {MenuItem[]}
    */
   get menus(): MenuItem[] {
@@ -157,7 +156,6 @@ export default class DocumentPage extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -173,7 +171,6 @@ export default class DocumentPage extends Vue {
 
   /**
    * @description: 切换菜单
-   * @author: Quarter
    * @return
    */
   changeMenu(_: number, menu: MenuItem): void {
@@ -182,7 +179,6 @@ export default class DocumentPage extends Vue {
 
   /**
    * @description: 切换示例代码显示
-   * @author: Quarter
    * @return
    */
   switchCode(): void {

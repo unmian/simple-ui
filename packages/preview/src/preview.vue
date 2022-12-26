@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2021-05-07 15:09:26
- * @LastEditTime: 2022-06-07 16:48:20
+ * @LastEditTime: 2022-12-13 15:40:56
  * @LastEditors: Quarter
  * @Description: 预览组件
  * @FilePath: /simple-ui/packages/preview/src/preview.vue
@@ -10,20 +10,11 @@
   <div class="s-preview" :class="customClass">
     <slot></slot>
     <fade-transition transition="linear">
-      <div
-        v-if="visible"
-        class="s-preview-fullscreen"
-        :style="{ zIndex }"
-        @click="visible = false"
-      >
-        <div
-          ref="container"
-          class="preview-container"
-          @click.stop="exitFullScreen"
-        ></div>
+      <div v-if="visible" class="s-preview-fullscreen" :style="{ zIndex }" @click="visible = false">
+        <div ref="container" class="preview-container" @click.stop="exitFullScreen"></div>
         <div class="preview-operation">
           <button @click="visible = false">
-            <i class="s-icon-close"></i>
+            <icon name="close-md"></icon>
           </button>
         </div>
       </div>
@@ -32,6 +23,7 @@
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { CustomClass, CommonThemeMode } from "packages/types";
 import { FadeTransition } from "packages/transition";
@@ -40,10 +32,11 @@ import variables from "packages/variables";
 @Component({
   name: "SPreview",
   components: {
+    Icon,
     FadeTransition,
   },
 })
-export default class SPreview extends Vue {
+export default class Preview extends Vue {
   @Prop(String)
   mode?: CommonThemeMode; // 主题模式
 
@@ -52,7 +45,6 @@ export default class SPreview extends Vue {
 
   /**
    * @description: 过滤的颜色模式
-   * @author: Quarter
    * @return {CommonThemeMode}
    */
   get filterMode(): CommonThemeMode {
@@ -65,7 +57,6 @@ export default class SPreview extends Vue {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -77,7 +68,6 @@ export default class SPreview extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -86,7 +76,6 @@ export default class SPreview extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -95,26 +84,22 @@ export default class SPreview extends Vue {
 
   /**
    * @description: 预览
-   * @author: Quarter
    * @return
    */
   preview(): void {
     this.zIndex = ++variables.zIndex;
     this.visible = true;
     this.$nextTick(() => {
-      if (
-        !(this.$el instanceof HTMLElement) ||
-        !(this.$refs.container instanceof HTMLDivElement)
-      ) {
+      if (!(this.$el instanceof HTMLElement) || !(this.$refs.container instanceof HTMLDivElement)) {
         return;
       }
-      const container: HTMLDivElement = this.$refs.container;
+      const {container} = this.$refs;
       container.childNodes.forEach((node: ChildNode) => node.remove());
       const media: HTMLImageElement | HTMLVideoElement | null =
         this.$el.querySelector("img") || this.$el.querySelector("video");
       if (media) {
         const el: HTMLImageElement | HTMLVideoElement = document.createElement(
-          media.nodeName.toLowerCase()
+          media.nodeName.toLowerCase(),
         ) as HTMLImageElement | HTMLVideoElement;
         el.src = media.src;
         const alt: string | null = media.getAttribute("alt");
@@ -132,7 +117,6 @@ export default class SPreview extends Vue {
 
   /**
    * @description: 键盘退出预览
-   * @author: Quarter
    * @return
    */
   keyboardExit(e: KeyboardEvent): void {
@@ -143,16 +127,10 @@ export default class SPreview extends Vue {
 
   /**
    * @description: 点击退出预览
-   * @author: Quarter
    * @return
    */
   exitFullScreen(e: MouseEvent): void {
-    if (
-      !(
-        e.target instanceof HTMLImageElement ||
-        e.target instanceof HTMLVideoElement
-      )
-    ) {
+    if (!(e.target instanceof HTMLImageElement || e.target instanceof HTMLVideoElement)) {
       this.visible = false;
     }
   }
@@ -219,6 +197,9 @@ export default class SPreview extends Vue {
         background-color: rgba($color: #ffffff, $alpha: 0.5);
         cursor: pointer;
         backdrop-filter: blur(5px);
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
 
         &:hover {
           color: rgba($color: #000000, $alpha: 0.6);

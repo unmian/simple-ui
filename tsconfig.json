@@ -35,10 +35,10 @@
       "packages/*": [
         "packages/*"
       ],
-      "@quarter/simple-ui": [
+      "@unmian/simple-ui": [
         "packages/index.ts"
       ],
-      "@quarter/simple-ui/*": [
+      "@unmian/simple-ui/*": [
         "packages/*"
       ]
     },
@@ -47,7 +47,10 @@
     ]
   },
   "vueCompilerOptions": {
-    "experimentalCompatMode": 2
+    "experimentalCompatMode": 2,
+    "extensions": [
+      ".vue"
+    ]
   },
   "include": [
     "documents/**/*.ts",

@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:59:25
+ * @LastEditTime: 2022-12-13 15:17:58
  * @Description: 输入框文档
- * @FilePath: /simple-ui/documents/views/InputDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/InputDocument.vue
 -->
 <template>
   <div class="input-document">
@@ -177,19 +177,46 @@
               <s-input width="240px"></s-input>
             </li>
             <li>
-              <s-input width="240px" placeholder="请输入内容"></s-input>
+              <s-input width="240px" placeholder="请输入内容">
+                <template #icon>
+                  <s-icon name="edit-pencil-line-01"></s-icon>
+                </template>
+              </s-input>
+            </li>
+            <li>
+              <s-input width="240px" placeholder="请输入内容">
+                <template #prefix>网址：</template>
+                <template #suffix>.com</template>
+              </s-input>
             </li>
             <li>
               <s-input width="240px" placeholder="有长度限制的输入框" :maxlength="20"></s-input>
             </li>
             <li>
-              <s-input width="240px" value="可以直接清空的输入框" placeholder="请输入内容" clearable></s-input>
+              <s-input
+                width="240px"
+                value="可以直接清空的输入框"
+                placeholder="请输入内容"
+                clearable
+              ></s-input>
             </li>
             <li>
               <s-input width="240px" placeholder="禁用的输入框" :maxlength="20" disabled></s-input>
             </li>
             <li>
               <s-input width="240px" placeholder="只读的输入框" :maxlength="20" readonly></s-input>
+            </li>
+            <li>
+              <s-input
+                width="360px"
+                height="40px"
+                placeholder="只读的输入框"
+                :maxlength="20"
+                clearable
+              >
+                <template #prefix>网址：</template>
+                <template #suffix>.com</template>
+              </s-input>
             </li>
           </ul>
         </div>
@@ -209,14 +236,7 @@ import { Component, Vue } from "vue-property-decorator";
   },
 })
 export default class InputDocument extends Vue {
-  code = `
-<s-input width="240px"></s-input>
-<s-input width="240px" placeholder="请输入内容"></s-input>
-<s-input width="240px" placeholder="有长度限制的输入框" :maxlength="20"></s-input>
-<s-input width="240px" value="可以直接清空的输入框" placeholder="请输入内容" clearable></s-input>
-<s-input width="240px" placeholder="禁用的输入框" :maxlength="20" disabled></s-input>
-<s-input width="240px" placeholder="只读的输入框" :maxlength="20" readonly></s-input>
-  `;
+  code = "";
 }
 </script>
 

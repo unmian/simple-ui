@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-05-16 10:50:33
- * @LastEditTime: 2022-06-08 11:16:43
+ * @LastEditTime: 2022-12-13 15:30:58
  * @LastEditors: Quarter
  * @Description: 示例代码
  * @FilePath: /simple-ui/documents/views/document/avatar/size-demo.vue
@@ -42,7 +42,7 @@ import { Component, Vue } from "vue-property-decorator";
 import userBigUrl from "documents/assets/user-big.png";
 
 @Component
-export default class SizeDemo extends Vue {
+export default class AvatarSizeDemo extends Vue {
   // 头像地址
   url = userBigUrl;
 }

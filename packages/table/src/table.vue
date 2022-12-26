@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2021-03-09 21:26:05
- * @LastEditTime: 2022-04-08 06:15:12
+ * @LastEditTime: 2022-12-13 15:41:49
  * @LastEditors: Quarter
  * @Description: 简易的表格组件
  * @FilePath: /simple-ui/packages/table/src/table.vue
@@ -53,7 +53,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 @Component({
   name: "STable",
 })
-export default class STable extends Vue {
+export default class Table extends Vue {
   @Prop(Array)
   tableData?: any[];
 
@@ -61,7 +61,7 @@ export default class STable extends Vue {
     if (Array.isArray(this.tableData)) {
       return this.tableData;
     }
-    return new Array();
+    return [];
   }
 
   mounted(): void {

@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-06-06 01:08:31
+ * @LastEditTime: 2022-12-14 15:45:14
  * @Description: 复选框文档
  * @FilePath: /simple-ui/documents/views/document/CheckboxDocument.vue
 -->
@@ -10,9 +10,7 @@
   <div class="checkbox-document">
     <document-page title="复选框 Checkbox" :code="checkboxCode">
       <template v-slot:desc>
-        <p>
-          这是一个自定义的复选框组件，不推荐单独使用，搭配 CheckboxGroup 使用效果更加。
-        </p>
+        <p>这是一个自定义的复选框组件，不推荐单独使用，搭配 CheckboxGroup 使用效果更加。</p>
       </template>
       <template v-slot:prop>
         <tbody>
@@ -79,8 +77,7 @@
             <td>change</td>
             <td>
               status: Boolean 勾选的状态
-              <br />label: CheckboxValue
-              复选框的值
+              <br />label: CheckboxValue 复选框的值
             </td>
             <td>复选框状态改变</td>
           </tr>
@@ -112,9 +109,7 @@
     </document-page>
     <document-page title="复选框按钮 CheckboxButton" :code="checkboxButtonCode">
       <template v-slot:desc>
-        <p>
-          这是一个自定义的复选框按钮组件，不推荐单独使用，搭配 CheckboxGroup 使用效果更加。
-        </p>
+        <p>这是一个自定义的复选框按钮组件，不推荐单独使用，搭配 CheckboxGroup 使用效果更加。</p>
       </template>
       <template v-slot:prop>
         <tbody>
@@ -176,8 +171,7 @@
             <td>change</td>
             <td>
               status: Boolean 勾选的状态
-              <br />label: CheckboxValue
-              复选框的值
+              <br />label: CheckboxValue 复选框的值
             </td>
             <td>复选框状态改变</td>
           </tr>
@@ -211,6 +205,13 @@
           <s-checkbox-button label="羽毛球" disabled>羽毛球</s-checkbox-button>
           <s-checkbox-button checked label="网球" disabled>网球</s-checkbox-button>
           <s-checkbox-button label="排球" disabled>排球</s-checkbox-button>
+        </div>
+        <div style="margin-top: 20px">
+          <s-checkbox-button checked label="篮球" readonly>篮球</s-checkbox-button>
+          <s-checkbox-button label="足球" readonly>足球</s-checkbox-button>
+          <s-checkbox-button label="羽毛球" readonly>羽毛球</s-checkbox-button>
+          <s-checkbox-button checked label="网球" readonly>网球</s-checkbox-button>
+          <s-checkbox-button label="排球" readonly>排球</s-checkbox-button>
         </div>
         <div style="margin-top: 20px">
           <s-checkbox-button checked label="篮球" size="large">篮球</s-checkbox-button>
@@ -258,7 +259,7 @@
 
 <script lang="ts">
 import { DocumentPage } from "documents/components";
-import { CheckboxValue } from "@quarter/simple-ui";
+import { CheckboxValue } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -338,7 +339,7 @@ export default class CheckboxDocument extends Vue {
 
 <script lang="ts">
 import Vue from "vue";
-import { CheckboxValue } from "@quarter/simple-ui";
+import { CheckboxValue } from "@unmian/simple-ui";
 
 ${"export default Vue.extend"}({
   data() {
@@ -349,7 +350,6 @@ ${"export default Vue.extend"}({
   computed: {
     /**
      * @description: 获取复选框组成的字符串
-     * @author: Quarter
      * @return {String}
      */
     checkboxStr(): string {
@@ -365,7 +365,6 @@ ${"export default Vue.extend"}({
 
   /**
    * @description: 获取复选框组成的字符串
-   * @author: Quarter
    * @return {String}
    */
   get checkboxStr(): string {
@@ -377,5 +376,4 @@ ${"export default Vue.extend"}({
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

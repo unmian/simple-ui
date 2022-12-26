@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-05 11:26:09
+ * @LastEditTime: 2022-12-13 15:27:13
  * @Description: 媒体预览文档
  * @FilePath: /simple-ui/documents/views/document/PreviewDocument.vue
 -->
@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import { DocumentPage } from "documents/components";
-import { Preview } from "@quarter/simple-ui";
+import { Preview } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -86,13 +86,12 @@ export default class PreviewDocument extends Vue {
 
 <script lang="ts">
 import Vue from "vue";
-import { Preview } from "@quarter/simple-ui";
+import { Preview } from "@unmian/simple-ui";
 
 ${"export default Vue.extends"}({
   methods: {
     /**
    * @description: 预览图片
-   * @author: Quarter
    * @return
    */
     previewImage(): void {
@@ -102,7 +101,6 @@ ${"export default Vue.extends"}({
     },
     /**
      * @description: 预览视频
-     * @author: Quarter
      * @return
      */
     previewVideo(): void {
@@ -117,7 +115,6 @@ ${"export default Vue.extends"}({
 
   /**
    * @description: 预览图片
-   * @author: Quarter
    * @return
    */
   previewImage(): void {
@@ -128,7 +125,6 @@ ${"export default Vue.extends"}({
 
   /**
    * @description: 预览视频
-   * @author: Quarter
    * @return
    */
   previewVideo(): void {

@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 14:42:15
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:01:27
+ * @LastEditTime: 2022-12-13 15:27:42
  * @Description: 步骤条说明文档
- * @FilePath: /simple-ui/documents/views/StepDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/StepDocument.vue
 -->
 <template>
   <div class="step-document">
@@ -85,7 +85,7 @@
 
 <script lang="ts">
 import { DocumentPage } from "documents/components";
-import { StepItem } from "@quarter/simple-ui";
+import { StepItem } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -96,7 +96,8 @@ import { Component, Vue } from "vue-property-decorator";
 })
 export default class StepDocument extends Vue {
   active = 1; // 当前激活
-  steps: StepItem[] = [ // 步骤
+  steps: StepItem[] = [
+    // 步骤
     {
       name: "步骤一",
       brief: "这是步骤一的说明",
@@ -124,7 +125,7 @@ export default class StepDocument extends Vue {
 
 <script lang="ts">
 import Vue from "vue";
-import { StepItem } from "@quarter/simple-ui";
+import { StepItem } from "@unmian/simple-ui";
 
 ${"export default Vue.extends"}({
   data() {
@@ -150,5 +151,4 @@ ${"export default Vue.extends"}({
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -2,14 +2,14 @@
  * @Author: Quarter
  * @Date: 2020-07-16 09:35:29
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-06 10:43:02
+ * @LastEditTime: 2022-09-19 16:09:41
  * @Description: 全局注册自定义UI组件
  */
 
-import { IconPlugin, IconfontPlugin } from "@quarter/simple-icons";
+import { IconPlugin, IconfontPlugin } from "@unmian/simple-icons";
 import Vue, { PluginObject } from "vue";
 import { ANIMATION_INDEX_DB } from "./constants";
-import "@quarter/simple-icons/lib/style.css";
+import "@unmian/simple-icons/lib/style.css";
 import "./styles";
 
 import AvatarPlugin from "./avatar";
@@ -27,8 +27,6 @@ import FormPlugin from "./form";
 import ImagePlugin from "./image";
 import ImagePickerPlugin from "./image-picker";
 import InputPlugin from "./input";
-import LoadingPlugin from "./loading";
-import MessagePlugin from "./message";
 import PaginationPlugin from "./pagination";
 import PasswordStrengthPlugin from "./password-strength";
 import PathPlugin from "./path";
@@ -71,8 +69,6 @@ const plugin: PluginObject<object> = {
     ImagePlugin.install(vue);
     ImagePickerPlugin.install(vue);
     InputPlugin.install(vue);
-    LoadingPlugin.install(vue);
-    MessagePlugin.install(vue);
     PaginationPlugin.install(vue);
     PasswordStrengthPlugin.install(vue);
     PathPlugin.install(vue);
@@ -101,6 +97,8 @@ const plugin: PluginObject<object> = {
 };
 
 export default plugin;
+
+export * from "@unmian/simple-icons";
 
 export * from "./types";
 

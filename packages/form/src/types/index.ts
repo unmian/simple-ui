@@ -7,7 +7,13 @@
  * @FilePath: /simple-ui/packages/form/src/types/index.ts
  */
 // 表单的值
-export type FormItemValue = string | number | boolean | (string | number | boolean)[] | null | undefined;
+export type FormItemValue =
+  | string
+  | number
+  | boolean
+  | Array<string | number | boolean>
+  | null
+  | undefined;
 
 // 表单数据
 export interface CustomFormData {

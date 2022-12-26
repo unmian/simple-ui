@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:43:15
+ * @LastEditTime: 2022-12-13 15:39:48
  * @LastEditors: Quarter
  * @Description: 简易的图片选择器
  * @FilePath: /simple-ui/packages/image-picker/src/image-picker.vue
@@ -33,7 +33,7 @@
 import SImagePickerItem from "./image-picker-item.vue";
 import { Emitter } from "packages/mixins";
 import { FileSource, FileValue } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   name: "SImagePicker",
@@ -41,7 +41,7 @@ import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
     SImagePickerItem,
   },
 })
-export default class SImagePicker extends Mixins(Emitter) {
+export default class ImagePicker extends Emitter {
   @Prop({
     type: Array,
     default: () => [],
@@ -65,7 +65,6 @@ export default class SImagePicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {FileValue|undefined}
    */
   get syncedValue(): FileValue | undefined {
@@ -74,7 +73,6 @@ export default class SImagePicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {FileValue|undefined} val 值
    * @return
    */
@@ -85,20 +83,17 @@ export default class SImagePicker extends Mixins(Emitter) {
 
   /**
    * @description: 图片的个数
-   * @author: Quarter
    * @return {Number}
    */
   get pickers(): number {
     if (this.multiple === true) {
       return this.files.length + 1;
-    } else {
-      return 1;
     }
+    return 1;
   }
 
   /**
    * @description: 监听文件的变化
-   * @author: Quarter
    * @return
    */
   @Watch("files")
@@ -107,33 +102,29 @@ export default class SImagePicker extends Mixins(Emitter) {
       this.syncedValue = this.files;
       this.$emit("input", this.files);
       this.$emit("change", this.files);
+    } else if (this.files.length > 0) {
+      this.syncedValue = this.files[0];
+      this.$emit("input", this.files[0]);
+      this.$emit("change", this.files[0]);
     } else {
-      if (this.files.length > 0) {
-        this.syncedValue = this.files[0];
-        this.$emit("input", this.files[0]);
-        this.$emit("change", this.files[0]);
-      } else {
-        this.syncedValue = null;
-        this.$emit("input", null);
-        this.$emit("change", null);
-      }
+      this.syncedValue = null;
+      this.$emit("input", null);
+      this.$emit("change", null);
     }
     this.dispatch("SFormItem", "s-form-validate", ["change"]);
   }
 
   /**
    * @description: 清空内容
-   * @author: Quarter
    * @return
    */
   clear(): void {
-    this.files = new Array();
-    this.imageSrc = new Array();
+    this.files = [];
+    this.imageSrc = [];
   }
 
   /**
    * @description: 生成图片路径
-   * @author: Quarter
    * @param {Number} index 图片下标
    * @param {File} file 图片文件
    * @return
@@ -153,7 +144,6 @@ export default class SImagePicker extends Mixins(Emitter) {
 
   /**
    * @description: 更新文件列表
-   * @author: Quarter
    * @param {Number} index 下标
    * @param {File} file 文件
    * @return
@@ -168,7 +158,6 @@ export default class SImagePicker extends Mixins(Emitter) {
 
   /**
    * @description: 删除文件
-   * @author: Quarter
    * @param {Number} index 下标
    * @return
    */
@@ -186,7 +175,7 @@ export default class SImagePicker extends Mixins(Emitter) {
   width: 100%;
 
   .image-tip {
-    color: #999999;
+    color: #abcef2;
     font-size: 12px;
     line-height: 1.5;
 

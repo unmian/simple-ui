@@ -2,40 +2,36 @@
  * @Author: Quarter
  * @Date: 2020-08-20 14:20:35
  * @LastEditors: Quarter
- * @LastEditTime: 2022-06-07 16:32:30
+ * @LastEditTime: 2022-12-15 17:46:24
  * @Description: 日期选择器弹窗
 -->
 <template>
   <div class="s-date-picker-popover">
-    <div class="day-picker" v-if="dayPicker">
-      <div class="picker-header">
+    <div class="s-date-picker-popover__day-picker" v-if="dayPicker">
+      <div class="s-date-picker-popover__picker-header">
         <div class="left-operation">
           <s-button
-            type="normal"
+            variant="plain"
+            shape="square"
+            icon="chevron-left-duo"
             v-show="yearSwitchVisible"
             @click="previousYear"
           >
-            <i class="s-icon-d-arrow-left"></i>
           </s-button>
           <s-button
-            type="normal"
+            variant="plain"
+            shape="square"
+            icon="chevron-left-1"
             v-show="monthSwitchVisible"
             @click="previousMonth"
           >
-            <i class="s-icon-arrow-left"></i>
           </s-button>
         </div>
         <div class="date-info">
-          <s-button
-            type="normal"
-            v-show="datePickerVisible"
-            @click="showYearPicker"
+          <s-button variant="plain" v-show="datePickerVisible" @click="showYearPicker"
             >{{ yearStr }} 年</s-button
           >
-          <s-button
-            type="normal"
-            v-show="datePickerVisible"
-            @click="showMonthPicker"
+          <s-button variant="plain" v-show="datePickerVisible" @click="showMonthPicker"
             >{{ monthStr }} 月</s-button
           >
           <span v-show="yearPickerVisible">{{ yearStr }} 年</span>
@@ -43,18 +39,22 @@
         </div>
         <div class="right-operation">
           <s-button
-            type="normal"
+            variant="plain"
+            shape="square"
+            icon="chevron-right-1"
             v-show="monthSwitchVisible"
             @click="nextMonth"
-          >
-            <i class="s-icon-arrow-right"></i>
-          </s-button>
-          <s-button type="normal" v-show="yearSwitchVisible" @click="nextYear">
-            <i class="s-icon-d-arrow-right"></i>
-          </s-button>
+          ></s-button>
+          <s-button
+            variant="plain"
+            shape="square"
+            icon="chevron-right-duo"
+            v-show="yearSwitchVisible"
+            @click="nextYear"
+          ></s-button>
         </div>
       </div>
-      <div class="picker-content">
+      <div class="s-date-picker-popover__picker-content">
         <div class="date-picker" v-show="datePickerVisible">
           <ul class="date-header">
             <li>日</li>
@@ -68,16 +68,17 @@
           <div class="split-line"></div>
           <ul>
             <li v-for="item of monthDay" :key="`date-item-${item.time}`">
-              <s-button
-                type="none"
+              <button
+                class="date-picker__button"
                 :class="{
-                  'date-disabled': !item.enable,
-                  'inner-range': item.select,
-                  'date-selected': dateSelected === item.time,
+                  'date-picker__button--inner-range': item.select,
+                  'date-picker__button--selected': dateSelected === item.time,
                 }"
+                :disabled="!item.enable"
                 @click="selectDate(item.time, item.enable)"
-                >{{ item.date }}</s-button
               >
+                {{ item.date }}
+              </button>
             </li>
           </ul>
         </div>
@@ -85,8 +86,8 @@
           <ul>
             <li v-for="year of yearArray" :key="`year-item-${year}`">
               <s-button
-                type="none"
-                :class="{ 'date-selected': currentYear === year }"
+                variant="plain"
+                :class="{ 'date-picker__button--selected': currentYear === year }"
                 @click="selectYear(year)"
                 >{{ year }} 年</s-button
               >
@@ -97,8 +98,8 @@
           <ul>
             <li v-for="month of 12" :key="`month-item-${month}`">
               <s-button
-                type="none"
-                :class="{ 'date-selected': currentMonth === month }"
+                variant="plain"
+                :class="{ 'date-picker__button--selected': currentMonth === month }"
                 @click="selectMonth(month)"
                 >{{ month }} 月</s-button
               >
@@ -108,34 +109,37 @@
       </div>
     </div>
     <div v-else>
-      <div class="picker-header">
+      <div class="s-date-picker-popover__picker-header">
         <div class="left-operation">
-          <s-button type="normal" @click="previousYear">
-            <i class="s-icon-arrow-left"></i>
-          </s-button>
+          <s-button
+            variant="plain"
+            shape="square"
+            icon="chevron-left"
+            @click="previousYear"
+          ></s-button>
         </div>
         <div class="date-info">
-          <s-button
-            type="normal"
-            v-show="monthPickerVisible"
-            @click="showYearPicker"
+          <s-button variant="plain" v-show="monthPickerVisible" @click="showYearPicker"
             >{{ yearStr }} 年</s-button
           >
           <span v-show="yearPickerVisible">{{ yearStr }} 年</span>
         </div>
         <div class="right-operation">
-          <s-button type="normal" @click="nextYear">
-            <i class="s-icon-arrow-right"></i>
-          </s-button>
+          <s-button
+            variant="plain"
+            shape="square"
+            icon="chevron-right"
+            @click="nextYear"
+          ></s-button>
         </div>
       </div>
-      <div class="picker-content">
+      <div class="s-date-picker-popover__picker-content">
         <div class="year-picker" v-show="yearPickerVisible">
           <ul>
             <li v-for="year of yearArray" :key="`year-item-${year}`">
               <s-button
-                type="none"
-                :class="{ 'date-selected': currentYear === year }"
+                variant="plain"
+                :class="{ 'date-picker__button--selected': currentYear === year }"
                 @click="selectYear(year)"
                 >{{ year }} 年</s-button
               >
@@ -146,8 +150,8 @@
           <ul>
             <li v-for="month of 12" :key="`month-item-${month}`">
               <s-button
-                type="none"
-                :class="{ 'date-selected': dateSelectedMonth === month }"
+                variant="plain"
+                :class="{ 'date-picker__button--selected': dateSelectedMonth === month }"
                 @click="selectMonth(month)"
                 >{{ month }} 月</s-button
               >
@@ -167,42 +171,50 @@ import { DayConfig } from "./types";
 @Component({
   name: "SDatePickerPopover",
 })
-export default class SDatePickerPopover extends Vue {
+export default class DatePickerPopover extends Vue {
+  // 宽度
   @Prop(String)
-  width?: string; // 宽度
+  readonly width?: string;
 
+  // 高度
   @Prop(String)
-  height?: string; // 高度
+  readonly height?: string;
 
+  // 值
   @Prop(Number)
-  value?: number; // 值
+  readonly value?: number;
 
+  // 日选择
   @Prop(Boolean)
-  dayPicker?: boolean; // 日选择
+  readonly dayPicker?: boolean;
 
+  // 最小值
   @Prop({
     type: Number,
     default: 0,
   })
-  min!: number; // 最小值
+  readonly min!: number;
 
+  // 最大值
   @Prop({
     type: Number,
     default: 0,
   })
-  max!: number; // 最大值
+  readonly max!: number;
 
+  // 左区间
   @Prop({
     type: Number,
     default: 0,
   })
-  left!: number; // 左区间
+  readonly left!: number;
 
+  // 右区间
   @Prop({
     type: Number,
     default: 0,
   })
-  right!: number; // 右区间
+  readonly right!: number;
 
   date = new Date(); // 当前日期
   dateSelected = 0; // 选择的日期
@@ -215,7 +227,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 过滤的日选择
-   * @author: Quarter
    * @return {Boolean}
    */
   get filterDayPicker(): boolean {
@@ -224,29 +235,28 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 年份字符串
-   * @author: Quarter
    * @return {String}
    */
   get yearStr(): string | undefined {
     if (this.date instanceof Date) {
       return dateFormate(this.date, "yyyy");
     }
+    return undefined;
   }
 
   /**
    * @description: 月份格式化字符串
-   * @author: Quarter
    * @return {String}
    */
   get monthStr(): string | undefined {
     if (this.date instanceof Date) {
       return dateFormate(this.date, "MM");
     }
+    return undefined;
   }
 
   /**
    * @description: 当前年份
-   * @author: Quarter
    * @return {Number}
    */
   get currentYear(): number {
@@ -258,7 +268,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 当前月份
-   * @author: Quarter
    * @return {Number}
    */
   get currentMonth(): number {
@@ -270,7 +279,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 选择的月份
-   * @author: Quarter
    * @return
    */
   get dateSelectedMonth(): number | null {
@@ -282,7 +290,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 是否显示年份切换
-   * @author: Quarter
    * @return {Boolean}
    */
   get yearSwitchVisible(): boolean {
@@ -291,7 +298,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 是否显示月份
-   * @author: Quarter
    * @return {Boolean}
    */
   get monthSwitchVisible(): boolean {
@@ -300,7 +306,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return
    */
@@ -312,11 +317,7 @@ export default class SDatePickerPopover extends Vue {
       if (this.value > 0) {
         const date: Date = new Date(this.value);
         if (typeof date.getTime() === "number") {
-          const justDate: Date = new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate()
-          );
+          const justDate: Date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
           if (justDate.getTime() !== this.dateSelected) {
             this.dateSelected = justDate.getTime();
             this.date = justDate;
@@ -330,7 +331,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 监听选中值变化
-   * @author: Quarter
    * @param {Number} time 时间戳
    * @return
    */
@@ -346,7 +346,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 监听范围变化
-   * @author: Quarter
    * @return
    */
   @Watch("min")
@@ -354,7 +353,7 @@ export default class SDatePickerPopover extends Vue {
   @Watch("left")
   @Watch("right")
   handleEdgeChange(): void {
-    let date: Date = this.date;
+    let { date } = this;
     if (this.min > 0 && this.date.getTime() < this.min) {
       date = new Date(this.min);
     }
@@ -366,7 +365,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 计算当月日期结构
-   * @author: Quarter
    * @param {Date} date 变化的日期
    * @return
    */
@@ -379,7 +377,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 点击弹窗
-   * @author: Quarter
    * @param {Boolean} visible 是否显示
    * @return
    */
@@ -395,7 +392,7 @@ export default class SDatePickerPopover extends Vue {
     if (this.max > 0 && this.date.getTime() > this.max) {
       date = new Date(this.max);
     }
-    this.date = new Date(dateFormate(date, "yyyy-MM-dd") + " 00:00:00");
+    this.date = new Date(`${dateFormate(date, "yyyy-MM-dd")} 00:00:00`);
     if (this.filterDayPicker) {
       this.datePickerVisible = true;
       this.monthPickerVisible = false;
@@ -409,7 +406,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 获取选择器的值
-   * @author: Quarter
    * @return
    */
   getSelectorValue(): number | undefined {
@@ -420,7 +416,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 计算是否在值域内
-   * @author: Quarter
    * @return
    */
   calcDateSelect(): void {
@@ -428,25 +423,17 @@ export default class SDatePickerPopover extends Vue {
     const hasRight: boolean = typeof this.right === "number" && this.right > 0;
     const dayArray: DayConfig[] = this.monthDay.slice();
     dayArray.forEach((day: DayConfig, index: number) => {
-      let select: boolean = false;
+      let select = false;
       if (hasLeft && hasRight) {
         if (day.time <= this.right && day.time >= this.left) {
           select = true;
         }
       } else if (hasLeft) {
-        if (
-          this.dateSelected > 0 &&
-          day.time >= this.left &&
-          day.time <= this.dateSelected
-        ) {
+        if (this.dateSelected > 0 && day.time >= this.left && day.time <= this.dateSelected) {
           select = true;
         }
       } else if (hasRight) {
-        if (
-          this.dateSelected > 0 &&
-          day.time <= this.right &&
-          day.time >= this.dateSelected
-        ) {
+        if (this.dateSelected > 0 && day.time <= this.right && day.time >= this.dateSelected) {
           select = true;
         }
       }
@@ -457,7 +444,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 上一年
-   * @author: Quarter
    * @return
    */
   previousYear(): void {
@@ -466,7 +452,7 @@ export default class SDatePickerPopover extends Vue {
         const date: Date = new Date(
           this.date.getFullYear() - 1,
           this.date.getMonth(),
-          this.date.getDate()
+          this.date.getDate(),
         );
         this.date = date;
       } else if (this.yearPickerVisible === true) {
@@ -476,28 +462,21 @@ export default class SDatePickerPopover extends Vue {
           this.calcSelectYears();
         }
       }
-    } else {
-      if (this.monthPickerVisible === true) {
-        const date: Date = new Date(
-          this.date.getFullYear() - 1,
-          this.date.getMonth(),
-          1
-        );
-        this.date = date;
-        this.dateSelected = date.getTime();
-      } else if (this.yearPickerVisible === true) {
-        const yearToChoose: number = this.yearToChoose - 10;
-        if (yearToChoose > 0) {
-          this.yearToChoose = yearToChoose;
-          this.calcSelectYears();
-        }
+    } else if (this.monthPickerVisible === true) {
+      const date: Date = new Date(this.date.getFullYear() - 1, this.date.getMonth(), 1);
+      this.date = date;
+      this.dateSelected = date.getTime();
+    } else if (this.yearPickerVisible === true) {
+      const yearToChoose: number = this.yearToChoose - 10;
+      if (yearToChoose > 0) {
+        this.yearToChoose = yearToChoose;
+        this.calcSelectYears();
       }
     }
   }
 
   /**
    * @description: 下一年
-   * @author: Quarter
    * @return
    */
   nextYear(): void {
@@ -506,7 +485,7 @@ export default class SDatePickerPopover extends Vue {
         const date: Date = new Date(
           this.date.getFullYear() + 1,
           this.date.getMonth(),
-          this.date.getDate()
+          this.date.getDate(),
         );
         this.date = date;
       } else if (this.yearPickerVisible === true) {
@@ -516,39 +495,28 @@ export default class SDatePickerPopover extends Vue {
           this.calcSelectYears();
         }
       }
-    } else {
-      if (this.monthPickerVisible === true) {
-        const date: Date = new Date(
-          this.date.getFullYear() + 1,
-          this.date.getMonth(),
-          1
-        );
-        this.date = date;
-        this.dateSelected = date.getTime();
-      } else if (this.yearPickerVisible === true) {
-        const yearToChoose: number = this.yearToChoose + 10;
-        if (yearToChoose < 10000) {
-          this.yearToChoose = yearToChoose;
-          this.calcSelectYears();
-        }
+    } else if (this.monthPickerVisible === true) {
+      const date: Date = new Date(this.date.getFullYear() + 1, this.date.getMonth(), 1);
+      this.date = date;
+      this.dateSelected = date.getTime();
+    } else if (this.yearPickerVisible === true) {
+      const yearToChoose: number = this.yearToChoose + 10;
+      if (yearToChoose < 10000) {
+        this.yearToChoose = yearToChoose;
+        this.calcSelectYears();
       }
     }
   }
 
   /**
    * @description: 上个月
-   * @author: Quarter
    * @return
    */
   previousMonth(): void {
     let month: number = this.date.getMonth() - 1;
-    const date: Date = new Date(
-      this.date.getFullYear(),
-      this.date.getMonth(),
-      this.date.getDate()
-    );
+    const date: Date = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
     if (month < 0) {
-      month = month + 12;
+      month += 12;
       date.setFullYear(date.getFullYear() - 1);
     }
     date.setMonth(month);
@@ -557,18 +525,13 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 下个月
-   * @author: Quarter
    * @return
    */
   nextMonth(): void {
     let month: number = this.date.getMonth() + 1;
-    const date: Date = new Date(
-      this.date.getFullYear(),
-      this.date.getMonth(),
-      this.date.getDate()
-    );
+    const date: Date = new Date(this.date.getFullYear(), this.date.getMonth(), this.date.getDate());
     if (month > 11) {
-      month = month - 12;
+      month -= 12;
       date.setFullYear(date.getFullYear() + 1);
     }
     date.setMonth(month);
@@ -577,7 +540,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 选择日期
-   * @author: Quarter
    * @param {Number} 时间戳
    * @param {Boolean} 是否可以选择
    * @return
@@ -591,7 +553,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 清空选中的日期
-   * @author: Quarter
    * @return
    */
   clearValue(): void {
@@ -600,7 +561,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 显示年份选择
-   * @author: Quarter
    * @return
    */
   showYearPicker(): void {
@@ -619,13 +579,12 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 计算当前可选的年份
-   * @author: Quarter
    * @return
    */
   calcSelectYears(): void {
     if (this.date instanceof Date) {
       const date: number = Math.floor(this.yearToChoose / 10) * 10;
-      const yearArray: number[] = new Array();
+      const yearArray: number[] = [];
       for (let i = 0; i < 10; i++) {
         yearArray.push(date + i);
       }
@@ -635,7 +594,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 选择年份
-   * @author: Quarter
    * @param {Number} year 年份
    * @return
    */
@@ -657,7 +615,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 显示月份选择
-   * @author: Quarter
    * @return
    */
   showMonthPicker(): void {
@@ -667,7 +624,6 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 选择月份
-   * @author: Quarter
    * @param {Number} month 月份
    * @return
    */
@@ -688,34 +644,20 @@ export default class SDatePickerPopover extends Vue {
 
   /**
    * @description: 计算每月天数
-   * @author: Quarter
    * @param {Date} date 日期
    * @return
    */
   calcMonthDay(date: Date): void {
     if (date instanceof Date) {
       // 计算当月天数
-      const dayArray: DayConfig[] = new Array();
+      const dayArray: DayConfig[] = [];
       const oneDay = 24 * 60 * 60 * 1000;
-      const today: Date = new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate()
-      );
-      const dayLength: number = new Date(
-        today.getFullYear(),
-        today.getMonth() + 1,
-        0
-      ).getDate();
-      const firstDay: number = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        1
-      ).getDay();
+      const today: Date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const dayLength: number = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      const firstDay: number = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
       const weekLength: number = Math.ceil((dayLength + firstDay) / 7);
       let tempDate: Date = new Date(
-        new Date(today.getFullYear(), today.getMonth(), 1).getTime() -
-          firstDay * oneDay
+        new Date(today.getFullYear(), today.getMonth(), 1).getTime() - firstDay * oneDay,
       );
       for (let i = 0; i < weekLength * 7; i++) {
         let enable: boolean = tempDate.getMonth() === today.getMonth();
@@ -748,143 +690,130 @@ export default class SDatePickerPopover extends Vue {
   button.s-button:not(:last-child) {
     margin-right: 0;
   }
+}
 
-  .picker-header {
-    height: 50px;
-    padding: 0 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.s-date-picker-popover__picker-header {
+  height: 50px;
+  padding: 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .s-button {
+    padding: 0 8px;
+
+    i {
+      margin: 0;
+    }
+
+    &:not(:first-of-type) {
+      margin-left: 5px;
+    }
+  }
+
+  .date-info {
+    width: 120px;
+    color: #666666;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
 
     .s-button {
-      padding: 0 8px;
-
-      i {
-        margin: 0;
-      }
-
-      &:not(:first-of-type) {
-        margin-left: 5px;
-      }
-    }
-
-    .date-info {
-      width: 120px;
-      color: #666666;
+      padding: 0 5px;
       font-size: 16px;
       font-weight: 500;
-      text-align: center;
 
-      .s-button {
-        padding: 0 5px;
-        font-size: 16px;
-        font-weight: 500;
-
-        &:not(:first-of-type) {
-          margin-left: 0;
-        }
+      &:not(:first-of-type) {
+        margin-left: 0;
       }
     }
   }
+}
 
-  .picker-content {
-    padding: 0 12px;
+.s-date-picker-popover__picker-content {
+  padding: 0 var(--s-spacing-12);
+  font-size: 1.4rem;
 
-    .date-picker ul {
-      width: 280px;
-      padding: 0;
-      list-style: none;
+  .date-picker ul {
+    width: 28rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+
+    li {
+      width: 4rem;
+      height: 4rem;
       display: flex;
-      flex-wrap: wrap;
-      margin: 0 auto;
-
-      li {
-        width: 40px;
-        height: 40px;
-        color: #666666;
-        font-size: 12px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        button {
-          width: 26px;
-          height: 26px;
-          padding: 0;
-          color: #666666;
-          font-size: 14px;
-          text-align: center;
-          border-radius: 13px;
-          box-sizing: border-box;
-          transition: none;
-
-          &.date-disabled {
-            color: #d6e1e5;
-            cursor: default;
-          }
-
-          &:not(.date-disabled):hover,
-          &:not(.date-disabled).date-selected {
-            color: #ffffff;
-            background-color: #549fff;
-          }
-
-          &.date-disabled.inner-range {
-            border: 1px solid #d6e1e5;
-          }
-
-          &:not(.date-disabled):not(.date-selected).inner-range {
-            color: #549fff;
-            border: 1px solid #549fff;
-
-            &:hover {
-              color: #ffffff;
-            }
-          }
-        }
-      }
-    }
-
-    .year-picker ul,
-    .month-picker ul {
-      width: 300px;
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      margin: 5px 0 0;
-
-      li {
-        width: 100px;
-        height: 50px;
-        color: #666666;
-        font-size: 12px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        button {
-          padding: 0;
-          color: #666666;
-          font-size: 14px;
-          text-align: center;
-          border-radius: 13px;
-          transition: none;
-
-          &:hover,
-          &.date-selected {
-            color: #549fff;
-          }
-        }
-      }
-    }
-
-    .split-line {
-      width: 100%;
-      height: 1px;
-      background-color: #e1dee2;
-      margin: 5px 0;
+      justify-content: center;
+      align-items: center;
     }
   }
+
+  .year-picker ul,
+  .month-picker ul {
+    width: 30rem;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: var(--s-spacing-4) 0 0;
+
+    li {
+      width: 10rem;
+      height: 5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .split-line {
+    width: 100%;
+    height: 1px;
+    background-color: var(--s-border-color);
+    margin: var(--s-spacing-4) 0;
+  }
+}
+
+.date-picker__button {
+  width: 2.6rem;
+  height: 2.6rem;
+  padding: 0;
+  font-size: inherit;
+  text-align: center;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  box-sizing: border-box;
+  transition: none;
+  justify-content: center;
+
+  &:disabled {
+    color: var(--s-text-disabled);
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    color: var(--s-brand-hover);
+  }
+}
+
+.date-picker__button--selected:not(:disabled),
+.date-picker__button--selected:not(:disabled):hover {
+  color: var(--s-text-white);
+  background-color: var(--s-brand-normal);
+}
+
+.date-picker__button--inner-range:not(.date-disabled):not(.date-picker__button--selected) {
+  color: var(--s-brand-normal);
+  border: 1px solid var(--s-brand-normal);
+}
+
+.date-picker__button--selected,
+.s-button--default.date-picker__button--selected {
+  color: var(--s-text-white);
+  background-color: var(--s-brand-normal);
 }
 </style>

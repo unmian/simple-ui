@@ -1,14 +1,13 @@
 /*
  * @Author: Quarter
  * @Date: 2022-04-12 01:05:05
- * @LastEditTime: 2022-04-12 01:35:06
+ * @LastEditTime: 2022-11-14 18:11:38
  * @LastEditors: Quarter
  * @Description: 对象操作
  * @FilePath: /simple-ui/packages/util/object.ts
  */
 /**
  * @description: 对象深度拷贝
- * @author: Quarter
  * @param {T} source 来源
  * @return {T}
  */
@@ -24,10 +23,10 @@ export const deepAssign = <T>(source: T): T => {
         }
       }
       return target as unknown as T;
-    } else {
+    } 
       const target = Object.create(null);
       for (const key in source) {
-        if (true) {
+        if (key) {
           const item: any = (source as any)[key];
           if (typeof item === "object") {
             Reflect.set(target, key, deepAssign(item));
@@ -37,7 +36,7 @@ export const deepAssign = <T>(source: T): T => {
         }
       }
       return target;
-    }
+    
   }
   return source;
 };

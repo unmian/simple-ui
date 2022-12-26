@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:16:16
+ * @LastEditTime: 2022-12-13 16:03:29
  * @LastEditors: Quarter
  * @Description: 时间选择
  * @FilePath: /simple-ui/packages/time-picker/src/time-selector.vue
@@ -24,11 +24,7 @@
         </ul>
       </s-scroll>
     </div>
-    <div
-      class="minute-list"
-      v-if="showMinute"
-      @mouseleave="calibrateActiveMinute"
-    >
+    <div class="minute-list" v-if="showMinute" @mouseleave="calibrateActiveMinute">
       <s-scroll ref="minuteScroll" full @scroll="judgeActiveMinute">
         <ul>
           <li
@@ -44,11 +40,7 @@
         </ul>
       </s-scroll>
     </div>
-    <div
-      class="second-list"
-      v-if="showSecond"
-      @mouseleave="calibrateActiveSecond"
-    >
+    <div class="second-list" v-if="showSecond" @mouseleave="calibrateActiveSecond">
       <s-scroll ref="secondScroll" full @scroll="judgeActiveSecond">
         <ul>
           <li
@@ -81,11 +73,11 @@ import { TimeConfig } from "./types";
     SScroll: Scroll,
   },
 })
-export default class STimeSelector extends Vue {
+export default class TimeSelector extends Vue {
   $refs!: {
-    hourScroll: Scroll; // 小时滚动条
-    minuteScroll: Scroll; // 分钟滚动条
-    secondScroll: Scroll; // 秒滚动条
+    hourScroll: InstanceType<typeof Scroll>; // 小时滚动条
+    minuteScroll: InstanceType<typeof Scroll>; // 分钟滚动条
+    secondScroll: InstanceType<typeof Scroll>; // 秒滚动条
   };
 
   @Prop(String)
@@ -127,7 +119,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {TimeConfig | DateTimeConfig | undefined}
    */
   get syncedValue(): TimeConfig | DateTimeConfig | undefined {
@@ -136,7 +127,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {TimeConfig | DateTimeConfig | undefined} val 值
    * @return
    */
@@ -147,12 +137,11 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 过滤的日期
-   * @author: Quarter
    * @return {String}
    */
   get filterDate(): string {
     if (typeof this.date === "string") {
-      const dateRegExp: RegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
       if (dateRegExp.test(this.date)) {
         return this.date;
       }
@@ -162,7 +151,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 显示分钟
-   * @author: Quarter
    * @return
    */
   get showMinute(): boolean {
@@ -174,7 +162,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 显示秒
-   * @author: Quarter
    * @return
    */
   get showSecond(): boolean {
@@ -186,70 +173,60 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 最小时间限制
-   * @author: Quarter
    * @return {Number}
    */
   get minTime(): number | undefined {
     if (typeof this.min === "string") {
-      const timeRegExp: RegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
+      const timeRegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (timeRegExp.test(this.min)) {
-        return new Date(DEFAULT_DATE + " " + this.min).getTime();
+        return new Date(`${DEFAULT_DATE} ${this.min}`).getTime();
       }
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(this.min)) {
         return new Date(this.min).getTime();
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 最大时间限制
-   * @author: Quarter
    * @return {Number}
    */
   get maxTime(): number | undefined {
     if (typeof this.max === "string") {
-      const timeRegExp: RegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
+      const timeRegExp = new RegExp(/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (timeRegExp.test(this.max)) {
-        return new Date(DEFAULT_DATE + " " + this.max).getTime();
+        return new Date(`${DEFAULT_DATE} ${this.max}`).getTime();
       }
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(this.max)) {
         return new Date(this.max).getTime();
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 完整的时间
-   * @author: Quarter
    * @return {Number}
    */
   get wholeTime(): number | undefined {
     const { hour, minute, second } = this.insideTime;
     if (typeof hour === "number") {
       const hourStr: string =
-        new Array(2 - hour.toString().length).fill(0).join("") +
-        hour.toString();
+        new Array(2 - hour.toString().length).fill(0).join("") + hour.toString();
       const minuteStr: string =
-        new Array(2 - (minute || 0).toString().length).fill(0).join("") +
-        (minute || 0).toString();
+        new Array(2 - (minute || 0).toString().length).fill(0).join("") + (minute || 0).toString();
       const secondStr: string =
-        new Array(2 - (second || 0).toString().length).fill(0).join("") +
-        (second || 0).toString();
-      return new Date(
-        `${this.filterDate} ${hourStr}:${minuteStr}:${secondStr}`
-      ).getTime();
+        new Array(2 - (second || 0).toString().length).fill(0).join("") + (second || 0).toString();
+      return new Date(`${this.filterDate} ${hourStr}:${minuteStr}:${secondStr}`).getTime();
     }
+    return undefined;
   }
 
   /**
    * @description: 小时列表
-   * @author: Quarter
    * @return {Array<String>}
    */
   get hourArr(): string[] {
@@ -261,7 +238,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 分钟列表
-   * @author: Quarter
    * @return {Array<String>}
    */
   get minuteArr(): string[] {
@@ -273,7 +249,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 监听时间的变化
-   * @author: Quarter
    * @return
    */
   @Watch("value", {
@@ -302,16 +277,14 @@ export default class STimeSelector extends Vue {
       if (typeof minute === "number") {
         if (
           typeof this.minTime === "number" &&
-          new Date(
-            `${this.filterDate} ${this.insideTime.hour}:${minute}:00`
-          ).getTime() < this.minTime
+          new Date(`${this.filterDate} ${this.insideTime.hour}:${minute}:00`).getTime() <
+            this.minTime
         ) {
           this.insideTime.minute = new Date(this.minTime).getMinutes();
         } else if (
           typeof this.maxTime === "number" &&
-          new Date(
-            `${this.filterDate} ${this.insideTime.hour}:${minute}:00:00`
-          ).getTime() > this.maxTime
+          new Date(`${this.filterDate} ${this.insideTime.hour}:${minute}:00:00`).getTime() >
+            this.maxTime
         ) {
           this.insideTime.minute = new Date(this.maxTime).getMinutes();
         } else {
@@ -324,14 +297,14 @@ export default class STimeSelector extends Vue {
         if (
           typeof this.minTime === "number" &&
           new Date(
-            `${this.filterDate} ${this.insideTime.hour}:${this.insideTime.minute}:${second}`
+            `${this.filterDate} ${this.insideTime.hour}:${this.insideTime.minute}:${second}`,
           ).getTime() < this.minTime
         ) {
           this.insideTime.second = new Date(this.minTime).getSeconds();
         } else if (
           typeof this.maxTime === "number" &&
           new Date(
-            `${this.filterDate} ${this.insideTime.hour}:${this.insideTime.minute}:${second}`
+            `${this.filterDate} ${this.insideTime.hour}:${this.insideTime.minute}:${second}`,
           ).getTime() > this.maxTime
         ) {
           this.insideTime.second = new Date(this.maxTime).getSeconds();
@@ -346,7 +319,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 监听内部时间变化
-   * @author: Quarter
    * @return
    */
   @Watch("insideTime", {
@@ -358,7 +330,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 初始化
-   * @author: Quarter
    * @return
    */
   init(): void {
@@ -372,7 +343,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 确认使用时间
-   * @author: Quarter
    * @return {Number}
    */
   confirmValue(time?: number): number {
@@ -396,7 +366,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 判断选中小时
-   * @author: Quarter
    * @return
    */
   judgeActiveHour(e: WheelEvent): void {
@@ -410,7 +379,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 校准小时选中项
-   * @author: Quarter
    * @return
    */
   calibrateActiveHour(): void {
@@ -421,7 +389,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 计算小时状态
-   * @author: Quarter
    * @param {Number} hour 小时
    * @return {Boolean}
    */
@@ -429,16 +396,12 @@ export default class STimeSelector extends Vue {
     const hourStr: string =
       new Array(2 - hour.toString().length).fill(0).join("") + hour.toString();
     if (typeof this.minTime === "number" && this.minTime > 0) {
-      if (
-        new Date(`${this.filterDate} ${hourStr}:59:59`).getTime() < this.minTime
-      ) {
+      if (new Date(`${this.filterDate} ${hourStr}:59:59`).getTime() < this.minTime) {
         return true;
       }
     }
     if (typeof this.maxTime === "number" && this.maxTime > 0) {
-      if (
-        new Date(`${this.filterDate} ${hourStr}:00:00`).getTime() > this.maxTime
-      ) {
+      if (new Date(`${this.filterDate} ${hourStr}:00:00`).getTime() > this.maxTime) {
         return true;
       }
     }
@@ -447,7 +410,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 判断选中分钟
-   * @author: Quarter
    * @return
    */
   judgeActiveMinute(e: WheelEvent): void {
@@ -461,7 +423,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 校准分钟选中项
-   * @author: Quarter
    * @return
    */
   calibrateActiveMinute(): void {
@@ -472,7 +433,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 计算分钟状态
-   * @author: Quarter
    * @param {Number} minute 分钟
    * @return {Boolean}
    */
@@ -482,25 +442,17 @@ export default class STimeSelector extends Vue {
       return true;
     }
     const hourStr: string =
-      new Array(2 - (this.insideTime.hour || "0").toString().length)
-        .fill(0)
-        .join("") + (this.insideTime.hour || "0").toString();
+      new Array(2 - (this.insideTime.hour || "0").toString().length).fill(0).join("") +
+      (this.insideTime.hour || "0").toString();
     const minuteStr: string =
-      new Array(2 - minute.toString().length).fill(0).join("") +
-      minute.toString();
+      new Array(2 - minute.toString().length).fill(0).join("") + minute.toString();
     if (typeof this.minTime === "number" && this.minTime > 0) {
-      if (
-        new Date(`${this.filterDate} ${hourStr}:${minuteStr}:59`).getTime() <
-        this.minTime
-      ) {
+      if (new Date(`${this.filterDate} ${hourStr}:${minuteStr}:59`).getTime() < this.minTime) {
         return true;
       }
     }
     if (typeof this.maxTime === "number" && this.maxTime > 0) {
-      if (
-        new Date(`${this.filterDate} ${hourStr}:${minuteStr}:0`).getTime() >
-        this.maxTime
-      ) {
+      if (new Date(`${this.filterDate} ${hourStr}:${minuteStr}:0`).getTime() > this.maxTime) {
         return true;
       }
     }
@@ -509,7 +461,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 判断选中秒
-   * @author: Quarter
    * @return
    */
   judgeActiveSecond(e: WheelEvent): void {
@@ -523,7 +474,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 校准秒选中项
-   * @author: Quarter
    * @return
    */
   calibrateActiveSecond(): void {
@@ -534,7 +484,6 @@ export default class STimeSelector extends Vue {
 
   /**
    * @description: 计算秒状态
-   * @author: Quarter
    * @param {Number} minute 分钟
    * @return {Boolean}
    */
@@ -546,37 +495,28 @@ export default class STimeSelector extends Vue {
     if (hourStatus) {
       return true;
     }
-    const minuteStatus: boolean = this.calcMinuteStatus(
-      this.insideTime.minute || 0
-    );
+    const minuteStatus: boolean = this.calcMinuteStatus(this.insideTime.minute || 0);
     if (minuteStatus) {
       return true;
     }
     const hourStr: string =
-      new Array(2 - (this.insideTime.hour || "0").toString().length)
-        .fill(0)
-        .join("") + (this.insideTime.hour || "0").toString();
+      new Array(2 - (this.insideTime.hour || "0").toString().length).fill(0).join("") +
+      (this.insideTime.hour || "0").toString();
     const minuteStr: string =
-      new Array(2 - (this.insideTime.minute || "0").toString().length)
-        .fill(0)
-        .join("") + (this.insideTime.minute || "0").toString();
+      new Array(2 - (this.insideTime.minute || "0").toString().length).fill(0).join("") +
+      (this.insideTime.minute || "0").toString();
     const secondStr: string =
-      new Array(2 - second.toString().length).fill(0).join("") +
-      second.toString();
+      new Array(2 - second.toString().length).fill(0).join("") + second.toString();
     if (typeof this.minTime === "number" && this.minTime > 0) {
       if (
-        new Date(
-          `${this.filterDate} ${hourStr}:${minuteStr}:${secondStr}`
-        ).getTime() < this.minTime
+        new Date(`${this.filterDate} ${hourStr}:${minuteStr}:${secondStr}`).getTime() < this.minTime
       ) {
         return true;
       }
     }
     if (typeof this.maxTime === "number" && this.maxTime > 0) {
       if (
-        new Date(
-          `${this.filterDate} ${hourStr}:${minuteStr}:${secondStr}`
-        ).getTime() > this.maxTime
+        new Date(`${this.filterDate} ${hourStr}:${minuteStr}:${secondStr}`).getTime() > this.maxTime
       ) {
         return true;
       }

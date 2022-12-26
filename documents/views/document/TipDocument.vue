@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 14:13:32
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:03:09
+ * @LastEditTime: 2022-12-13 15:29:18
  * @Description: 提示信息文档
- * @FilePath: /simple-ui/documents/views/TipDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/TipDocument.vue
 -->
 <template>
   <div class="tip-document">

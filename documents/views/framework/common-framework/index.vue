@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-07 19:02:17
+ * @LastEditTime: 2022-12-13 15:32:31
  * @LastEditors: Quarter
  * @Description: 管理系统框架组件
  * @FilePath: /simple-ui/documents/views/framework/common-framework/index.vue
@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { CommonThemeMode, MenuItem, Scroll } from "@quarter/simple-ui";
+import { CommonThemeMode, MenuItem, Scroll } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 import { NavigationGuardNext, RouteConfig } from "vue-router";
 import CommonHeader from "./common-header/index.vue";
@@ -70,7 +70,6 @@ export default class CommonFramework extends Vue {
 
   /**
    * @description: 菜单
-   * @author: Quarter
    * @return {Array<MenuItem>}
    */
   get components(): MenuItem[] {
@@ -79,17 +78,15 @@ export default class CommonFramework extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
-    const path: string = this.$route.path;
+    const {path} = this.$route;
     this.$store.commit("switchMenuByPath", path);
   }
 
   /**
    * @description: 路由更新之前
-   * @author: Quarter
    * @return
    */
   beforeRouteUpdate(to: RouteConfig, from: RouteConfig, next: NavigationGuardNext): void {

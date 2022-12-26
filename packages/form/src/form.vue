@@ -1,26 +1,23 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-04-11 11:45:21
+ * @LastEditTime: 2022-12-13 16:02:04
  * @LastEditors: Quarter
  * @Description: 简易的表单的组件
  * @FilePath: /simple-ui/packages/form/src/form.vue
 -->
 <template>
-  <div class="s-form" :class="customClass" :style="customStyle">
+  <form class="s-form" :class="customClass" :style="customStyle">
     <slot></slot>
-  </div>
+  </form>
 </template>
 
 <script lang="ts">
 import SFormItem from "./form-item.vue";
+import Vue from "vue";
 import { Emitter } from "packages/mixins";
-import {
-  CustomClass,
-  CustomStyle,
-  CommonPosition,
-} from "packages/types";
-import { Component, Mixins, Prop, Provide } from "vue-property-decorator";
+import { CustomClass, CustomStyle, CommonPosition } from "packages/types";
+import { Component, Prop, Provide } from "vue-property-decorator";
 import { CustomFormData, FormRules } from "./types";
 
 @Component({
@@ -29,7 +26,7 @@ import { CustomFormData, FormRules } from "./types";
     SFormItem,
   },
 })
-export default class SForm extends Mixins(Emitter) {
+export default class Form extends Emitter {
   @Prop({
     type: Object,
     default: () => ({}),
@@ -63,11 +60,10 @@ export default class SForm extends Mixins(Emitter) {
   })
   align!: CommonPosition; // 排列方式
 
-  formItemList: SFormItem[] = []; // 保存所有的表单项
+  formItemList: Array<InstanceType<typeof SFormItem>> = []; // 保存所有的表单项
 
   /**
    * @description: 暴露的表单数据
-   * @author: Quarter
    * @return {CustomFormData}
    */
   get exposedData(): CustomFormData | undefined {
@@ -76,7 +72,6 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 暴露的规则
-   * @author: Quarter
    * @return {FormRules}
    */
   get exposedRule(): FormRules | undefined {
@@ -85,15 +80,10 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 排列方式
-   * @author: Quarter
    * @return {String}
    */
   get finalAlign(): CommonPosition {
-    if (
-      this.align === "left" ||
-      this.align === "top" ||
-      this.align === "right"
-    ) {
+    if (this.align === "left" || this.align === "top" || this.align === "right") {
       return this.align;
     }
     return "left";
@@ -101,7 +91,6 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -116,7 +105,6 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 自定义样式表
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get customStyle(): CustomStyle {
@@ -130,7 +118,6 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 提供组件
-   * @author: Quarter
    * @return {SForm}
    */
   @Provide("SForm")
@@ -140,7 +127,6 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 提供表单数据
-   * @author: Quarter
    * @return {CustomFormData}
    */
   @Provide("CustomFormData")
@@ -150,7 +136,6 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -168,12 +153,11 @@ export default class SForm extends Mixins(Emitter) {
 
   /**
    * @description: 规则验证
-   * @author: Quarter
    * @return {Boolean}
    */
   validate(): Promise<void> {
     return new Promise((resolve, reject) => {
-      let result: boolean = true;
+      let result = true;
       let msg!: string;
       if (Array.isArray(this.formItemList)) {
         this.formItemList.forEach((formItem: InstanceType<typeof SFormItem>) => {

@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:01:49
+ * @LastEditTime: 2022-12-13 15:27:51
  * @Description: 切换按钮文档
- * @FilePath: /simple-ui/documents/views/SwitchDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/SwitchDocument.vue
 -->
 <template>
   <div class="switch-document">
@@ -213,69 +213,7 @@ import { Component, Vue } from "vue-property-decorator";
 })
 export default class SwitchDocument extends Vue {
   switchValue = true; // 开关的值
-  code = `
-<template>
-  <div class="example-list">
-    <div>
-      <s-switch></s-switch>
-      <s-switch v-model="switchValue"></s-switch>
-    </div>
-    <div>
-      <s-switch disabled></s-switch>
-      <s-switch v-model="switchValue" disabled></s-switch>
-    </div>
-    <div>
-      <s-switch readonly></s-switch>
-      <s-switch v-model="switchValue" readonly></s-switch>
-    </div>
-    <div>
-      <s-switch size="mini"></s-switch>
-      <s-switch size="small"></s-switch>
-      <s-switch size="medium"></s-switch>
-      <s-switch size="large"></s-switch>
-    </div>
-    <div>
-      <s-switch size="mini" square></s-switch>
-      <s-switch size="small" square></s-switch>
-      <s-switch size="medium" square></s-switch>
-      <s-switch size="large" square></s-switch>
-    </div>
-    <div>
-      <s-switch
-        width="70px"
-        scale="70"
-        active-label="开启"
-        inactive-label="关闭"
-      ></s-switch>
-      <s-switch
-        width="70px"
-        scale="70"
-        active-label="开启"
-        inactive-label="关闭"
-        v-model="switchValue"
-      ></s-switch>
-      <s-switch
-        width="70px"
-        scale="70"
-        active-label="开启"
-        active-color="#11c986"
-        inactive-label="关闭"
-        v-model="switchValue"
-      ></s-switch>
-    </div>
-  </div>
-</template>
-
-<script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class SwitchDocument extends Vue {
-  // 开关的值
-  private switchValue: boolean = true;
-}
-</${"script"}>
-  `; // 示例代码
+  code = ""; // 示例代码
 }
 </script>
 

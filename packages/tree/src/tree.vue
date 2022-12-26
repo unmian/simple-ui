@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:25:08
+ * @LastEditTime: 2022-12-14 17:47:46
  * @LastEditors: Quarter
  * @Description: 简易的树型组件
  * @FilePath: /simple-ui/packages/tree/src/tree.vue
@@ -36,13 +36,8 @@ import { CheckboxGroup } from "packages/checkbox";
 import { Identifier } from "packages/types";
 import { FadeTransitionGroup } from "packages/transition";
 import STreeNode from "./tree-node.vue";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
-import {
-  TreeCheckedNode,
-  TreeLazyLoad,
-  TreeNodeConfig,
-  TreeProp,
-} from "./types";
+import { Component, Prop, Watch } from "vue-property-decorator";
+import { TreeCheckedNode, TreeLazyLoad, TreeNodeConfig, TreeProp } from "./types";
 
 @Component({
   name: "STree",
@@ -52,73 +47,90 @@ import {
     STreeNode,
   },
 })
-export default class STree extends Mixins(Emitter) {
+export default class Tree extends Emitter {
+  // 参数配置
   @Prop({
     type: Object,
     default: () => ({}),
   })
-  props!: TreeProp; // 参数配置
+  props!: TreeProp;
 
+  // 树数据
   @Prop({
     type: Array,
     default: () => [],
   })
-  data!: object[]; // 树数据
+  data!: object[];
 
+  // 值
   @Prop({
     type: Array,
     default: () => [],
   })
-  value!: Identifier[]; // 值
+  value!: Identifier[];
 
+  // 是否懒加载
   @Prop({
     type: Boolean,
     default: false,
   })
-  lazy!: boolean; // 是否懒加载
+  lazy!: boolean;
 
+  // 懒加载函数
   @Prop(Function)
-  load?: TreeLazyLoad; // 懒加载函数
+  load?: TreeLazyLoad;
 
+  // 是否默认展开
   @Prop({
     type: Boolean,
     default: false,
   })
-  initExpand!: boolean; // 是否默认展开
+  initExpand!: boolean;
 
+  // 是否显示复选框
   @Prop({
     type: Boolean,
     default: false,
   })
-  showCheckbox!: boolean; // 是否显示复选框
+  showCheckbox!: boolean;
 
+  // 是否联动
   @Prop({
     type: Boolean,
     default: false,
   })
-  linkage!: boolean; // 是否联动
+  linkage!: boolean;
 
+  // 选中值
   @Prop([String, Number])
-  select!: string | number; // 选中值
+  select!: string | number;
 
+  // 是否可以选择
   @Prop({
     type: Boolean,
     default: false,
   })
-  canSelect!: boolean; // 是否可以选择
+  canSelect!: boolean;
 
-  checkedNodes: TreeCheckedNode = {}; // 复选框选中的条目
-  checked: Identifier[] = []; // 复选框选中的id
-  slotVisible = false; // 是否存在放置
-  treeData: any[] = []; // 节点数据
-  nodeList: TreeNodeConfig[] = []; // 扁平化节点列表
-  selectedNode: Identifier = -999999; // 选中的条目
-  expandNodes: Identifier[] = []; // 展开的节点
-  loadingNodes: Identifier[] = []; // 加载的节点
+  // 复选框选中的条目
+  checkedNodes: TreeCheckedNode = {};
+  // 复选框选中的id
+  checked: Identifier[] = [];
+  // 是否存在放置
+  slotVisible = false;
+  // 节点数据
+  treeData: any[] = [];
+  // 扁平化节点列表
+  nodeList: TreeNodeConfig[] = [];
+  // 选中的条目
+  selectedNode: Identifier = -999999;
+  // 展开的节点
+  expandNodes: Identifier[] = [];
+  // 加载的节点
+  loadingNodes: Identifier[] = [];
 
   /**
    * @description: 值
-   * @author: Quarter
    * @return {Identifier[]}
    */
   get syncedValue(): Identifier[] {
@@ -127,7 +139,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 值
-   * @author: Quarter
    * @param {Identifier[]} val 值
    * @return
    */
@@ -138,7 +149,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 同步的选中值
-   * @author: Quarter
    * @return {Identifier}
    */
   get syncSelect(): Identifier | undefined {
@@ -147,7 +157,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 同步的选中值
-   * @author: Quarter
    * @param {Identifier} val 值
    * @return
    */
@@ -158,7 +167,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 过滤的树数据
-   * @author: Quarter
    * @return {Array<Object>}
    */
   get filterData(): any[] {
@@ -170,7 +178,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 识别符属性
-   * @author: Quarter
    * @return {String}
    */
   get idProperty(): string {
@@ -182,7 +189,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 标签属性
-   * @author: Quarter
    * @return {String}
    */
   get labelProperty(): string {
@@ -194,7 +200,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 子节点属性
-   * @author: Quarter
    * @return {String}
    */
   get childrenProperty(): string {
@@ -206,7 +211,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 是否叶子节点属性
-   * @author: Quarter
    * @return {String}
    */
   get isLeafProperty(): string {
@@ -218,7 +222,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 过滤的节点列表
-   * @author: Quarter
    * @return {Array<TreeNodeConfig>}
    */
   get filterNodeList(): TreeNodeConfig[] {
@@ -226,26 +229,25 @@ export default class STree extends Mixins(Emitter) {
       .filter((node: TreeNodeConfig) => {
         if (node.level === 0) {
           return true;
-        } else {
-          for (const id of node.sequence.slice(0, node.sequence.length - 1)) {
-            if (this.expandNodes.indexOf(id) === -1) {
-              return false;
-            }
-          }
-          return true;
         }
+        for (const id of node.sequence.slice(0, node.sequence.length - 1)) {
+          if (!this.expandNodes.includes(id)) {
+            return false;
+          }
+        }
+        return true;
       })
       .map((node: TreeNodeConfig) => {
+        // eslint-disable-next-line no-param-reassign
         node.selected = node.id === this.selectedNode;
-        node.expand = (node.id &&
-          this.expandNodes.indexOf(node.id) > -1) as boolean;
+        // eslint-disable-next-line no-param-reassign
+        node.expand = (node.id && this.expandNodes.indexOf(node.id) > -1) as boolean;
         return node;
       });
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -258,7 +260,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   updated(): void {
@@ -271,24 +272,19 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 监听传入选中节点
-   * @author: Quarter
    * @return
    */
   @Watch("syncSelect", {
     immediate: true,
   })
   handleSyncSelectChange(): void {
-    if (
-      this.syncSelect !== undefined &&
-      this.syncSelect !== this.selectedNode
-    ) {
+    if (this.syncSelect !== undefined && this.syncSelect !== this.selectedNode) {
       this.selectedNode = this.syncSelect;
     }
   }
 
   /**
    * @description: 监听树节点数据变化
-   * @author: Quarter
    * @return
    */
   @Watch("filterData", {
@@ -301,7 +297,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 监传入的值
-   * @author: Quarter
    * @return
    */
   @Watch("syncedValue", {
@@ -311,13 +306,12 @@ export default class STree extends Mixins(Emitter) {
     if (Array.isArray(this.syncedValue)) {
       this.checked = this.syncedValue;
     } else if (this.syncedValue === undefined || this.syncedValue === null) {
-      this.checked = new Array();
+      this.checked = [];
     }
   }
 
   /**
    * @description: 监听选中的值
-   * @author: Quarter
    * @return
    */
   @Watch("checked")
@@ -329,7 +323,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 取消选择
-   * @author: Quarter
    * @return
    */
   cancelSelect(): void {
@@ -339,7 +332,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 解析节点列表
-   * @author: Quarter
    * @param {Array<Object>} nodes 节点
    * @param {Number} level 节点层级
    * @param {TreeNodeConfig} parentNode 上级节点
@@ -349,23 +341,23 @@ export default class STree extends Mixins(Emitter) {
    */
   parseNodeList(
     nodes: any[],
-    level: number = 0,
+    level = 0,
     parentNode?: TreeNodeConfig,
     sequence: Identifier[] = [],
-    position: number[] = []
+    position: number[] = [],
   ): TreeNodeConfig[] {
     if (Array.isArray(nodes)) {
-      let result: TreeNodeConfig[] = new Array();
+      let result: TreeNodeConfig[] = [];
       nodes.forEach((node: any, index: number) => {
-        let isLeaf: boolean = false;
-        if (node[this.isLeafProperty]) {
-          isLeaf = true;
+        let isLeaf = true;
+        if (Reflect.has(node, this.isLeafProperty)) {
+          isLeaf = !!node[this.isLeafProperty];
         } else if (!this.lazy) {
           if (
             Array.isArray(node[this.childrenProperty]) &&
             node[this.childrenProperty].length > 0
           ) {
-            isLeaf = true;
+            isLeaf = false;
           }
         }
         const config: TreeNodeConfig = {
@@ -390,10 +382,7 @@ export default class STree extends Mixins(Emitter) {
         ) {
           this.expandNodes.push(config.id);
         }
-        if (
-          typeof node[this.isLeafProperty] === "boolean" &&
-          node[this.isLeafProperty]
-        ) {
+        if (typeof node[this.isLeafProperty] === "boolean" && node[this.isLeafProperty]) {
           if (Array.isArray(node[this.childrenProperty])) {
             result = result.concat(
               this.parseNodeList(
@@ -401,8 +390,8 @@ export default class STree extends Mixins(Emitter) {
                 level + 1,
                 config,
                 config.sequence,
-                config.position
-              )
+                config.position,
+              ),
             );
           }
         } else if (Array.isArray(node[this.childrenProperty])) {
@@ -412,19 +401,18 @@ export default class STree extends Mixins(Emitter) {
               level + 1,
               config,
               config.sequence,
-              config.position
-            )
+              config.position,
+            ),
           );
         }
       });
       return result;
     }
-    return new Array();
+    return [];
   }
 
   /**
    * @description: 切换节点展开状态
-   * @author: Quarter
    * @param {TreeNodeConfig} node 节点配置
    * @return
    */
@@ -432,54 +420,52 @@ export default class STree extends Mixins(Emitter) {
     if (node.id) {
       if (this.expandNodes.indexOf(node.id) > -1) {
         this.expandNodes.splice(this.expandNodes.indexOf(node.id), 1);
+      } else if (
+        this.lazy &&
+        typeof this.load === "function" &&
+        !node.isLeaf &&
+        (!Array.isArray(node.data[this.childrenProperty]) ||
+          (Array.isArray(node.data[this.childrenProperty]) &&
+            node.data[this.childrenProperty].length === 0))
+      ) {
+        // eslint-disable-next-line no-param-reassign
+        node.loading = true;
+        this.load(node, (nodes: any[] = []) => {
+          if (!Array.isArray(nodes)) {
+            // eslint-disable-next-line no-param-reassign
+            nodes = [];
+          }
+          this.insertChildNodes(node, nodes);
+        });
       } else {
-        if (
-          this.lazy &&
-          typeof this.load === "function" &&
-          !node.isLeaf &&
-          (!Array.isArray(node.data[this.childrenProperty]) ||
-            (Array.isArray(node.data[this.childrenProperty]) &&
-              node.data[this.childrenProperty].length === 0))
-        ) {
-          node.loading = true;
-          this.load(node, (nodes: any[] = []) => {
-            if (!Array.isArray(nodes)) {
-              nodes = new Array();
-            }
-            this.insertChildNodes(node, nodes);
-          });
-        } else {
-          this.expandNodes.push(node.id);
-        }
+        this.expandNodes.push(node.id);
       }
     }
   }
 
   /**
    * @description: 插入子节点
-   * @author: Quarter
    * @return
    */
   insertChildNodes(node: TreeNodeConfig, nodes: any[]): void {
-    let treeData: any[] = this.treeData;
+    let { treeData } = this;
     for (const id of node.position.slice(0, node.position.length - 1)) {
       if (treeData[id] && Array.isArray(treeData[id][this.childrenProperty])) {
         treeData = treeData[id][this.childrenProperty];
       } else {
+        // eslint-disable-next-line no-param-reassign
         node.isLeaf = true;
+        // eslint-disable-next-line no-param-reassign
         node.loading = false;
         return;
       }
     }
     if (treeData[node.position[node.position.length - 1]]) {
       if (nodes.length > 0) {
-        treeData[node.position[node.position.length - 1]][
-          this.childrenProperty
-        ] = nodes;
+        treeData[node.position[node.position.length - 1]][this.childrenProperty] = nodes;
         this.expandNodes.push(node.id);
       } else {
-        treeData[node.position[node.position.length - 1]][this.isLeafProperty] =
-          true;
+        treeData[node.position[node.position.length - 1]][this.isLeafProperty] = true;
       }
     }
     this.nodeList = this.parseNodeList(this.treeData);
@@ -487,7 +473,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 选择节点
-   * @author: Quarter
    * @param {TreeNodeConfig} node 选中的节点
    * @return
    */
@@ -501,7 +486,6 @@ export default class STree extends Mixins(Emitter) {
 
   /**
    * @description: 选中节点
-   * @author: Quarter
    * @param {TreeNodeConfig} node 选中的节点
    * @return
    */

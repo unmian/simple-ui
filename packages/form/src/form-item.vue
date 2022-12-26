@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:42:16
+ * @LastEditTime: 2022-12-13 16:09:31
  * @LastEditors: Quarter
  * @Description: 简易的表单项组件
  * @FilePath: /simple-ui/packages/form/src/form-item.vue
@@ -27,29 +27,22 @@
 import SForm from "./form.vue";
 import { Emitter } from "packages/mixins";
 import { CustomClass, CommonPosition } from "packages/types";
-import { Component, Inject, Mixins, Prop } from "vue-property-decorator";
-import {
-  FormErrorDepot,
-  CustomFormData,
-  FormItemValue,
-  FormRule,
-  FormRules,
-} from "./types";
+import { Component, Inject, Prop } from "vue-property-decorator";
+import { FormErrorDepot, CustomFormData, FormItemValue, FormRule, FormRules } from "./types";
 
 @Component({
   name: "SFormItem",
 })
-export default class SFormItem extends Mixins(Emitter) {
+export default class FormItem extends Emitter {
   /**
    * @description: 表单组件
-   * @author: Quarter
    * @return {SForm|undefined}
    */
   @Inject({
     from: "SForm",
     default: undefined,
   })
-  SForm?: SForm;
+  SForm?: InstanceType<typeof SForm>;
 
   @Prop(String)
   name?: string; // 数据名
@@ -79,7 +72,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 过滤的不显示标签
-   * @author: Quarter
    * @return {CustomFormData}
    */
   get filterWithoutLabel(): boolean {
@@ -88,7 +80,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -102,7 +93,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 表单数据
-   * @author: Quarter
    * @return {CustomFormData}
    */
   get formData(): CustomFormData {
@@ -114,7 +104,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 表单规则
-   * @author: Quarter
    * @return {FormRules}
    */
   get formRules(): FormRules {
@@ -126,7 +115,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 验证规则
-   * @author: Quarter
    * @return {Array<FormRule>}
    */
   get rules(): FormRule[] {
@@ -142,7 +130,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 表单数据
-   * @author: Quarter
    * @return {FormItemValue}
    */
   get formItemData(): FormItemValue {
@@ -159,7 +146,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 是否存在错误
-   * @author: Quarter
    * @return {Boolean}
    */
   get error(): boolean {
@@ -168,18 +154,17 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 错误消息
-   * @author: Quarter
    * @return {String}
    */
   get message(): string | undefined {
     if (Object.keys(this.errorDepot).length > 0) {
       return Object.values(this.errorDepot)[0];
     }
+    return undefined;
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -190,7 +175,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -201,7 +185,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -212,7 +195,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 验证所有规则
-   * @author: Quarter
    * @return
    */
   validateAll(): void {
@@ -222,7 +204,7 @@ export default class SFormItem extends Mixins(Emitter) {
     if (!Array.isArray(this.rules)) {
       return;
     }
-    const rules: FormRule[] = this.rules;
+    const { rules } = this;
     rules.forEach((rule: FormRule, index: number) => {
       try {
         this.validateRule(rule);
@@ -242,7 +224,6 @@ export default class SFormItem extends Mixins(Emitter) {
 
   /**
    * @description: 按照触发事件验证规则
-   * @author: Quarter
    * @param {String} eventName 事件名称
    * @return
    */
@@ -253,7 +234,7 @@ export default class SFormItem extends Mixins(Emitter) {
     if (!Array.isArray(this.rules)) {
       return;
     }
-    const rules: FormRule[] = this.rules;
+    const { rules } = this;
     try {
       rules.forEach((rule: FormRule, index: number) => {
         if (rule.trigger === eventName) {
@@ -272,13 +253,13 @@ export default class SFormItem extends Mixins(Emitter) {
           }
         }
       });
-      // tslint:disable-next-line
-    } catch {}
+    } catch (e) {
+      // do something
+    }
   }
 
   /**
    * @description: 验证规则
-   * @author: Quarter
    * @param {FormRule} rule 待验证的规则
    * @return
    */
@@ -295,27 +276,26 @@ export default class SFormItem extends Mixins(Emitter) {
       }
       if (value !== null && value !== undefined && value !== "") {
         if (typeof rule.type === "string") {
+          const numberRegExp = new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/);
           switch (rule.type) {
             case "number":
-              const numberRegExp: RegExp = new RegExp(
-                /^[0-9]+(\.[0-9]+){0,1}$/
-              );
+              // eslint-disable-next-line max-depth
               if (numberRegExp.test(value.toString()) === false) {
                 throw new Error(rule.message);
               }
               break;
             case "boolean":
+              // eslint-disable-next-line max-depth
               if (value.toString() !== "true" || value.toString() !== "false") {
                 throw new Error(rule.message);
               }
               break;
+            default:
+            //
           }
         }
         if (!Array.isArray(value) && rule.reg instanceof RegExp) {
-          if (
-            value.toString().length > 0 &&
-            rule.reg.test(value.toString()) === false
-          ) {
+          if (value.toString().length > 0 && rule.reg.test(value.toString()) === false) {
             throw new Error(rule.message);
           }
         }

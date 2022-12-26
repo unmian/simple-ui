@@ -1,13 +1,12 @@
 /*
  * @Author: Quarter
  * @Date: 2022-04-11 11:48:35
- * @LastEditTime: 2022-04-11 11:48:36
+ * @LastEditTime: 2022-09-19 16:42:20
  * @LastEditors: Quarter
  * @Description: 全局提示组件类型
- * @FilePath: /simple-ui/packages/message/src/types/index.ts
+ * @FilePath: /simple-ui/packages/alert/src/types/index.ts
  */
 import { CommonType } from "packages/types";
-import MessageBox from "../message-box.vue";
 
 // 提示配置项
 export interface MessageOptions {
@@ -18,15 +17,16 @@ export interface MessageOptions {
 }
 
 // 提示方法
-export interface MessageCommand {
-  (message: string): MessageBox;
-  (options: MessageOptions): MessageBox;
-  info (message: string): MessageBox;
-  info (options: string): MessageBox;
-  success (message: string): MessageBox;
-  success (options: string): MessageBox;
-  warning (message: string): MessageBox;
-  warning (options: string): MessageBox;
-  error (message: string): MessageBox;
-  error (options: string): MessageBox;
-}
+// 提示方法
+export type MessageCommand = ((message: string | MessageOptions) => string) &
+  ((options: MessageOptions) => string) & {
+    info: (message: string) => string;
+    success: (message: string) => string;
+    warning: (message: string) => string;
+    error: (message: string) => string;
+  } & {
+    info: (options: string) => string;
+    success: (options: string) => string;
+    warning: (options: string) => string;
+    error: (options: string) => string;
+  };

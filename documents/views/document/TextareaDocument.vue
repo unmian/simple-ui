@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:02:32
+ * @LastEditTime: 2022-12-14 19:20:13
  * @Description: 文本域文档
- * @FilePath: /simple-ui/documents/views/TextareaDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/TextareaDocument.vue
 -->
 <template>
   <div class="textarea-document">
@@ -118,8 +118,7 @@
             <td>keyup</td>
             <td>
               event: KeyboardEvent 键盘事件
-              <br />value: InputValue
-              文本域内容
+              <br />value: InputValue 文本域内容
             </td>
             <td>键盘弹起</td>
           </tr>
@@ -127,8 +126,7 @@
             <td>keydown</td>
             <td>
               event: KeyboardEvent 键盘事件
-              <br />value: InputValue
-              文本域内容
+              <br />value: InputValue 文本域内容
             </td>
             <td>键盘按下</td>
           </tr>
@@ -136,8 +134,7 @@
             <td>keypress</td>
             <td>
               event: KeyboardEvent 键盘事件
-              <br />value: InputValue
-              文本域内容
+              <br />value: InputValue 文本域内容
             </td>
             <td>键盘按下</td>
           </tr>
@@ -153,7 +150,12 @@
               <s-textarea :cols="40" :rows="4" placeholder="请输入内容"></s-textarea>
             </li>
             <li>
-              <s-textarea :cols="40" :rows="4" placeholder="有长度限制的文本域" :maxlength="100"></s-textarea>
+              <s-textarea
+                :cols="40"
+                :rows="4"
+                placeholder="有长度限制的文本域"
+                :maxlength="100"
+              ></s-textarea>
             </li>
             <li>
               <s-textarea
@@ -168,7 +170,8 @@
               <s-textarea
                 :cols="40"
                 :rows="4"
-                placeholder="只读的文本域\n还可以换行"
+                value="只读的文本域
+还可以换行"
                 :maxlength="100"
                 readonly
               ></s-textarea>

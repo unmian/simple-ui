@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:25:12
+ * @LastEditTime: 2022-12-14 19:43:05
  * @LastEditors: Quarter
  * @Description: 树型组件节点项
  * @FilePath: /simple-ui/packages/tree/src/tree-node.vue
@@ -20,48 +20,47 @@
     <div class="item-arrow">
       <s-button
         v-if="!data.isLeaf"
+        variant="plain"
+        icon="chevron-right"
+        shape="circle"
+        size="small"
         :class="{ 'roll-down': data.expand }"
         @click="switchSubNodeVisible"
-      >
-        <i class="s-icon-caret-right"></i>
-      </s-button>
+      ></s-button>
     </div>
     <div v-if="showCheckbox" class="item-checkbox">
       <s-checkbox :label="data.id" @change="checkNode"></s-checkbox>
     </div>
     <div v-if="data.loading" class="item-loading">
       <div class="loading">
-        <i class="s-icon-loading"></i>
+        <icon name="loading"></icon>
       </div>
     </div>
     <div v-if="hasSlot" class="item-label" @click="selectNode">
       <slot :node="data"></slot>
     </div>
-    <div
-      v-else
-      class="item-label static-label"
-      :title="data.label"
-      @click="selectNode"
-    >
+    <div v-else class="item-label static-label" :title="data.label" @click="selectNode">
       {{ data.label }}
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Emitter } from "packages/mixins";
 import { Button as SButton, Checkbox, type CustomStyle } from "packages";
-import { Component, Prop, Mixins } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import { TreeNodeConfig } from "./types";
 
 @Component({
   name: "STreeNode",
   components: {
+    Icon,
     SButton,
     SCheckbox: Checkbox,
   },
 })
-export default class STreeNode extends Mixins(Emitter) {
+export default class TreeNode extends Emitter {
   @Prop({
     type: Object,
     required: true,
@@ -84,18 +83,16 @@ export default class STreeNode extends Mixins(Emitter) {
 
   /**
    * @description: 自定义样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get customStyle(): CustomStyle {
     return {
-      "padding-left": (this.data.level || 0) * 20 + "px",
+      "padding-left": `calc(${(this.data.level || 0) * 2}rem + 0.4rem)`,
     };
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -108,7 +105,6 @@ export default class STreeNode extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   updated(): void {
@@ -121,7 +117,6 @@ export default class STreeNode extends Mixins(Emitter) {
 
   /**
    * @description: 切换下级菜单的显示状态
-   * @author: Quarter
    * @return
    */
   switchSubNodeVisible(): void {
@@ -132,7 +127,6 @@ export default class STreeNode extends Mixins(Emitter) {
 
   /**
    * @description: 选中某个节点
-   * @author: Quarter
    * @return
    */
   selectNode(): void {
@@ -143,7 +137,6 @@ export default class STreeNode extends Mixins(Emitter) {
 
   /**
    * @description: 选中节点
-   * @author: Quarter
    * @return
    */
   checkNode(): void {
@@ -157,40 +150,20 @@ export default class STreeNode extends Mixins(Emitter) {
 <style lang="scss">
 .s-tree-node {
   width: 100%;
-  height: 35px;
+  padding: var(--s-spacing-4);
   box-sizing: border-box;
   display: flex;
   align-items: center;
 
   .item-arrow {
-    width: 40px;
+    width: 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
 
-    button {
-      width: 26px;
-      height: 26px;
-      min-width: initial;
-      padding: 0;
-      color: #666666;
-      font-size: 10px;
-      text-align: center;
-      border-radius: 13px;
-      transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
-
-      i {
-        margin: 0;
-      }
-
-      &.roll-down {
-        transform: rotate(90deg);
-      }
-
-      &:hover {
-        background-color: rgba($color: #000000, $alpha: 0.05);
-      }
-    }
+  .roll-down {
+    transform: rotate(90deg);
   }
 
   .item-checkbox {
@@ -209,7 +182,6 @@ export default class STreeNode extends Mixins(Emitter) {
       width: 20px;
       height: 20px;
       font-size: 14px;
-      animation: loadingRotate 2s linear infinite;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -217,20 +189,15 @@ export default class STreeNode extends Mixins(Emitter) {
   }
 
   .item-label {
-    width: calc(100% - 40px);
-    color: #333333;
-    font-size: 14px;
+    color: var(--s-text-priamry);
+    font-size: 1.4rem;
+    flex: 1;
 
     &.static-label {
       white-space: nowrap;
-      line-height: 35px;
       text-overflow: ellipsis;
       overflow: hidden;
     }
-  }
-
-  &.show-checkbox .item-label {
-    width: calc(100% - 64px);
   }
 
   &.can-select {
@@ -244,26 +211,6 @@ export default class STreeNode extends Mixins(Emitter) {
     &:hover {
       background-color: rgba($color: #000000, $alpha: 0.05);
     }
-  }
-
-  &.loading {
-    .item-label {
-      width: calc(100% - 70px);
-    }
-
-    &.show-checkbox .item-label {
-      width: calc(100% - 94px);
-    }
-  }
-}
-
-@keyframes loadingRotate {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
   }
 }
 </style>

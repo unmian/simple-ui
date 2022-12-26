@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 08:58:56
  * @LastEditors: Quarter
- * @LastEditTime: 2022-06-08 11:17:52
+ * @LastEditTime: 2022-12-13 15:30:08
  * @Description: 头像文档
  * @FilePath: /simple-ui/documents/views/document/avatar/index.vue
 -->

@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:59:14
+ * @LastEditTime: 2022-12-13 15:17:51
  * @Description: 图片选择文档
- * @FilePath: /simple-ui/documents/views/ImagePickerDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/ImagePickerDocument.vue
 -->
 <template>
   <div class="image-picker-document">
@@ -88,5 +88,4 @@ export default class ImagePickerDocument extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

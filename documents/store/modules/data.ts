@@ -11,12 +11,8 @@ export default {
   state: {
     __OBJECT_TYPE: "module",
   },
-  mutations: {
-  },
-  getters: {
-  },
-  actions: {
-  },
-  modules: {
-  },
+  mutations: {},
+  getters: {},
+  actions: {},
+  modules: {},
 };

@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-07-13 09:19:17
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-07 18:55:36
+ * @LastEditTime: 2022-12-15 19:54:35
  * @Description: 主应用程序
 -->
 <template>
@@ -12,13 +12,22 @@
 </template>
 
 <script lang="ts">
+import { LoadingDrective } from "@unmian/simple-ui";
 import { Component, Provide, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  directives: {
+    Loading: LoadingDrective,
+  },
+})
 export default class App extends Vue {
+  fullScreen = false; // // 是否全屏
+  fullScreenListening = false; // // 全屏键盘操作
+  fullScreenTimeout = -1; // // 延迟取消
+  routerActive = true; // 路由是否激活
+
   /**
    * @description: 刷新
-   * @author: Quarter
    * @return
    */
   @Provide("refresh")
@@ -29,23 +38,14 @@ export default class App extends Vue {
     });
   }
 
-  fullScreen = false; // // 是否全屏
-  fullScreenListening = false; // // 全屏键盘操作
-  fullScreenTimeout = -1; // // 延迟取消
-  routerActive = true; // 路由是否激活
-
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created() {
     // 在页面关闭前存储vuex数据
     window.addEventListener("beforeunload", () => {
-      sessionStorage.setItem(
-        "vuex-persistent-storage",
-        JSON.stringify(this.$store.state)
-      );
+      sessionStorage.setItem("vuex-persistent-storage", JSON.stringify(this.$store.state));
     });
   }
 
@@ -69,20 +69,18 @@ export default class App extends Vue {
           !Array.isArray(sourceState[name]) &&
           sourceState[name].__OBJECT_TYPE === "module"
         ) {
+          // eslint-disable-next-line valid-typeof
           if (typeof targetState[name] !== undefined) {
-            if (
-              typeof targetState[name] === "object" &&
-              !Array.isArray(targetState[name])
-            ) {
-              targetState[name] = this.stateMerge(
-                targetState[name],
-                sourceState[name]
-              );
+            if (typeof targetState[name] === "object" && !Array.isArray(targetState[name])) {
+              // eslint-disable-next-line no-param-reassign
+              targetState[name] = this.stateMerge(targetState[name], sourceState[name]);
             } else {
+              // eslint-disable-next-line no-param-reassign
               targetState[name] = this.stateMerge({}, sourceState[name]);
             }
           }
         } else {
+          // eslint-disable-next-line no-param-reassign
           targetState[name] = sourceState[name];
         }
       });

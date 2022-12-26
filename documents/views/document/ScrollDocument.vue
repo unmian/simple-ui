@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:01:08
+ * @LastEditTime: 2022-12-13 15:27:34
  * @Description: 滚动条文档
- * @FilePath: /simple-ui/documents/views/ScrollDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/ScrollDocument.vue
 -->
 <template>
   <div class="scroll-document">
@@ -88,5 +88,4 @@ export default class ScrollDocument extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

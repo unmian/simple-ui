@@ -1,59 +1,57 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:45:50
+ * @LastEditTime: 2022-12-13 16:51:08
  * @LastEditors: Quarter
  * @Description: 简易的分页组件
  * @FilePath: /simple-ui/packages/pagination/src/pagination.vue
 -->
 <template>
-  <div
-    class="s-pagination"
-    :class="{ 'plain-text': plain }"
-    :style="alignStyle"
-  >
-    <div class="total" v-if="showCounter">
+  <div class="s-pagination" :class="{ 's-pagination--plain': plain }" :style="alignStyle">
+    <div class="s-pagination__total" v-if="showCounter">
       共
       <span>{{ realTotal }}</span
       >条
     </div>
     <div class="page-size" v-if="showPagination">
-      <s-select
-        width="95px"
-        height="26px"
-        :value.sync="unsyncedSize"
-        @change="updateSizeStatus"
-      >
-        <s-option
-          v-for="(item, index) of sizeList"
-          :key="`size-item-${index}`"
-          :value="item"
+      <s-select width="12rem" height="2.8rem" :value.sync="unsyncedSize" @change="updateSizeStatus">
+        <s-option v-for="(item, index) of sizeList" :key="`size-item-${index}`" :value="item"
           >{{ item }}条/页</s-option
         >
       </s-select>
     </div>
-    <div class="page-list">
+    <div class="s-pagination__page-list">
       <ul>
-        <li :class="{ disabled: unsyncedPage <= 1 }">
-          <button @click="previousPage">
+        <li>
+          <button
+            class="s-pagination__btn"
+            :class="{ 's-pagination__btn-disabled': unsyncedPage <= 1 }"
+            @click="previousPage"
+          >
             <template v-if="showWord">上一页</template>
             <template v-else>
-              <i class="s-icon-arrow-left"></i>
+              <icon name="chevron-left"></icon>
             </template>
           </button>
         </li>
-        <li
-          v-for="(item, index) of buttonList"
-          :key="`button-item-${index}`"
-          :class="{ active: item === unsyncedPage }"
-        >
-          <button @click="changePage(item)">{{ item }}</button>
+        <li v-for="(item, index) of buttonList" :key="`button-item-${index}`">
+          <button
+            class="s-pagination__btn"
+            :class="{ 's-pagination__btn-active': item === unsyncedPage }"
+            @click="changePage(item)"
+          >
+            {{ item }}
+          </button>
         </li>
-        <li :class="{ disabled: unsyncedPage >= maxPageNumber }">
-          <button @click="nextPage">
+        <li>
+          <button
+            class="s-pagination__btn"
+            :class="{ 's-pagination__btn-disabled': unsyncedPage >= maxPageNumber }"
+            @click="nextPage"
+          >
             <template v-if="showWord">下一页</template>
             <template v-else>
-              <i class="s-icon-arrow-right"></i>
+              <icon name="chevron-right"></icon>
             </template>
           </button>
         </li>
@@ -63,8 +61,8 @@
       <div>前往</div>
       <div style="margin: 0 3px">
         <s-input
-          width="40px"
-          height="26px"
+          width="4.8rem"
+          height="2.8rem"
           :value.sync="pageValue"
           :maxlength="5"
           :show-counter="false"
@@ -77,14 +75,18 @@
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { CommonAlign, CustomStyle } from "packages/types";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { PageValue } from "./types";
 
 @Component({
   name: "SPagination",
+  components: {
+    Icon,
+  },
 })
-export default class SPagination extends Vue {
+export default class Pagination extends Vue {
   @Prop({
     type: Number,
     default: 0,
@@ -146,7 +148,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 分页尺寸
-   * @author: Quarter
    * @return {number}
    */
   get syncedSize(): number {
@@ -155,7 +156,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 分页尺寸
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -165,7 +165,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 同步的页码
-   * @author: Quarter
    * @return {number}
    */
   get syncedPage(): number {
@@ -174,7 +173,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 同步的页码
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -184,7 +182,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 总条目数
-   * @author: Quarter
    * @return
    */
   get realTotal(): number {
@@ -196,7 +193,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 排列方式样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get alignStyle(): CustomStyle {
@@ -219,7 +215,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 最大页码
-   * @author: Quarter
    * @return {Array<Number>}
    */
   get maxPageNumber(): number {
@@ -232,11 +227,10 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 页码列表
-   * @author: Quarter
    * @return {Array<PageValue>}
    */
   get buttonList(): PageValue[] {
-    let list: PageValue[] = new Array();
+    let list: PageValue[] = [];
     if (this.maxPageNumber < 7) {
       for (let i = 1; i <= this.maxPageNumber; i++) {
         list.push(i);
@@ -270,7 +264,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 生命周期
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -283,24 +276,19 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 监听传入页码的变化
-   * @author: Quarter
    * @return
    */
   @Watch("syncedPage", {
     immediate: true,
   })
   handleSyncedPageChange(): void {
-    if (
-      typeof this.syncedPage === "number" &&
-      this.syncedPage !== this.unsyncedPage
-    ) {
+    if (typeof this.syncedPage === "number" && this.syncedPage !== this.unsyncedPage) {
       this.unsyncedPage = this.syncedPage;
     }
   }
 
   /**
    * @description: 修改分页的大小
-   * @author: Quarter
    * @return
    */
   updateSizeStatus(): void {
@@ -312,7 +300,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 切换页码
-   * @author: Quarter
    * @param {PageValue} page 页码
    * @return
    */
@@ -326,7 +313,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 上一页
-   * @author: Quarter
    * @return
    */
   previousPage(): void {
@@ -337,7 +323,6 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 下一页
-   * @author: Quarter
    * @return
    */
   nextPage(): void {
@@ -348,17 +333,12 @@ export default class SPagination extends Vue {
 
   /**
    * @description: 页面跳转
-   * @author: Quarter
    * @return
    */
   jumpPage(): void {
     const page: number = parseInt(this.pageValue, 10);
     if (typeof page === "number") {
-      if (
-        page !== this.unsyncedPage &&
-        page > 0 &&
-        page <= this.maxPageNumber
-      ) {
+      if (page !== this.unsyncedPage && page > 0 && page <= this.maxPageNumber) {
         this.changePage(page);
       }
       this.pageValue = "";
@@ -369,103 +349,102 @@ export default class SPagination extends Vue {
 
 <style lang="scss">
 .s-pagination {
-  .page-size .s-select .select-input {
-    font-size: 12px;
-  }
-
-  .go-page .s-input .input-content input {
-    text-align: center;
-  }
-}
-</style>
-
-<style lang="scss">
-.s-pagination {
   width: 100%;
   display: flex;
   align-items: center;
 
   > div:nth-of-type(n + 2) {
-    margin-left: 20px;
+    margin-left: var(--s-spacing-24);
   }
+}
 
-  .total {
-    color: #666666;
-    font-size: 12px;
+.s-pagination__total {
+  color: var(--s-text-primary);
+  font-size: 1.4rem;
 
-    span {
-      margin: 0 5px;
-    }
+  span {
+    margin: 0 var(--s-spacing-4);
   }
+}
 
-  .page-list {
-    ul {
-      padding: 0;
-      list-style: none;
-      border-radius: 2px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      margin: 0;
-
-      li {
-        border: 1px solid #d6e1e5;
-
-        button {
-          min-width: 24px;
-          height: 24px;
-          padding: 0 8px;
-          color: #333333;
-          font-size: 12px;
-          border: none;
-          cursor: default;
-          background: none;
-        }
-
-        &:not(:first-of-type) {
-          border-left: none;
-        }
-
-        &:not(.active) button {
-          cursor: pointer;
-
-          &:hover {
-            color: #549fff;
-          }
-        }
-
-        &.disabled button,
-        &.disabled button:hover {
-          cursor: not-allowed;
-          color: #dcdcdc;
-        }
-
-        &.active {
-          border-color: #549fff;
-
-          button {
-            color: #ffffff;
-            background-color: #549fff;
-          }
-        }
-      }
-    }
-  }
-
-  .go-page {
-    color: #666666;
-    font-size: 12px;
+.s-pagination__page-list {
+  ul {
+    padding: 0;
+    list-style: none;
+    border-radius: 2px;
+    overflow: hidden;
     display: flex;
     align-items: center;
+    margin: 0;
   }
 
-  &.plain-text .page-list li {
-    border: none;
+  li {
+    border: 1px solid var(--s-border-color);
 
-    &.active button {
-      color: #549fff;
-      background: none;
+    &:first-child {
+      border-radius: var(--s-border-radius) 0 0 var(--s-border-radius);
     }
+
+    &:last-child {
+      border-radius: 0 var(--s-border-radius) var(--s-border-radius) 0;
+    }
+
+    &:not(:first-of-type) {
+      border-left: none;
+    }
+  }
+}
+
+.go-page {
+  color: var(--s-text-primary);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+
+  .s-input {
+    text-align: center;
+    margin: 0 var(--s-spacing-4);
+  }
+}
+
+.s-pagination__btn {
+  min-width: 2.8rem;
+  height: 2.8rem;
+  padding: 0 var(--s-spacing-8);
+  color: var(--s-text-primary);
+  font-size: 1.4rem;
+  border: none;
+  cursor: pointer;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: var(--s-brand-normal);
+  }
+}
+
+.s-pagination__btn-active,
+.s-pagination__btn-active:hover {
+  color: #ffffff;
+  cursor: default;
+  background-color: var(--s-brand-normal);
+}
+
+.s-pagination__btn-disabled,
+.s-pagination__btn-disabled:hover {
+  cursor: not-allowed;
+  color: var(--s-text-disabled);
+}
+
+.s-pagination--plain {
+  .s-pagination__page-list li {
+    border: none;
+  }
+
+  .s-pagination__btn-active {
+    border-radius: var(--s-border-radius);
   }
 }
 </style>

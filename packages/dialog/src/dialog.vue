@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:41:14
+ * @LastEditTime: 2022-12-13 15:34:29
  * @LastEditors: Quarter
  * @Description: 简易的弹窗组件
  * @FilePath: /simple-ui/packages/dialog/src/dialog.vue
@@ -16,11 +16,7 @@
   >
     <div class="dialog-shadow" @click="closeDialog"></div>
     <scale-transition>
-      <div
-        class="dialog-container"
-        :style="{ width, height }"
-        v-if="delayVisible"
-      >
+      <div class="dialog-container" :style="{ width, height }" v-if="delayVisible">
         <s-scroll>
           <slot></slot>
         </s-scroll>
@@ -40,7 +36,7 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
     SScroll: Scroll,
   },
 })
-export default class SDialog extends Vue {
+export default class Dialog extends Vue {
   @Prop(String)
   width?: string; // 弹窗宽度
 
@@ -68,7 +64,6 @@ export default class SDialog extends Vue {
 
   /**
    * @description: 是否显示弹窗
-   * @author: Quarter
    * @return {boolean}
    */
   get syncedVisible(): boolean {
@@ -77,7 +72,6 @@ export default class SDialog extends Vue {
 
   /**
    * @description: 是否显示弹窗
-   * @author: Quarter
    * @param {boolean} val 值
    * @return
    */
@@ -87,7 +81,6 @@ export default class SDialog extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -98,7 +91,6 @@ export default class SDialog extends Vue {
 
   /**
    * @description: 监听外部传入参数变化
-   * @author: Quarter
    * @param {Boolean} newValue 变化后的值
    * @return
    */
@@ -116,7 +108,6 @@ export default class SDialog extends Vue {
 
   /**
    * @description: 监听内部显隐的变化
-   * @author: Quarter
    * @param {Boolean} newValue 变化后的值
    * @return
    */
@@ -132,7 +123,6 @@ export default class SDialog extends Vue {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closeDialog(): void {

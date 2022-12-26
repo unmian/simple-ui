@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2022-06-09 11:50:44
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-07 17:21:44
+ * @LastEditTime: 2022-12-13 15:15:40
  * @FilePath: /simple-ui/documents/components/color-block/index.vue
  * @Description: 颜色
 -->
@@ -18,12 +18,12 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { CustomClass, CustomStyle } from "@quarter/simple-ui";
+import { CustomClass, CustomStyle, MessageCommand } from "@unmian/simple-ui";
 
 @Component({
-  name: "filterColorBlock",
+  name: "ColorBlock",
 })
-export default class filterColorBlock extends Vue {
+export default class ColorBlock extends Vue {
   @Prop({
     type: String,
     default: "#0052d9",
@@ -95,7 +95,6 @@ export default class filterColorBlock extends Vue {
 
   /**
    * @description: 自定义样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get customStyle(): CustomStyle {
@@ -122,7 +121,7 @@ export default class filterColorBlock extends Vue {
   handleClick(): void {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(this.styleName);
-      this.$message.success(`CSS 变量复制成功 【${this.styleName}】`);
+      MessageCommand.success(`CSS 变量复制成功 【${this.styleName}】`);
     }
   }
 }

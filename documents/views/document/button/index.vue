@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 15:32:26
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-08 14:32:51
+ * @LastEditTime: 2022-12-13 15:31:38
  * @Description: 按钮的文档
  * @FilePath: /simple-ui/documents/views/document/button/index.vue
 -->
@@ -51,6 +51,15 @@
             <td>按钮形状</td>
           </tr>
           <tr>
+            <td>icon</td>
+            <td>否</td>
+            <td>string</td>
+            <td>否</td>
+            <td>-</td>
+            <td>-</td>
+            <td>按钮图标</td>
+          </tr>
+          <tr>
             <td>disabled</td>
             <td>否</td>
             <td>Boolean</td>
@@ -71,7 +80,10 @@
         </tbody>
       </template>
       <template v-slot:example>
-        <code-example name="按钮示例" url="/documents/views/document/button/demo.vue"></code-example>
+        <code-example
+          name="按钮示例"
+          url="/documents/views/document/button/demo.vue"
+        ></code-example>
       </template>
     </document-page>
   </div>
@@ -88,5 +100,5 @@ import { CodeExample, DocumentPage } from "documents/components";
     DocumentPage,
   },
 })
-export default class ButtonDocument extends Vue { }
+export default class ButtonDocument extends Vue {}
 </script>

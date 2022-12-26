@@ -11,7 +11,7 @@ module.exports = {
     "max-len": [
       "error",
       {
-        code: 100,
+        code: 160,
       },
     ],
     "max-lines": [
@@ -24,7 +24,7 @@ module.exports = {
     "max-lines-per-function": [
       "error",
       {
-        max: 100,
+        max: 300,
         skipBlankLines: true,
       },
     ],

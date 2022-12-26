@@ -1,25 +1,26 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-04-12 02:47:21
+ * @LastEditTime: 2022-12-13 15:41:16
  * @LastEditors: Quarter
  * @Description: 下拉框选项
  * @FilePath: /simple-ui/packages/select/src/option.vue
 -->
+<!-- eslint-disable vue/valid-template-root -->
 <template></template>
 
 <script lang="ts">
 import { Emitter } from "packages/mixins";
 import { VNode } from "vue";
-import { Component, Mixins, Prop } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import { OptionConfig, SelectValue } from "./types";
 
-let index: number = 0;
+let index = 0;
 
 @Component({
   name: "SOption",
 })
-export default class SOption extends Mixins(Emitter) {
+export default class Option extends Emitter {
   @Prop({
     type: [String, Number, Boolean],
     default: null,
@@ -36,7 +37,6 @@ export default class SOption extends Mixins(Emitter) {
 
   /**
    * @description: 获取标签内容
-   * @author: Quarter
    * @return {String}
    */
   get label(): string {
@@ -52,7 +52,6 @@ export default class SOption extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -65,7 +64,6 @@ export default class SOption extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   updated(): void {
@@ -79,7 +77,6 @@ export default class SOption extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {

@@ -1,19 +1,14 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:45:05
+ * @LastEditTime: 2022-12-13 15:32:43
  * @LastEditors: Quarter
  * @Description: 消息提示容器组件
- * @FilePath: /simple-ui/packages/message/src/message-box.vue
+ * @FilePath: /simple-ui/packages/alert/src/message-box.vue
 -->
 <template>
   <transition name="message-fade">
-    <div
-      class="s-message-box"
-      v-show="visible"
-      :class="customClass"
-      :style="{ zIndex }"
-    >
+    <div class="s-message-box" v-show="visible" :class="customClass" :style="{ zIndex }">
       <div class="message-icon">
         <i :class="iconName"></i>
       </div>
@@ -69,15 +64,11 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 安全的类型
-   * @author: Quarter
    * @return {CommonType}
    */
   get safeType(): CommonType {
     const types: CommonType[] = ["info", "warning", "success", "error"];
-    if (
-      typeof this.messageType === "string" &&
-      types.indexOf(this.messageType) > -1
-    ) {
+    if (typeof this.messageType === "string" && types.indexOf(this.messageType) > -1) {
       return this.messageType;
     }
     return "info";
@@ -85,7 +76,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 安全的延迟时间
-   * @author: Quarter
    * @return {Number}
    */
   get safeDuration(): number {
@@ -97,7 +87,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 自定义类
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
@@ -111,7 +100,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 图标的名称
-   * @author: Quarter
    * @return {String}
    */
   get iconName(): string | undefined {
@@ -124,12 +112,13 @@ export default class MessageBox extends Vue {
         return "s-icon-success";
       case "error":
         return "s-icon-error";
+      default:
+        return undefined;
     }
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -143,7 +132,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -155,7 +143,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   close(): void {
@@ -168,7 +155,6 @@ export default class MessageBox extends Vue {
 
   /**
    * @description: 销毁弹窗
-   * @author: Quarter
    * @return
    */
   destroyElement(): void {

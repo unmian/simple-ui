@@ -2,17 +2,15 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:01:37
+ * @LastEditTime: 2022-12-13 15:27:46
  * @Description: 吸附文档
- * @FilePath: /simple-ui/documents/views/StickyDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/StickyDocument.vue
 -->
 <template>
   <div class="sticky-document">
     <document-page title="吸附 Sticky" :code="code">
       <template v-slot:desc>
-        <p>
-          这是一个可以在滚动的时候吸附在容器边缘的组件，需要和 Scroll 搭配使用。
-        </p>
+        <p>这是一个可以在滚动的时候吸附在容器边缘的组件，需要和 Scroll 搭配使用。</p>
       </template>
       <template v-slot:prop>
         <tbody>
@@ -73,5 +71,4 @@ export default class StickyDocument extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

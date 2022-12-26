@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:56:57
+ * @LastEditTime: 2022-12-13 15:16:49
  * @Description: 弹窗文档
- * @FilePath: /simple-ui/documents/views/DialogDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/DialogDocument.vue
 -->
 <template>
   <div class="dialog-document">
@@ -192,48 +192,9 @@ import { Component, Vue } from "vue-property-decorator";
 export default class DialogDocument extends Vue {
   dialogVisible = false; // 弹窗显示
   dialogBoxVisible = false; // 弹窗显示
-  dialogCode = `
-<template>
-  <div>
-    <s-button type="normal" @click="dialogVisible = true" outline>点击显示弹窗</s-button>
-    <s-dialog :visible.sync="dialogVisible" shadow-close>
-      <div style="padding: 30px;">我是弹窗的内容。</div>
-    </s-dialog>
-  </div>
-</template>
-
-<script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class DialogDocument extends Vue {
-  // 弹窗显示
-  private readonly dialogVisible: boolean = false;
-}
-</${"script"}>
-  `; // 示例代码
-  dialogBoxCode = `
-<template>
-  <div>
-    <s-button type="normal" @click="dialogBoxVisible = true" outline>点击显示弹窗</s-button>
-    <s-dialog title="自定义弹框" :visible.sync="dialogBoxVisible">
-      <div>我是弹窗的内容。</div>
-    </s-dialog>
-  </div>
-</template>
-
-<script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class DialogDocument extends Vue {
-  // 弹窗显示
-  private readonly dialogBoxVisible: boolean = false;
-}
-</${"script"}>
-  `; // 示例代码
+  dialogCode = ""; // 示例代码
+  dialogBoxCode = ""; // 示例代码
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

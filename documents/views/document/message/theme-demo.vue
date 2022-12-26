@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2022-06-10 10:16:26
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-05 11:21:16
+ * @LastEditTime: 2022-12-13 15:32:19
  * @FilePath: /simple-ui/documents/views/document/message/theme-demo.vue
  * @Description: 主题示例
 -->
@@ -17,19 +17,19 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import { CommonType, MessageCommand } from "@unmian/simple-ui";
 
 @Component
-export default class ThemeDialog extends Vue {
+export default class MessageThemeDemo extends Vue {
   /**
    * @description: 显示全局提示
-   * @author: Quarter
    * @param {string} theme 主题
    * @return
    */
-  showMessage(theme = "info"): void {
-    this.$message({
+  showMessage(theme: CommonType = "info"): void {
+    MessageCommand({
       theme,
-      content: "提示信息",
+      message: "提示信息",
     });
   }
 }

@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 13:37:38
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:02:21
+ * @LastEditTime: 2022-12-13 15:29:08
  * @Description: 标签文档
- * @FilePath: /simple-ui/documents/views/TagDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/TagDocument.vue
 -->
 <template>
   <div class="tag-document">

@@ -2,16 +2,15 @@
  * @Author: Quarter
  * @Date: 2020-08-18 13:55:34
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-05 11:19:44
+ * @LastEditTime: 2022-12-15 18:19:09
  * @Description: 简易的日期选择器
 -->
 <template>
   <div
     class="s-date-ranger-picker"
-    :class="{ 'status-disabled': disabled, 'status-readonly': readonly }"
-    :style="{
-      '--input-container-width': width,
-      '--input-container-height': height,
+    :class="{
+      's-date-ranger-picker--disabled': disabled,
+      's-date-ranger-picker--readonly': readonly,
     }"
   >
     <s-popover
@@ -21,35 +20,32 @@
       :disabled="!enabled"
     >
       <template #reference>
-        <div class="date-ranger" ref="input">
-          <div class="date-picker-icon" ref="icon">
-            <i class="s-icon-calendar-outline"></i>
+        <div class="s-date-ranger-picker__container" ref="input" :style="{ width, height }">
+          <div class="s-date-ranger-picker__icon">
+            <icon name="calendar-days"></icon>
           </div>
           <s-input
-            :width="inputWidth"
-            :height="inputHeight"
             :value="startDateStr"
-            :placeholder="startPlaceholder"
+            :readonly-placeholder="startPlaceholder"
             :disabled="disabled"
             readonly
-          ></s-input>
+          >
+          </s-input>
           <div class="ranger-sign" ref="separator">{{ separator }}</div>
           <s-input
-            :width="inputWidth"
-            :height="inputHeight"
             :value="endDateStr"
-            :placeholder="endPlaceholder"
+            :readonly-placeholder="endPlaceholder"
             :disabled="disabled"
             readonly
           ></s-input>
-          <div v-if="canClear" class="input-clear" @click.stop="clearValue">
-            <i class="s-icon-circle-close"></i>
+          <div v-if="canClear" class="s-date-ranger-picker__clear" @click.stop="clearValue">
+            <icon name="close-circle"></icon>
           </div>
         </div>
       </template>
       <div class="date-ranger-picker-popover">
         <div class="date-ranger-picker">
-          <s-date-picker-popover
+          <date-picker-popover
             ref="startDatePicker"
             :value="unsyncedStartValue"
             :min="min"
@@ -57,9 +53,9 @@
             :right="right"
             :day-picker="dayPicker"
             @change="updateLeftValue"
-          ></s-date-picker-popover>
+          ></date-picker-popover>
           <div class="picker-split"></div>
-          <s-date-picker-popover
+          <date-picker-popover
             ref="endDatePicker"
             :value="unsyncedEndValue"
             :min="complexMin"
@@ -67,11 +63,11 @@
             :left="left"
             :day-picker="dayPicker"
             @change="updateRightValue"
-          ></s-date-picker-popover>
+          ></date-picker-popover>
         </div>
         <div class="picker-footer">
-          <s-button type="cancel" @click="closePopover">取消</s-button>
-          <s-button type="confirm" @click="confirmPopover">确定</s-button>
+          <s-button theme="cancel" @click="closePopover">取消</s-button>
+          <s-button theme="primary" @click="confirmPopover">确定</s-button>
         </div>
       </div>
     </s-popover>
@@ -79,22 +75,24 @@
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { Input } from "packages/input";
 import { Emitter } from "packages/mixins";
 import { Popover } from "packages/popover";
 import { dateFormate } from "packages/util";
-import SDatePickerPopover from "./date-picker-popover.vue";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import DatePickerPopover from "./date-picker-popover.vue";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   name: "SDateRangerPicker",
   components: {
-    SPopover: Popover,
+    Icon,
+    Popover,
     SInput: Input,
-    SDatePickerPopover,
+    DatePickerPopover,
   },
 })
-export default class SDateRangerPicker extends Mixins(Emitter) {
+export default class DateRangerPicker extends Emitter {
   @Prop(String)
   width?: string; // 宽度
 
@@ -155,7 +153,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {string|null}
    */
   get syncedValue(): string | null {
@@ -164,7 +161,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {string|null} val 值
    * @return
    */
@@ -175,7 +171,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
   }
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -184,12 +179,11 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 日选择
-   * @author: Quarter
    * @return {Boolean}
    */
   get dayPicker(): boolean {
     if (typeof this.formate === "string") {
-      const dayRegExp: RegExp = new RegExp(/d+/);
+      const dayRegExp = new RegExp(/d+/);
       return dayRegExp.test(this.formate);
     }
     return true;
@@ -197,15 +191,14 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 最小值
-   * @author: Quarter
    * @return {Number}
    */
   get min(): number {
     if (Array.isArray(this.interval) && typeof this.interval[0] === "string") {
       const minStr: string = this.interval[0];
-      const dateRegExp: RegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
       if (dateRegExp.test(minStr)) {
-        return new Date(minStr + " 00:00:00").getTime();
+        return new Date(`${minStr} 00:00:00`).getTime();
       }
     }
     return 0;
@@ -213,15 +206,14 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 最大值
-   * @author: Quarter
    * @return {Number}
    */
   get max(): number {
     if (Array.isArray(this.interval) && typeof this.interval[1] === "string") {
       const maxStr: string = this.interval[1];
-      const dateRegExp: RegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/);
       if (dateRegExp.test(maxStr)) {
-        return new Date(maxStr + " 00:00:00").getTime();
+        return new Date(`${maxStr} 00:00:00`).getTime();
       }
     }
     return 0;
@@ -229,46 +221,39 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 复合最小值
-   * @author: Quarter
    * @return {Number}
    */
   get complexMin(): number {
     if (this.min > this.left) {
       return this.min;
-    } else {
-      return this.left;
     }
+    return this.left;
   }
 
   /**
    * @description: 复合最大值
-   * @author: Quarter
    * @return {Number}
    */
   get complexMax(): number {
     if (this.max !== 0 && this.max < this.right) {
       return this.max;
-    } else {
-      return this.right;
     }
+    return this.right;
   }
 
   /**
    * @description: 左区间
-   * @author: Quarter
    * @return {Number}
    */
   get left(): number {
     if (this.unsyncedStartValue < this.leftInterval) {
       return this.leftInterval;
-    } else {
-      return this.unsyncedStartValue;
     }
+    return this.unsyncedStartValue;
   }
 
   /**
    * @description: 右区间
-   * @author: Quarter
    * @return {Number}
    */
   get right(): number {
@@ -276,14 +261,12 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
       return this.rightInterval;
     } else if (this.unsyncedEndValue > this.rightInterval && this.rightInterval !== 0) {
       return this.rightInterval;
-    } else {
-      return this.unsyncedEndValue;
     }
+    return this.unsyncedEndValue;
   }
 
   /**
    * @description: 开始日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get startDateStr(): string | undefined {
@@ -294,11 +277,11 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
     ) {
       return dateFormate(this.unsyncedStartValue, this.formate);
     }
+    return undefined;
   }
 
   /**
    * @description: 结束日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get endDateStr(): string | undefined {
@@ -309,11 +292,11 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
     ) {
       return dateFormate(this.unsyncedEndValue, this.formate);
     }
+    return undefined;
   }
 
   /**
    * @description: 是否显示清除
-   * @author: Quarter
    * @return {Boolean}
    */
   get canClear(): boolean {
@@ -322,7 +305,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   mounted(): void {
@@ -331,7 +313,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeUpdate(): void {
@@ -340,7 +321,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return
    */
@@ -382,14 +362,13 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 监听开始值变化
-   * @author: Quarter
    * @return
    */
   @Watch("unsyncedStartValue")
   @Watch("unsyncedEndValue")
   handleUnsyncedValueChange(): void {
-    let start: string = "";
-    let end: string = "";
+    let start = "";
+    let end = "";
     if (typeof this.unsyncedStartValue === "number" && typeof this.formate === "string") {
       if (this.unsyncedStartValue !== 0) {
         start = dateFormate(this.unsyncedStartValue, "yyyy-MM-dd");
@@ -400,7 +379,7 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
         end = dateFormate(this.unsyncedEndValue, "yyyy-MM-dd");
       }
     }
-    const ranger: string = `${start} - ${end}`;
+    const ranger = `${start} - ${end}`;
     this.syncedValue = ranger;
     this.$emit("input", ranger);
     this.$emit("change", ranger, start, end);
@@ -409,13 +388,12 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 计算输入框的宽高
-   * @author: Quarter
    * @return
    */
   calcInputWidth(): void {
-    const input: Vue | Element | (Vue | Element)[] | undefined = this.$refs.input;
-    const icon: Vue | Element | (Vue | Element)[] | undefined = this.$refs.icon;
-    const separator: Vue | Element | (Vue | Element)[] | undefined = this.$refs.separator;
+    const { input } = this.$refs;
+    const { icon } = this.$refs;
+    const { separator } = this.$refs;
     if (input instanceof Element && icon instanceof Element && separator instanceof Element) {
       const inputStyle: CSSStyleDeclaration = getComputedStyle(input);
       const spaceWidth: number =
@@ -431,7 +409,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 清空值
-   * @author: Quarter
    * @return
    */
   clearValue(): void {
@@ -442,15 +419,14 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 切换弹窗显示
-   * @author: Quarter
    * @param {Boolean} visible 是否显示
    * @return
    */
   switchPopover(visible: boolean): void {
     if (
       visible === true &&
-      this.$refs.startDatePicker instanceof SDatePickerPopover &&
-      this.$refs.endDatePicker instanceof SDatePickerPopover
+      this.$refs.startDatePicker instanceof DatePickerPopover &&
+      this.$refs.endDatePicker instanceof DatePickerPopover
     ) {
       this.$refs.startDatePicker.init();
       this.$refs.endDatePicker.init();
@@ -461,7 +437,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closePopover(): void {
@@ -472,13 +447,12 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认弹窗
-   * @author: Quarter
    * @return
    */
   confirmPopover(): void {
     if (
-      this.$refs.startDatePicker instanceof SDatePickerPopover &&
-      this.$refs.endDatePicker instanceof SDatePickerPopover
+      this.$refs.startDatePicker instanceof DatePickerPopover &&
+      this.$refs.endDatePicker instanceof DatePickerPopover
     ) {
       let value: number | undefined = this.$refs.startDatePicker.getSelectorValue();
       if (typeof value === "number") {
@@ -500,7 +474,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 更新左区间值
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -510,7 +483,6 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 
   /**
    * @description: 更新右区间值
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -523,123 +495,106 @@ export default class SDateRangerPicker extends Mixins(Emitter) {
 <style lang="scss">
 .s-date-ranger-picker {
   width: fit-content;
+  color: var(--s-text-primary);
+  display: inline-flex;
+}
 
-  .date-ranger {
-    width: var(--input-container-width, 340px);
-    height: var(--input-container-height, 36px);
-    padding-right: 10px;
-    border: 1px solid #d6e1e5;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #ffffff;
-    transition: border 0.2s ease;
-    overflow: hidden;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    position: relative;
+.s-date-ranger-picker__container {
+  width: 34rem;
+  height: 3.4rem;
+  padding-right: var(--s-spacing-12);
+  border: 1px solid var(--s-border-color);
+  border-radius: var(--s-border-radius);
+  box-sizing: border-box;
+  background-color: var(--s-background-primary);
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
 
-    .date-picker-icon {
-      width: 25px;
-      padding-left: 5px;
-      color: #d6e1e5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  &:hover {
+    border-color: var(--s-brand-hover);
 
-    .s-input {
-      text-align: center;
-      margin-right: 0;
-
-      .input-content {
-        border: none;
-        background-color: unset;
-
-        .input-icon {
-          padding-left: 5px;
-        }
-
-        input {
-          padding-left: 5px;
-          color: #333333;
-        }
-      }
-    }
-
-    .ranger-sign {
-      padding: 0 5px;
-      color: #333333;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .input-clear {
-      padding: 0 10px;
-      height: var(--input-container-height, 36px);
-      color: #b7c1c5;
-      line-height: var(--input-container-height, 36px);
-      background-color: #ffffff;
-      cursor: pointer;
-      opacity: 0;
-      position: absolute;
-      top: 0;
-      right: 0;
-
-      &:hover {
-        color: #666666;
-      }
-    }
-  }
-
-  &:not(.status-disabled):not(.status-readonly):hover .date-ranger {
-    border-color: #b7c1c5;
-
-    .input-clear {
+    .s-date-ranger-picker__clear {
       opacity: 1;
     }
   }
 
-  &.status-disabled {
-    cursor: not-allowed;
-
-    .date-ranger {
-      cursor: not-allowed;
-      background-color: #f9f9f9;
-
-      .s-input {
-        cursor: not-allowed;
-        background-color: transparent;
-
-        input {
-          color: #666666;
-          cursor: not-allowed;
-        }
-      }
-
-      .input-clear {
-        background-color: transparent;
-      }
-    }
+  .s-input {
+    width: auto !important;
+    height: 100% !important;
+    text-align: center;
+    margin-right: 0;
+    flex: 1;
   }
 
-  &:not(.status-disabled).status-readonly .date-ranger {
-    cursor: not-allowed;
+  .s-input__placeholder {
+    justify-content: center;
+  }
 
-    .s-input {
-      cursor: not-allowed;
-      background-color: transparent;
-
-      input {
-        cursor: not-allowed;
-      }
-    }
-
-    .input-clear {
-      background-color: transparent;
-    }
+  .s-input__content {
+    border-width: 0;
   }
 }
+
+.s-date-ranger-picker__icon {
+  padding-left: var(--s-spacing-12);
+  color: var(--s-text-placeholder);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.s-date-ranger-picker__clear {
+  padding: 0 var(--s-spacing-8);
+  height: 100%;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  &:hover {
+    color: var(--s-brand-hover);
+  }
+}
+
+/* &:not(.s-date-ranger-picker--disabled):not(.s-date-ranger-picker--readonly):hover .date-ranger {
+  border-color: #b7c1c5;
+
+  .s-date-ranger-picker__clear {
+    opacity: 1;
+  }
+} */
+
+.s-date-ranger-picker--disabled {
+  cursor: not-allowed;
+  color: var(--s-text-disabled);
+
+  .s-date-ranger-picker__container,
+  .s-input {
+    background-color: var(--s-background-disabled);
+  }
+
+  .s-date-ranger-picker__container:hover {
+    border-color: var(--s-border-color);
+  }
+
+  .s-date-ranger-picker__icon {
+    color: var(--s-text-disabled);
+  }
+}
+
+.s-date-ranger-picker--readonly:not(.s-date-ranger-picker--disabled) {
+  .s-date-ranger-picker__container:hover {
+    border-color: var(--s-border-color);
+  }
+}
+
 .date-ranger-picker-popover {
   .date-ranger-picker {
     display: flex;

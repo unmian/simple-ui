@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-07-08 14:17:49
+ * @LastEditTime: 2022-12-13 15:32:02
  * @Description: 冷却按钮文档
  * @FilePath: /simple-ui/documents/views/document/icon/index.vue
 -->
@@ -57,15 +57,15 @@
           <div v-for="(group, index) of icons" :key="`group-item-${index}`" class="icon-group">
             <div class="group-name">
               <s-iconfont size="24" name="label"></s-iconfont>
-              <span>{{ group.groupName }}</span>
+              <span>{{ group.group }}</span>
             </div>
             <ul>
               <li
                 v-for="(icon, index2) of group.children"
                 :key="`icon-item-${index}-${index2}`"
-                @click="copyIconName(icon)"
+                @click="copyIconName(icon.name)"
               >
-                <s-icon size="32" :name="icon"></s-icon>
+                <s-icon size="32" :name="icon.name"></s-icon>
               </li>
             </ul>
           </div>
@@ -78,7 +78,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { DocumentPage } from "documents/components";
-import icons from "documents/assets/icons.json";
+import { MessageCommand } from "@unmian/simple-ui";
+import { Mainfest } from "@unmian/simple-icons";
 
 @Component({
   components: {
@@ -88,23 +89,31 @@ import icons from "documents/assets/icons.json";
 export default class IconDocument extends Vue {
   /**
    * @description: 图标
-   * @author: Quarter
    * @return {Array}
    */
-  get icons(): any[] {
-    return icons;
+  get icons() {
+    const icons: { [name: string]: typeof Mainfest } = {};
+    Mainfest.forEach((item) => {
+      if (Reflect.has(icons, item.group)) {
+        icons[item.group].push(item);
+      } else {
+        Reflect.set(icons, item.group, [item]);
+      }
+    });
+    return Object.keys(icons).sort().map((group: string) => {
+      return { group, children: icons[group] };
+    });
   }
 
   /**
    * @description: 复制图标名称
-   * @author: Quarter
    * @param {string} name 名称
    * @return
    */
   copyIconName(name: string): void {
     if (typeof name === "string" && navigator.clipboard) {
       navigator.clipboard.writeText(name);
-      this.$message.success(`图标名称复制成功 【${name}】`);
+      MessageCommand.success(`图标名称复制成功 【${name}】`);
     }
   }
 }
@@ -163,7 +172,7 @@ export default class IconDocument extends Vue {
 
 @media (prefers-color-scheme: dark) {
   .icon-list ul li:hover {
-        background-color: var(--s-gray-1200);
+    background-color: var(--s-gray-1200);
   }
 }
 </style>

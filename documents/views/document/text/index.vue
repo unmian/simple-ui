@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-08 14:55:59
+ * @LastEditTime: 2022-12-13 15:32:26
  * @LastEditors: Quarter
  * @Description: 文本
  * @FilePath: /simple-ui/documents/views/document/text/index.vue

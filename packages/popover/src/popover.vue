@@ -1,16 +1,20 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:46:37
+ * @LastEditTime: 2022-12-16 10:20:12
  * @LastEditors: Quarter
  * @Description: 简易的弹出层
  * @FilePath: /simple-ui/packages/popover/src/popover.vue
 -->
 <template>
-  <div class="s-popover">
-    <div class="popover-reference" ref="reference" @click="switchPopVisible">
-      <slot name="reference"></slot>
-    </div>
+  <div
+    class="s-popover"
+    ref="reference"
+    @click="handleClick"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
+    <slot name="reference"></slot>
     <div
       :id="randomIdStr"
       class="popover-content"
@@ -19,6 +23,8 @@
       ref="content"
       :ele-hidden="popoverHidden"
       :style="popoverStyle"
+      @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave"
       @click.stop.prevent
     >
       <div class="s-popover__content" @click="clickPop">
@@ -38,95 +44,145 @@ import {
   CustomClass,
   CustomStyle,
   CommonPosition,
+  CommonAction,
 } from "packages/types";
 import variables from "packages/variables";
 
 @Component({
   name: "SPopover",
 })
-export default class SPopover extends Vue {
+export default class Popover extends Vue {
+  // 弹窗位置
+  @Prop({
+    type: String,
+    default: "click",
+  })
+  readonly trigger!: CommonAction;
+
+  // 弹窗位置
   @Prop({
     type: String,
     default: "bottom",
   })
-  position?: CommonPosition; // 弹窗位置
+  readonly position!: CommonPosition;
 
+  // 延迟毫秒数
+  @Prop([Number, String])
+  delay?: string | number;
+
+  // 弹出层背景色
   @Prop(String)
-  color?: string; // 弹出层背景色
+  readonly color?: string;
 
+  // 圆角
   @Prop(String)
-  borderRadius?: string; // 圆角
+  readonly borderRadius?: string;
 
+  // 是否显示
   @Prop({
     type: Boolean,
     default: false,
   })
-  show?: boolean; // 是否显示
+  readonly show!: boolean;
 
+  // 点击关闭
   @Prop({
     type: Boolean,
     default: false,
   })
-  onceClick?: boolean; // 点击关闭
+  readonly onceClick!: boolean;
 
+  // 特殊类名
   @Prop(String)
-  specialClass?: string; // 特殊类名
+  readonly specialClass?: string;
 
+  // 隐藏箭头
   @Prop({
     type: Boolean,
     default: false,
   })
-  hideArrow?: boolean; // 隐藏箭头
+  readonly hideArrow!: boolean;
 
+  // 禁用
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled?: boolean; // 禁用
+  readonly disabled!: boolean;
 
-  randomId = 0; // 随机id
-  zIndex = variables.zIndex; // 层级
-  hasSlot = false; // 是否存在插槽内容
-  unsyncedShow = false; // 弹窗是否可见
-  popElement: HTMLElement | null = null; // 弹窗DOM元素
-  adjustPosition: CommonPosition = "bottom"; // 适应的位置
+  // 随机id
+  randomId = 0;
+  // 层级
+  zIndex = variables.zIndex;
+  // 是否存在插槽内容
+  hasSlot = false;
+  // 弹窗是否可见
+  unsyncedShow = false;
+  // 弹窗DOM元素
+  popElement: HTMLElement | null = null;
+  // 适应的位置
+  adjustPosition: CommonPosition = "bottom";
+  // 自定义样式
   customStyle: CustomStyle = {
-    // 自定义样式
     "--popover-margin-left": 0,
     "--popover-margin-top": 0,
     "--popover-arrow-margin-left": 0,
     "--popover-arrow-margin-top": 0,
   };
-  animateKey = UUID(); // 帧计算下标
+  // 延迟关闭
+  closeDelay: number | undefined = undefined;
+  // 帧计算下标
+  animateKey = UUID();
 
   /**
-   * @description: 是否显示
-   * @author: Quarter
-   * @return {boolean}
+   * @description: 过滤的触发方式
+   * @return {CommonAction}
    */
-  get syncedShow(): boolean {
-    return !!this.show;
+  get filterTrigger(): CommonAction {
+    const triggerList: CommonAction[] = ["click", "hover"];
+    if (typeof this.trigger === "string" && triggerList.includes(this.trigger)) {
+      return this.trigger;
+    }
+    return "click";
   }
 
   /**
    * @description: 过滤的定位
-   * @author: Quarter
    * @return {CommonPosition}
    */
   get filterPosition(): CommonPosition {
-    const positionList: CommonPosition[] = ["top", "bottom", "left", "right"];
-    if (
-      typeof this.position === "string" &&
-      positionList.includes(this.position)
-    ) {
+    const positionList: CommonPosition[] = [
+      "top",
+      "bottom",
+      "left",
+      "left-top",
+      "left-bottom",
+      "right",
+      "right-top",
+      "right-bottom",
+    ];
+    if (typeof this.position === "string" && positionList.includes(this.position)) {
       return this.position;
     }
     return "bottom";
   }
 
   /**
+   * @description: 过滤的延迟
+   * @return
+   */
+  get filterDelay(): number {
+    if (typeof this.delay === "number" && this.delay > 0) {
+      return this.delay;
+    }
+    if (typeof this.delay === "string" && new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/).test(this.delay)) {
+      return parseInt(this.delay, 10);
+    }
+    return 50;
+  }
+
+  /**
    * @description: 是否显示
-   * @author: Quarter
    * @param {boolean} val 值
    * @return
    */
@@ -135,8 +191,15 @@ export default class SPopover extends Vue {
   }
 
   /**
+   * @description: 是否显示
+   * @return {boolean}
+   */
+  get syncedShow(): boolean {
+    return !!this.show;
+  }
+
+  /**
    * @description: 弹窗元素的id字符串
-   * @author: Quarter
    * @return {String}
    */
   get randomIdStr(): string {
@@ -145,7 +208,6 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 弹窗是否显示字符串
-   * @author: Quarter
    * @return {String}
    */
   get popoverHidden(): string {
@@ -154,15 +216,14 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
     const classNames: CustomClass = {
       "position-top": this.adjustPosition === "top",
-      "position-left": this.adjustPosition === "left",
+      "position-left": ["left", "left-top", "left-bottom"].includes(this.adjustPosition),
       "position-bottom": this.adjustPosition === "bottom",
-      "position-right": this.adjustPosition === "right",
+      "position-right": ["right", "right-top", "right-bottom"].includes(this.adjustPosition),
       "hide-arrow": this.hideArrow === true,
     };
     if (typeof this.specialClass === "string" && this.specialClass.length > 0) {
@@ -173,7 +234,6 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 弹窗样式
-   * @author: Quarter
    * @return {CustomStyle}
    */
   get popoverStyle(): CustomStyle {
@@ -181,19 +241,16 @@ export default class SPopover extends Vue {
       "z-index": this.zIndex.toString(),
     };
     if (typeof this.customStyle["--popover-margin-left"] === "string") {
-      styles["--popover-margin-left"] =
-        this.customStyle["--popover-margin-left"];
+      styles["--popover-margin-left"] = this.customStyle["--popover-margin-left"];
     }
     if (typeof this.customStyle["--popover-margin-top"] === "string") {
       styles["--popover-margin-top"] = this.customStyle["--popover-margin-top"];
     }
     if (typeof this.customStyle["--popover-arrow-margin-left"] === "string") {
-      styles["--popover-arrow-margin-left"] =
-        this.customStyle["--popover-arrow-margin-left"];
+      styles["--popover-arrow-margin-left"] = this.customStyle["--popover-arrow-margin-left"];
     }
     if (typeof this.customStyle["--popover-arrow-margin-top"] === "string") {
-      styles["--popover-arrow-margin-top"] =
-        this.customStyle["--popover-arrow-margin-top"];
+      styles["--popover-arrow-margin-top"] = this.customStyle["--popover-arrow-margin-top"];
     }
     if (typeof this.borderRadius === "string" && this.borderRadius) {
       styles["border-radius"] = this.borderRadius;
@@ -212,14 +269,12 @@ export default class SPopover extends Vue {
   get arrowSize(): number {
     if (this.hideArrow) {
       return 0;
-    } else {
-      return 6;
     }
+    return 6;
   }
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -238,7 +293,14 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
+   * @return
+   */
+  mounted(): void {
+    this.initPopElement();
+  }
+
+  /**
+   * @description: 生命周期函数
    * @return
    */
   beforeUpdate(): void {
@@ -251,7 +313,6 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   beforeDestroy(): void {
@@ -260,9 +321,7 @@ export default class SPopover extends Vue {
     if (typeof index === "number") {
       cancelAnimationFrame(index);
     }
-    const ele: HTMLElement | null = document.querySelector(
-      "#" + this.randomIdStr
-    );
+    const ele: HTMLElement | null = document.querySelector(`#${this.randomIdStr}`);
     if (ele) {
       ele.remove();
     }
@@ -270,7 +329,6 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 监听显示的变化
-   * @author: Quarter
    * @param {Boolean} newValue 变化的值
    * @return
    */
@@ -283,11 +341,10 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 切换显隐
-   * @author: Quarter
    * @param {Boolean} visible 显隐
    * @return
    */
-  switch(visible: boolean = false): void {
+  switch(visible = false): void {
     if (this.unsyncedShow !== visible) {
       this.switchPopVisible();
     }
@@ -295,7 +352,6 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 生成随意id
-   * @author: Quarter
    * @return
    */
   generateRandomId(): void {
@@ -308,11 +364,11 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 初始化弹窗DOM元素
-   * @author: Quarter;
+;
    * @return
    */
   initPopElement(): void {
-    this.popElement = document.querySelector("#" + this.randomIdStr);
+    this.popElement = document.querySelector(`#${this.randomIdStr}`);
     if (this.popElement) {
       document.body.appendChild(this.popElement);
     }
@@ -320,12 +376,10 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 调整弹窗位置
-   * @author: Quarter
    * @return
    */
   adjustPopPosition(): void {
-    const container: Vue | Element | (Vue | Element)[] | undefined =
-      this.$refs.reference;
+    const container: Vue | Element | Array<Vue | Element> | undefined = this.$refs.reference;
     if (container instanceof HTMLDivElement) {
       const maxWidth: number = window.innerWidth;
       const maxHeight: number = window.innerHeight;
@@ -336,12 +390,13 @@ export default class SPopover extends Vue {
         if (this.popElement.style.visibility === "hidden") {
           this.popElement.style.visibility = "";
         }
-        this.popElement.style.minWidth = bounding.width + "px";
+        this.popElement.style.minWidth = `${bounding.width}px`;
         const eleBounding: DOMRect = this.popElement.getBoundingClientRect();
         let top: number | null = null;
         let left: number | null = null;
         let bottom: number | null = null;
         let right: number | null = null;
+        // eslint-disable-next-line default-case
         switch (this.filterPosition) {
           case "top":
             top = bounding.y + bounding.height;
@@ -357,8 +412,7 @@ export default class SPopover extends Vue {
               top = null;
             }
             if (left + eleBounding.width > maxWidth) {
-              const marginLeft =
-                left + eleBounding.width - maxWidth + (this.arrowSize + 4);
+              const marginLeft = left + eleBounding.width - maxWidth + (this.arrowSize + 4);
               const contentMarginLeft =
                 marginLeft + (this.arrowSize + 4) < eleBounding.width / 2
                   ? marginLeft
@@ -383,8 +437,7 @@ export default class SPopover extends Vue {
               left = null;
             }
             if (top + eleBounding.height > maxHeight) {
-              const marginTop =
-                top + eleBounding.height - maxHeight + (this.arrowSize + 4);
+              const marginTop = top + eleBounding.height - maxHeight + (this.arrowSize + 4);
               const contentMarginTop =
                 marginTop + (this.arrowSize + 4) < eleBounding.height / 2
                   ? marginTop
@@ -393,6 +446,62 @@ export default class SPopover extends Vue {
               styles[
                 "--popover-arrow-margin-top"
               ] = `calc(50% - ${this.arrowSize} + ${contentMarginTop}px)`;
+            }
+            break;
+          case "left-top":
+            top = bounding.y;
+            left = bounding.width + bounding.x;
+            right = document.body.clientWidth - bounding.x;
+            if (
+              right + eleBounding.width > document.body.clientWidth &&
+              left + eleBounding.width < document.body.clientWidth
+            ) {
+              right = null;
+              this.adjustPosition = "right-top";
+            } else {
+              left = null;
+            }
+            if (top + eleBounding.height > maxHeight) {
+              const marginTop = top + eleBounding.height - maxHeight;
+              const contentMarginTop =
+                marginTop < eleBounding.height - bounding.height
+                  ? marginTop
+                  : eleBounding.height - bounding.height;
+              styles["--popover-margin-top"] = `-${contentMarginTop}px`;
+              styles["--popover-arrow-margin-top"] = `${
+                contentMarginTop + bounding.height / 2 - this.arrowSize
+              }px`;
+            } else {
+              styles["--popover-arrow-margin-top"] = `${bounding.height / 2 - this.arrowSize}px`;
+            }
+            break;
+          case "left-bottom":
+            top = bounding.y - eleBounding.height + bounding.height;
+            left = bounding.width + bounding.x;
+            right = document.body.clientWidth - bounding.x;
+            if (
+              right + eleBounding.width > document.body.clientWidth &&
+              left + eleBounding.width < document.body.clientWidth
+            ) {
+              right = null;
+              this.adjustPosition = "right-bottom";
+            } else {
+              left = null;
+            }
+            if (top < 0) {
+              const marginTop = Math.abs(top);
+              const contentMarginTop =
+                marginTop < eleBounding.height - bounding.height
+                  ? marginTop
+                  : eleBounding.height - bounding.height;
+              styles["--popover-margin-top"] = `${contentMarginTop}px`;
+              styles["--popover-arrow-margin-top"] = `${
+                eleBounding.height - bounding.height / 2 - this.arrowSize - marginTop
+              }px`;
+            } else {
+              styles["--popover-arrow-margin-top"] = `${
+                eleBounding.height - bounding.height / 2 - this.arrowSize
+              }px`;
             }
             break;
           case "bottom":
@@ -409,8 +518,7 @@ export default class SPopover extends Vue {
               bottom = null;
             }
             if (left + eleBounding.width > maxWidth) {
-              const marginLeft =
-                left + eleBounding.width - maxWidth + (this.arrowSize + 4);
+              const marginLeft = left + eleBounding.width - maxWidth + (this.arrowSize + 4);
               const contentMarginLeft =
                 marginLeft + (this.arrowSize + 4) < eleBounding.width / 2
                   ? marginLeft
@@ -435,8 +543,7 @@ export default class SPopover extends Vue {
               right = null;
             }
             if (top + eleBounding.height > maxHeight) {
-              const marginTop =
-                top + eleBounding.height - maxHeight + (this.arrowSize + 4);
+              const marginTop = top + eleBounding.height - maxHeight + (this.arrowSize + 4);
               const contentMarginTop =
                 marginTop + (this.arrowSize + 4) < eleBounding.height / 2
                   ? marginTop
@@ -447,12 +554,67 @@ export default class SPopover extends Vue {
               ] = `calc(50% - ${this.arrowSize} + ${contentMarginTop}px)`;
             }
             break;
+          case "right-top":
+            top = bounding.y;
+            left = bounding.width + bounding.x;
+            right = document.body.clientWidth - bounding.x;
+            if (
+              left + eleBounding.width > document.body.clientWidth &&
+              right + eleBounding.width < document.body.clientWidth
+            ) {
+              left = null;
+              this.adjustPosition = "left-top";
+            } else {
+              right = null;
+            }
+            if (top + eleBounding.height > maxHeight) {
+              const marginTop = top + eleBounding.height - maxHeight;
+              const contentMarginTop =
+                marginTop < eleBounding.height - bounding.height
+                  ? marginTop
+                  : eleBounding.height - bounding.height;
+              styles["--popover-margin-top"] = `-${contentMarginTop}px`;
+              styles["--popover-arrow-margin-top"] = `${
+                contentMarginTop + bounding.height / 2 - this.arrowSize
+              }px`;
+            } else {
+              styles["--popover-arrow-margin-top"] = `${bounding.height / 2 - this.arrowSize}px`;
+            }
+            break;
+          case "right-bottom":
+            top = bounding.y - eleBounding.height + bounding.height;
+            left = bounding.width + bounding.x;
+            right = document.body.clientWidth - bounding.x;
+            if (
+              left + eleBounding.width > document.body.clientWidth &&
+              right + eleBounding.width < document.body.clientWidth
+            ) {
+              left = null;
+              this.adjustPosition = "left-bottom";
+            } else {
+              right = null;
+            }
+            if (top < 0) {
+              const marginTop = Math.abs(top);
+              const contentMarginTop =
+                marginTop < eleBounding.height - bounding.height
+                  ? marginTop
+                  : eleBounding.height - bounding.height;
+              styles["--popover-margin-top"] = `${contentMarginTop}px`;
+              styles["--popover-arrow-margin-top"] = `${
+                eleBounding.height - bounding.height / 2 - this.arrowSize - marginTop
+              }px`;
+            } else {
+              styles["--popover-arrow-margin-top"] = `${
+                eleBounding.height - bounding.height / 2 - this.arrowSize
+              }px`;
+            }
+            break;
         }
-        this.popElement.style.top = top === null ? "initial" : top + "px";
-        this.popElement.style.left = left === null ? "initial" : left + "px";
-        this.popElement.style.bottom =
-          bottom === null ? "initial" : bottom + "px";
-        this.popElement.style.right = right === null ? "initial" : right + "px";
+        this.popElement.style.top = top === null ? "initial" : `${top}px`;
+        this.popElement.style.left = left === null ? "initial" : `${left}px`;
+        this.popElement.style.bottom = bottom === null ? "initial" : `${bottom}px`;
+        this.popElement.style.right = right === null ? "initial" : `${right}px`;
         this.customStyle = styles;
       }
       if (this.unsyncedShow) {
@@ -464,37 +626,80 @@ export default class SPopover extends Vue {
 
   /**
    * @description: 切换显示状态
-   * @author: Quarter
    * @return
    */
-  switchPopVisible(): void {
-    if (!this.disabled && this.hasSlot) {
-      if (this.popElement === null) {
-        this.initPopElement();
+  switchPopVisible(e?: MouseEvent): void {
+    if (e) {
+      if (this.filterTrigger === "click" && ["mouseenter", "mouseleave"].includes(e.type)) {
+        return;
       }
-      if (this.popElement !== null) {
-        if (this.unsyncedShow === false) {
-          this.popElement.style.visibility = "hidden";
-          this.zIndex = ++variables.zIndex;
-          this.unsyncedShow = !this.unsyncedShow;
-          const db: AnimationIndex = Reflect.get(window, ANIMATION_INDEX_DB);
-          db[this.animateKey] = requestAnimationFrame(this.adjustPopPosition);
-          setTimeout(() => {
-            document.body.addEventListener("click", this.switchPopVisible);
-          }, 0);
-        } else {
-          this.unsyncedShow = !this.unsyncedShow;
-          document.body.removeEventListener("click", this.switchPopVisible);
-        }
-        this.$emit("switch", this.unsyncedShow);
-        this.syncedShow = this.unsyncedShow;
+      if (this.filterTrigger === "hover" && ["click"].includes(e.type)) {
+        return;
       }
+    }
+    if (this.disabled || !this.hasSlot) {
+      return;
+    }
+    if (this.popElement === null) {
+      this.initPopElement();
+    }
+    if (this.popElement !== null) {
+      if (this.unsyncedShow === false) {
+        this.popElement.style.visibility = "hidden";
+        this.zIndex = ++variables.zIndex;
+        this.unsyncedShow = !this.unsyncedShow;
+        const db: AnimationIndex = Reflect.get(window, ANIMATION_INDEX_DB);
+        db[this.animateKey] = requestAnimationFrame(this.adjustPopPosition);
+        setTimeout(() => {
+          window.addEventListener("click", this.switchPopVisible);
+        }, 0);
+      } else {
+        this.unsyncedShow = !this.unsyncedShow;
+        window.removeEventListener("click", this.switchPopVisible);
+      }
+      this.$emit("switch", this.unsyncedShow);
+      this.syncedShow = this.unsyncedShow;
+    }
+  }
+
+  /**
+   * @description: 处理鼠标点击
+   * @return
+   */
+  handleClick(): void {
+    if (this.trigger === "click" && this.unsyncedShow === false) {
+      this.switchPopVisible();
+    }
+  }
+
+  /**
+   * @description: 处理鼠标进入
+   * @return
+   */
+  handleMouseEnter(): void {
+    if (typeof this.closeDelay === "number") {
+      clearTimeout(this.closeDelay);
+      this.closeDelay = undefined;
+    }
+    if (this.trigger === "hover" && this.disabled === false && this.unsyncedShow === false) {
+      this.switchPopVisible();
+    }
+  }
+
+  /**
+   * @description: 处理鼠标离开
+   * @return
+   */
+  handleMouseLeave(): void {
+    if (this.trigger === "hover" && this.unsyncedShow === true && this.disabled === false) {
+      this.closeDelay = setTimeout(() => {
+        this.switchPopVisible();
+      }, this.filterDelay);
     }
   }
 
   /**
    * @description: 点击弹窗关闭
-   * @author: Quarter
    * @return
    */
   clickPop(): void {
@@ -509,17 +714,13 @@ export default class SPopover extends Vue {
 .s-popover {
   position: relative;
   display: inline-block;
-
-  .popover-reference {
-    width: fit-content;
-  }
 }
 
 .popover-content {
-  // border: 1px solid rgba($color: #000000, $alpha: 0.05);
-  border: 1px solid rgba($color: #000000, $alpha: 0.05);
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1);
-  background-color: var(--popover-background, #ffffff);
+  border: 1px solid var(--s-border-color);
+  border-radius: var(--s-border-radius);
+  box-shadow: var(--s-shadow-3);
+  background-color: var(--popover-background, var(--s-background-primary));
   position: fixed;
   margin-top: var(--popover-margin-top, 0);
   margin-left: var(--popover-margin-left, 0);
@@ -553,14 +754,14 @@ export default class SPopover extends Vue {
 
     .s-popover__arrow {
       border-bottom-width: 0;
-      border-top-color: rgba($color: #000000, $alpha: 0.05);
+      border-top-color: var(--s-border-color);
       filter: drop-shadow(0 2px -12px rgba(0, 0, 0, 0.1));
       bottom: -6px;
       left: var(--popover-arrow-margin-left, calc(50% - 6px));
 
       &::after {
         border-bottom-width: 0;
-        border-top-color: var(--popover-background, #ffffff);
+        border-top-color: var(--popover-background, var(--s-background-primary));
         bottom: 1px;
         left: 0;
         margin-left: -6px;
@@ -577,14 +778,14 @@ export default class SPopover extends Vue {
 
     .s-popover__arrow {
       border-right-width: 0;
-      border-left-color: rgba($color: #000000, $alpha: 0.05);
+      border-left-color: var(--s-border-color);
       filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
       top: var(--popover-arrow-margin-top, calc(50% - 6px));
       right: -6px;
 
       &::after {
         border-right-width: 0;
-        border-left-color: var(--popover-background, #ffffff);
+        border-left-color: var(--popover-background, var(--s-background-primary));
         top: 0;
         right: 1px;
         margin-top: -6px;
@@ -601,14 +802,14 @@ export default class SPopover extends Vue {
 
     .s-popover__arrow {
       border-top-width: 0;
-      border-bottom-color: rgba($color: #000000, $alpha: 0.05);
+      border-bottom-color: var(--s-border-color);
       filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
       top: -6px;
       left: var(--popover-arrow-margin-left, calc(50% - 6px));
 
       &::after {
         border-top-width: 0;
-        border-bottom-color: var(--popover-background, #ffffff);
+        border-bottom-color: var(--popover-background, var(--s-background-primary));
         top: 1px;
         left: 0;
         margin-left: -6px;
@@ -625,14 +826,14 @@ export default class SPopover extends Vue {
 
     .s-popover__arrow {
       border-left-width: 0;
-      border-right-color: rgba($color: #000000, $alpha: 0.05);
+      border-right-color: var(--s-border-color);
       filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.1));
       top: var(--popover-arrow-margin-top, calc(50% - 6px));
       left: -6px;
 
       &::after {
         border-left-width: 0;
-        border-right-color: var(--popover-background, #ffffff);
+        border-right-color: var(--popover-background, var(--s-background-primary));
         left: 0;
         left: 1px;
         margin-top: -6px;

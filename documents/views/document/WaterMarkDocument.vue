@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:04:35
+ * @LastEditTime: 2022-12-13 15:29:49
  * @Description: 媒体预览文档
- * @FilePath: /simple-ui/documents/views/WaterMarkDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/WaterMarkDocument.vue
 -->
 <template>
   <div class="water-mark-document">
@@ -85,5 +85,4 @@ export default class WaterMarkDocument extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

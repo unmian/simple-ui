@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 11:08:37
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:50:46
+ * @LastEditTime: 2022-12-13 15:16:04
  * @Description: 进度条文档
- * @FilePath: /simple-ui/documents/views/BarDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/BarDocument.vue
 -->
 <template>
   <div class="bar-document">

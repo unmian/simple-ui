@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 11:58:49
+ * @LastEditTime: 2022-12-13 15:17:17
  * @Description: 文件选择按钮文档
- * @FilePath: /simple-ui/documents/views/FileButtonDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/FileButtonDocument.vue
 -->
 <template>
   <div class="file-button-document">
@@ -171,5 +171,4 @@ export default class FileButtonDocument extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

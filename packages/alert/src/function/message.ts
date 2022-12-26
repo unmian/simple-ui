@@ -20,6 +20,7 @@ const showMessage = (options: MessageOptions): InstanceType<typeof MessageBox> =
     Object.values(instances).forEach((instance: any) => {
       if (instance instanceof MessageBox) {
         instance.close();
+        // eslint-disable-next-line no-param-reassign
         instance = undefined;
       }
     });
@@ -48,7 +49,7 @@ const showMessage = (options: MessageOptions): InstanceType<typeof MessageBox> =
   SMessage.$mount();
   document.body.appendChild(SMessage.$el);
   SMessage.$on("close", (id: string) => {
-    delete instances[uuid];
+    delete instances[id];
   });
   instances[uuid] = SMessage;
   return SMessage;
@@ -58,7 +59,9 @@ const showMessage = (options: MessageOptions): InstanceType<typeof MessageBox> =
 const types: CommonType[] = ["info", "success", "warning", "error"];
 
 // 绑定弹窗函数
-const Message: any = (options?: string | MessageOptions): InstanceType<typeof MessageBox> | undefined => {
+const Message: any = (
+  options?: string | MessageOptions,
+): InstanceType<typeof MessageBox> | undefined => {
   if (typeof options === "string") {
     const SMessage: InstanceType<typeof MessageBox> = showMessage({
       message: options,
@@ -67,10 +70,10 @@ const Message: any = (options?: string | MessageOptions): InstanceType<typeof Me
   } else if (typeof options === "object") {
     const SMessage: InstanceType<typeof MessageBox> = showMessage(options);
     return SMessage;
-  } else {
+  } 
     const SMessage: InstanceType<typeof MessageBox> = showMessage({});
     return SMessage;
-  }
+  
 };
 
 types.forEach((type: CommonType) => {
@@ -81,11 +84,12 @@ types.forEach((type: CommonType) => {
         message: options,
       });
     } else if (typeof options === "object") {
+      // eslint-disable-next-line no-param-reassign
       options.type = type;
       return Message(options);
-    } else {
+    } 
       return Message();
-    }
+    
   };
 });
 

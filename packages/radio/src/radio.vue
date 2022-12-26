@@ -1,18 +1,26 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:51:59
+ * @LastEditTime: 2022-12-14 15:37:41
  * @LastEditors: Quarter
  * @Description: 单选按钮组件
  * @FilePath: /simple-ui/packages/radio/src/radio.vue
 -->
 <template>
-  <div class="s-radio" :class="customClass" @click="checkRadio">
-    <div class="radio">
-      <div class="inactive-view"></div>
-      <div class="active-view"></div>
+  <div
+    class="s-radio"
+    :class="{
+      's-radio--checked': checked,
+      's-radio--disabled': disabled,
+      's-radio--readonly': readonly,
+    }"
+    @click="handleCheck"
+  >
+    <div class="s-radio__symbol">
+      <div class="s-radio__inactive-symbol"></div>
+      <div class="s-radio__active-symbol"></div>
     </div>
-    <div v-if="hasSlot" class="radio-label">
+    <div v-if="hasSlot" class="s-radio__label">
       <slot></slot>
     </div>
   </div>
@@ -20,43 +28,46 @@
 
 <script lang="ts">
 import { Emitter } from "packages/mixins";
-import { type CustomClass } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 import { RadioValue } from "./types";
 
 @Component({
   name: "SRadio",
 })
-export default class SRadio extends Mixins(Emitter) {
+export default class Radio extends Emitter {
+  // 值
   @Prop({
     type: [String, Number, Boolean],
     default: null,
   })
-  value!: RadioValue; // 值
+  readonly value!: RadioValue;
 
+  // 当前单选框的值
   @Prop({
     type: [String, Number, Boolean],
     default: null,
   })
-  label!: RadioValue; // 当前单选框的值
+  readonly label!: RadioValue;
 
+  // 是否禁用
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled!: boolean; // 是否禁用
+  readonly disabled!: boolean;
 
+  // 是否只读
   @Prop({
     type: Boolean,
     default: false,
   })
-  readonly!: boolean; // 是否只读
+  readonly readonly!: boolean;
 
-  unsyncedValue: RadioValue = null; // 不同步的值
+  // 不同步的值
+  unsyncedValue: RadioValue = null;
 
   /**
    * @description: 选中的值
-   * @author: Quarter
    * @return {RadioValue}
    */
   get syncedValue(): RadioValue {
@@ -65,7 +76,6 @@ export default class SRadio extends Mixins(Emitter) {
 
   /**
    * @description: 选中的值
-   * @author: Quarter
    * @param {RadioValue} val 值
    * @return
    */
@@ -76,7 +86,6 @@ export default class SRadio extends Mixins(Emitter) {
 
   /**
    * @description: 是否有插槽内容
-   * @author: Quarter
    * @return {Boolean}
    */
   get hasSlot(): boolean {
@@ -85,7 +94,6 @@ export default class SRadio extends Mixins(Emitter) {
 
   /**
    * @description: 是否可用
-   * @author: Quarter
    * @return
    */
   get enabled(): boolean {
@@ -94,7 +102,6 @@ export default class SRadio extends Mixins(Emitter) {
 
   /**
    * @description: 当前是否选中
-   * @author: Quarter
    * @return {Boolean}
    */
   get checked(): boolean {
@@ -102,21 +109,7 @@ export default class SRadio extends Mixins(Emitter) {
   }
 
   /**
-   * @description: 自定义类名
-   * @author: Quarter
-   * @return {CustomClass}
-   */
-  get customClass(): CustomClass {
-    return {
-      "status-checked": this.checked === true,
-      "status-disabled": this.disabled === true,
-      "status-readonly": this.readonly === true,
-    };
-  }
-
-  /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -127,7 +120,6 @@ export default class SRadio extends Mixins(Emitter) {
 
   /**
    * @description: 监听选中值的改变
-   * @author: Quarter
    * @return
    */
   @Watch("value")
@@ -139,15 +131,10 @@ export default class SRadio extends Mixins(Emitter) {
 
   /**
    * @description: 选中单选框
-   * @author: Quarter
    * @return
    */
-  checkRadio(): void {
-    if (
-      this.enabled &&
-      this.unsyncedValue !== this.label &&
-      this.label !== undefined
-    ) {
+  handleCheck(): void {
+    if (this.enabled && this.unsyncedValue !== this.label && this.label !== undefined) {
       this.unsyncedValue = this.label;
       this.syncedValue = this.unsyncedValue;
       this.$emit("input", this.label);
@@ -160,75 +147,84 @@ export default class SRadio extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-radio {
-  cursor: default;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
+  margin-right: var(--s-spacing-16);
+}
 
-  .radio {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: #ffffff;
-    position: relative;
+.s-radio__symbol {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background-color: var(--s-background-primary);
+  position: relative;
+}
 
-    .inactive-view,
-    .active-view {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      box-sizing: border-box;
-      transition: transform 0.2s ease;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
+.s-radio__inactive-symbol,
+.s-radio__active-symbol {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transition: transform 0.2s ease;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
-    .inactive-view {
-      border: 1px solid #d6e1e5;
-    }
+.s-radio__inactive-symbol {
+  border: 1px solid var(--s-border-color);
+}
 
-    .active-view {
-      border: 5px solid #549fff;
-      transform: scale(0);
-    }
-  }
+.s-radio__active-symbol {
+  border: 0.4rem solid var(--s-brand-normal);
+  transform: scale(0);
+}
 
-  .radio-label {
-    color: #333333;
-    font-size: 14px;
-    margin-left: 10px;
-  }
+.s-radio__label {
+  color: var(--s-text-priamry);
+  font-size: 1.4rem;
+  margin-left: var(--s-spacing-12);
+}
 
-  &.status-checked .active-view {
+.s-radio--checked {
+  cursor: default;
+
+  .s-radio__active-symbol {
     transform: scale(1);
   }
 
-  &.status-disabled {
-    cursor: not-allowed;
+  .s-radio__label {
+    color: var(--s-brand-normal);
+  }
+}
 
-    .inactive-view {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
+.s-radio--disabled {
+  cursor: not-allowed;
 
-    .active-view {
-      border-color: rgba(0, 0, 0, 0.2);
-    }
+  .s-radio__inactive-symbol {
+    background-color: var(--s-background-disabled);
   }
 
-  &:not(.status-disabled).status-readonly {
-    cursor: not-allowed;
-
-    .inactive-view {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
-
-    &.status-checked .radio-label {
-      color: #549fff;
-    }
+  .s-radio__active-symbol {
+    border-color: var(--s-brand-disabled);
   }
 
-  &:not(:last-of-type) {
-    margin-right: 30px;
+  .s-radio__label {
+    color: var(--s-text-disabled);
+  }
+
+  &.s-radio--checked .s-radio__label {
+    color: var(--s-brand-disabled);
+  }
+}
+
+.s-radio--readonly:not(.s-radio--disabled) {
+  cursor: default;
+
+  .s-radio__inactive-symbol {
+    background-color: var(--s-background-secondary);
   }
 }
 </style>

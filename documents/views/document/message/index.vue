@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 14:13:32
  * @LastEditors: Quarter
- * @LastEditTime: 2022-06-10 10:22:11
+ * @LastEditTime: 2022-12-13 15:32:06
  * @Description: 提示信息文档
  * @FilePath: /simple-ui/documents/views/document/message/index.vue
 -->

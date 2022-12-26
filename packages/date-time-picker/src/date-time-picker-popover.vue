@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:37:55
+ * @LastEditTime: 2022-12-13 15:34:06
  * @LastEditors: Quarter
  * @Description: 日期时间选择弹窗
  * @FilePath: /simple-ui/packages/date-time-picker/src/date-time-picker-popover.vue
@@ -9,12 +9,7 @@
 <template>
   <div class="s-date-time-picker-popover">
     <div class="picker-input">
-      <s-input
-        width="140px"
-        :value="dateStr"
-        placeholder="选择日期"
-        readonly
-      ></s-input>
+      <s-input width="140px" :value="dateStr" placeholder="选择日期" readonly></s-input>
       <s-popover ref="popover" border-radius="4px" @switch="switchPopover">
         <s-input
           width="130px"
@@ -40,32 +35,18 @@
     <div class="split-line"></div>
     <div class="picker-header">
       <div class="left-operation">
-        <s-button
-          type="normal"
-          v-show="yearSwitchVisible"
-          @click="previousYear"
-        >
+        <s-button type="normal" v-show="yearSwitchVisible" @click="previousYear">
           <i class="s-icon-d-arrow-left"></i>
         </s-button>
-        <s-button
-          type="normal"
-          v-show="monthSwitchVisible"
-          @click="previousMonth"
-        >
+        <s-button type="normal" v-show="monthSwitchVisible" @click="previousMonth">
           <i class="s-icon-arrow-left"></i>
         </s-button>
       </div>
       <div class="date-info">
-        <s-button
-          type="normal"
-          v-show="datePickerVisible"
-          @click="showYearPicker"
+        <s-button type="normal" v-show="datePickerVisible" @click="showYearPicker"
           >{{ yearStr }} 年</s-button
         >
-        <s-button
-          type="normal"
-          v-show="datePickerVisible"
-          @click="showMonthPicker"
+        <s-button type="normal" v-show="datePickerVisible" @click="showMonthPicker"
           >{{ monthStr }} 月</s-button
         >
         <span v-show="yearPickerVisible">{{ yearStr }} 年</span>
@@ -151,7 +132,7 @@ import { DateTimeConfig } from "./types";
     STimePickerPopover,
   },
 })
-export default class SDateTimePickerPopover extends Vue {
+export default class DateTimePickerPopover extends Vue {
   @Prop(String)
   width?: string; // 宽度
 
@@ -208,7 +189,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {number}
    */
   get syncedValue(): number {
@@ -220,7 +200,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {number} val 值
    * @return
    */
@@ -230,48 +209,43 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 时间格式化字符串
-   * @author: Quarter
    * @return {String}
    */
   get timeFormate(): string {
     if (typeof this.formate === "string") {
-      const arr: RegExpMatchArray | null = this.formate.match(
-        new RegExp(/[smh:]+/)
-      );
+      const arr: RegExpMatchArray | null = this.formate.match(new RegExp(/[smh:]+/));
       if (arr && arr.length > 0) {
         return arr[0];
-      } else {
-        return "";
       }
+      return "";
     }
     return "hh:mm:ss";
   }
 
   /**
    * @description: 年份字符串
-   * @author: Quarter
    * @return {String}
    */
   get yearStr(): string | undefined {
     if (this.date.date instanceof Date) {
       return dateFormate(this.date.date, "yyyy");
     }
+    return undefined;
   }
 
   /**
    * @description: 月份格式化字符串
-   * @author: Quarter
    * @return {String}
    */
   get monthStr(): string | undefined {
     if (this.date.date instanceof Date) {
       return dateFormate(this.date.date, "MM");
     }
+    return undefined;
   }
 
   /**
    * @description: 当前年份
-   * @author: Quarter
    * @return {Number}
    */
   get currentYear(): number {
@@ -283,7 +257,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 当前月份
-   * @author: Quarter
    * @return {Number}
    */
   get currentMonth(): number {
@@ -295,7 +268,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 是否显示年份切换
-   * @author: Quarter
    * @return {Boolean}
    */
   get yearSwitchVisible(): boolean {
@@ -304,7 +276,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 是否显示月份
-   * @author: Quarter
    * @return {Boolean}
    */
   get monthSwitchVisible(): boolean {
@@ -313,7 +284,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get dateStr(): string | null {
@@ -325,65 +295,61 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 最小时间字符串
-   * @author: Quarter
    * @return {String}
    */
   get minTimeStr(): string | undefined {
     if (typeof this.min === "number" && this.min > 0) {
       return dateFormate(this.min, "yyyy-MM-dd hh:mm:ss");
     }
+    return undefined;
   }
 
   /**
    * @description: 最大时间字符串
-   * @author: Quarter
    * @return {String}
    */
   get maxTimeStr(): string | undefined {
     if (typeof this.max === "number" && this.max > 0) {
       return dateFormate(this.max, "yyyy-MM-dd hh:mm:ss");
     }
+    return undefined;
   }
 
   /**
    * @description: 最小日期时间戳
-   * @author: Quarter
    * @return {Number}
    */
   get minDateTime(): number | undefined {
     if (typeof this.min === "number" && this.min > 0) {
       return new Date(dateFormate(this.min, "yyyy-MM-dd 00:00:00")).getTime();
     }
+    return undefined;
   }
 
   /**
    * @description: 最大日期时间戳
-   * @author: Quarter
    * @return {Number}
    */
   get maxDateTime(): number | undefined {
     if (typeof this.max === "number" && this.max > 0) {
       return new Date(dateFormate(this.max, "yyyy-MM-dd 00:00:00")).getTime();
     }
+    return undefined;
   }
 
   /**
    * @description: 时间字符串
-   * @author: Quarter
    * @return {String}
    */
   get timeStr(): string | null {
     const { hour, minute, second } = this.date;
     if (typeof hour === "number") {
       const hourStr: string =
-        new Array(2 - hour.toString().length).fill(0).join("") +
-        hour.toString();
+        new Array(2 - hour.toString().length).fill(0).join("") + hour.toString();
       const minuteStr: string =
-        new Array(2 - (minute || 0).toString().length).fill(0).join("") +
-        (minute || 0).toString();
+        new Array(2 - (minute || 0).toString().length).fill(0).join("") + (minute || 0).toString();
       const secondStr: string =
-        new Array(2 - (second || 0).toString().length).fill(0).join("") +
-        (second || 0).toString();
+        new Array(2 - (second || 0).toString().length).fill(0).join("") + (second || 0).toString();
       return `${hourStr}:${minuteStr}:${secondStr}`;
     }
     return null;
@@ -391,21 +357,17 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 时间字符串
-   * @author: Quarter
    * @return {String}
    */
   get fullTimeStr(): string | null {
     const { hour, minute, second } = this.date;
     if (typeof hour === "number") {
       const hourStr: string =
-        new Array(2 - hour.toString().length).fill(0).join("") +
-        hour.toString();
+        new Array(2 - hour.toString().length).fill(0).join("") + hour.toString();
       const minuteStr: string =
-        new Array(2 - (minute || 0).toString().length).fill(0).join("") +
-        (minute || 0).toString();
+        new Array(2 - (minute || 0).toString().length).fill(0).join("") + (minute || 0).toString();
       const secondStr: string =
-        new Array(2 - (second || 0).toString().length).fill(0).join("") +
-        (second || 0).toString();
+        new Array(2 - (second || 0).toString().length).fill(0).join("") + (second || 0).toString();
       return `${hourStr}:${minuteStr}:${secondStr}`;
     }
     return null;
@@ -413,48 +375,35 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 选择的时间日期
-   * @author: Quarter
    * @return {Number}
    */
   get dateTimeSelected(): number {
     if (this.dateSelected > 0) {
       if (this.timeStr) {
         return new Date(
-          dateFormate(this.dateSelected, "yyyy-MM-dd") + " " + this.fullTimeStr
+          `${dateFormate(this.dateSelected, "yyyy-MM-dd")} ${this.fullTimeStr}`,
         ).getTime();
-      } else {
-        return this.dateSelected;
       }
+      return this.dateSelected;
     }
     return 0;
   }
 
   /**
    * @description: 选择的时间日期
-   * @author: Quarter
    * @param {Number} value 值
    * @return
    */
   set dateTimeSelected(value: number) {
     if (typeof value === "number" && value > 0) {
       let time: Date = new Date(value);
-      if (
-        this.minTimeStr &&
-        time.getTime() < new Date(this.minTimeStr).getTime()
-      ) {
+      if (this.minTimeStr && time.getTime() < new Date(this.minTimeStr).getTime()) {
         time = new Date(this.minTimeStr);
       }
-      if (
-        this.maxTimeStr &&
-        time.getTime() > new Date(this.maxTimeStr).getTime()
-      ) {
+      if (this.maxTimeStr && time.getTime() > new Date(this.maxTimeStr).getTime()) {
         time = new Date(this.maxTimeStr);
       }
-      this.dateSelected = new Date(
-        time.getFullYear(),
-        time.getMonth(),
-        time.getDate()
-      ).getTime();
+      this.dateSelected = new Date(time.getFullYear(), time.getMonth(), time.getDate()).getTime();
       this.date = {
         date: time,
         hour: time.getHours(),
@@ -463,16 +412,10 @@ export default class SDateTimePickerPopover extends Vue {
       };
     } else {
       let time: Date = new Date(Date.now());
-      if (
-        this.minTimeStr &&
-        time.getTime() < new Date(this.minTimeStr).getTime()
-      ) {
+      if (this.minTimeStr && time.getTime() < new Date(this.minTimeStr).getTime()) {
         time = new Date(this.minTimeStr);
       }
-      if (
-        this.maxTimeStr &&
-        time.getTime() > new Date(this.maxTimeStr).getTime()
-      ) {
+      if (this.maxTimeStr && time.getTime() > new Date(this.maxTimeStr).getTime()) {
         time = new Date(this.maxTimeStr);
       }
       this.dateSelected = 0;
@@ -487,7 +430,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return
    */
@@ -495,9 +437,7 @@ export default class SDateTimePickerPopover extends Vue {
   handleValueChange(): void {
     if (typeof this.syncedValue === "number") {
       if (this.syncedValue > 0) {
-        const date: Date = new Date(
-          dateFormate(this.syncedValue, "yyyy-MM-dd hh:mm:ss")
-        );
+        const date: Date = new Date(dateFormate(this.syncedValue, "yyyy-MM-dd hh:mm:ss"));
         this.dateTimeSelected = date.getTime();
       } else if (this.syncedValue === 0) {
         this.dateTimeSelected = 0;
@@ -509,7 +449,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 监听选中值变化
-   * @author: Quarter
    * @param {Number} time 时间戳
    * @return
    */
@@ -526,7 +465,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 区间限制
-   * @author: Quarter
    * @return
    */
   @Watch("min")
@@ -534,17 +472,11 @@ export default class SDateTimePickerPopover extends Vue {
   @Watch("left")
   @Watch("right")
   handleIntervalChange(): void {
-    let date: Date = this.date.date;
-    if (
-      this.minTimeStr &&
-      date.getTime() < new Date(this.minTimeStr).getTime()
-    ) {
+    let { date } = this.date;
+    if (this.minTimeStr && date.getTime() < new Date(this.minTimeStr).getTime()) {
       date = new Date(this.minTimeStr);
     }
-    if (
-      this.maxTimeStr &&
-      date.getTime() > new Date(this.maxTimeStr).getTime()
-    ) {
+    if (this.maxTimeStr && date.getTime() > new Date(this.maxTimeStr).getTime()) {
       date = new Date(this.maxTimeStr);
     }
     this.date.date = date;
@@ -553,7 +485,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 计算当月日期结构
-   * @author: Quarter
    * @param {Date} 变化的日期
    * @return
    */
@@ -566,7 +497,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 点击弹窗
-   * @author: Quarter
    * @param {Boolean} visible 是否显示
    * @return
    */
@@ -580,46 +510,33 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 获取选择器的值
-   * @author: Quarter
    * @return
    */
   getSelectorValue(date?: number): number | undefined {
     if (typeof date === "number" && date > 0) {
       this.dateTimeSelected = date;
     }
-    if (
-      typeof this.dateTimeSelected === "number" &&
-      this.dateTimeSelected > 0
-    ) {
+    if (typeof this.dateTimeSelected === "number" && this.dateTimeSelected > 0) {
       return this.dateTimeSelected;
     }
   }
 
   /**
    * @description:
-   * @author: Quarter
+
    * @return
    */
   calcMonthDay(date: Date): void {
     if (date instanceof Date) {
       // 计算当月天数
-      const dayArray: DayConfig[] = new Array();
+      const dayArray: DayConfig[] = [];
       const oneDay = 24 * 60 * 60 * 1000;
       const today: Date = new Date(dateFormate(date, "yyyy-MM-dd 00:00:00"));
-      const dayLength: number = new Date(
-        today.getFullYear(),
-        today.getMonth() + 1,
-        0
-      ).getDate();
-      const firstDay: number = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        1
-      ).getDay();
+      const dayLength: number = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      const firstDay: number = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
       const weekLength: number = Math.ceil((dayLength + firstDay) / 7);
       let tempDate: Date = new Date(
-        new Date(today.getFullYear(), today.getMonth(), 1).getTime() -
-          firstDay * oneDay
+        new Date(today.getFullYear(), today.getMonth(), 1).getTime() - firstDay * oneDay,
       );
       for (let i = 0; i < weekLength * 7; i++) {
         let enable: boolean = tempDate.getMonth() === today.getMonth();
@@ -651,22 +568,17 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 切换弹窗显示
-   * @author: Quarter
    * @param {Boolean} visible 是否显示
    * @return
    */
   switchPopover(visible: boolean): void {
-    if (
-      visible === true &&
-      this.$refs.timePicker instanceof STimePickerPopover
-    ) {
+    if (visible === true && this.$refs.timePicker instanceof STimePickerPopover) {
       (this.$refs.timePicker as InstanceType<typeof STimePickerPopover>).init();
     }
   }
 
   /**
    * @description: 计算是否在值域内
-   * @author: Quarter
    * @return
    */
   calcDateSelect(): void {
@@ -674,25 +586,17 @@ export default class SDateTimePickerPopover extends Vue {
     const hasRight: boolean = typeof this.right === "number" && this.right > 0;
     const dayArray: DayConfig[] = this.monthDay.slice();
     dayArray.forEach((day: DayConfig, index: number) => {
-      let select: boolean = false;
+      let select = false;
       if (hasLeft && hasRight) {
         if (day.time <= this.right && day.time >= this.left) {
           select = true;
         }
       } else if (hasLeft) {
-        if (
-          this.dateSelected > 0 &&
-          day.time >= this.left &&
-          day.time <= this.dateTimeSelected
-        ) {
+        if (this.dateSelected > 0 && day.time >= this.left && day.time <= this.dateTimeSelected) {
           select = true;
         }
       } else if (hasRight) {
-        if (
-          this.dateSelected > 0 &&
-          day.time <= this.right &&
-          day.time >= this.dateTimeSelected
-        ) {
+        if (this.dateSelected > 0 && day.time <= this.right && day.time >= this.dateTimeSelected) {
           select = true;
         }
       }
@@ -703,7 +607,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 上一年
-   * @author: Quarter
    * @return
    */
   previousYear(): void {
@@ -711,7 +614,7 @@ export default class SDateTimePickerPopover extends Vue {
       const date: Date = new Date(
         this.date.date.getFullYear() - 1,
         this.date.date.getMonth(),
-        this.date.date.getDate()
+        this.date.date.getDate(),
       );
       this.date.date = date;
     } else if (this.yearPickerVisible === true) {
@@ -725,7 +628,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 下一年
-   * @author: Quarter
    * @return
    */
   nextYear(): void {
@@ -733,7 +635,7 @@ export default class SDateTimePickerPopover extends Vue {
       const date: Date = new Date(
         this.date.date.getFullYear() + 1,
         this.date.date.getMonth(),
-        this.date.date.getDate()
+        this.date.date.getDate(),
       );
       this.date.date = date;
     } else if (this.yearPickerVisible === true) {
@@ -747,7 +649,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 上个月
-   * @author: Quarter
    * @return
    */
   previousMonth(): void {
@@ -755,10 +656,10 @@ export default class SDateTimePickerPopover extends Vue {
     const date: Date = new Date(
       this.date.date.getFullYear(),
       this.date.date.getMonth(),
-      this.date.date.getDate()
+      this.date.date.getDate(),
     );
     if (month < 0) {
-      month = month + 12;
+      month += 12;
       date.setFullYear(date.getFullYear() - 1);
     }
     date.setMonth(month);
@@ -767,7 +668,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 下个月
-   * @author: Quarter
    * @return
    */
   nextMonth(): void {
@@ -775,10 +675,10 @@ export default class SDateTimePickerPopover extends Vue {
     const date: Date = new Date(
       this.date.date.getFullYear(),
       this.date.date.getMonth(),
-      this.date.date.getDate()
+      this.date.date.getDate(),
     );
     if (month > 11) {
-      month = month - 12;
+      month -= 12;
       date.setFullYear(date.getFullYear() + 1);
     }
     date.setMonth(month);
@@ -787,7 +687,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 选择日期
-   * @author: Quarter
    * @param {Number} 时间戳
    * @param {Boolean} 是否可以选择
    * @return
@@ -801,7 +700,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 清空选中的日期
-   * @author: Quarter
    * @return
    */
   clearValue(): void {
@@ -810,7 +708,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 显示年份选择
-   * @author: Quarter
    * @return
    */
   showYearPicker(): void {
@@ -824,13 +721,12 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 计算当前可选的年份
-   * @author: Quarter
    * @return
    */
   calcSelectYears(): void {
     if (this.date.date instanceof Date) {
       const date: number = Math.floor(this.yearToChoose / 10) * 10;
-      const yearArray: number[] = new Array();
+      const yearArray: number[] = [];
       for (let i = 0; i < 10; i++) {
         yearArray.push(date + i);
       }
@@ -840,7 +736,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 选择年份
-   * @author: Quarter
    * @param {Number} year 年份
    * @return
    */
@@ -856,7 +751,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 显示月份选择
-   * @author: Quarter
    * @return
    */
   showMonthPicker(): void {
@@ -866,7 +760,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 选择月份
-   * @author: Quarter
    * @param {Number} month 月份
    * @return
    */
@@ -882,7 +775,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closePopover(): void {
@@ -893,7 +785,6 @@ export default class SDateTimePickerPopover extends Vue {
 
   /**
    * @description: 确认弹窗
-   * @author: Quarter
    * @param {Number} hour 小时
    * @param {Number} minute 分钟
    * @param {Number} second 秒

@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 14:58:39
  * @LastEditors: Quarter
- * @LastEditTime: 2022-03-30 15:01:17
+ * @LastEditTime: 2022-12-15 13:53:37
  * @Description: 弹出层的说明文档
- * @FilePath: /simple-ui/documents/views/PopoverDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/PopoverDocument.vue
 -->
 <template>
   <div class="popver-document">
@@ -99,10 +99,14 @@
       </template>
       <template v-slot:example>
         <div class="example-list">
-          <s-popover color="#ffffff">
+          <div style="height: 800px"></div>
+          <s-popover position="right-bottom">
             <s-button type="normal" slot="reference">点击我查看详情</s-button>
-            <div style="padding: 20px 12px; color: #535353; font-size: 14px">这是弹窗的信息哦～～</div>
+            <div style="padding: 20px 12px; color: #535353; font-size: 14px">
+              这是弹窗的信息哦～～
+            </div>
           </s-popover>
+          <div style="height: 800px"></div>
         </div>
       </template>
     </document-page>
@@ -125,9 +129,8 @@ export default class PopoverDocument extends Vue {
   <s-button type="normal" slot="reference">点击我查看详情</s-button>
   <div style="padding: 20px 12px;color: #535353;font-size: 14px;">这是弹窗的信息哦～～</div>
 </s-popover>
-  `;  // 示例代码
+  `; // 示例代码
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

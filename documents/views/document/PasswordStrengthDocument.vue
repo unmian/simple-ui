@@ -2,9 +2,9 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-04-12 12:00:22
+ * @LastEditTime: 2022-12-13 15:26:49
  * @Description: 密码强度文档
- * @FilePath: /simple-ui/documents/views/PasswordStrengthDocument.vue
+ * @FilePath: /simple-ui/documents/views/document/PasswordStrengthDocument.vue
 -->
 <template>
   <div class="password-strength-document">
@@ -28,7 +28,13 @@
       <template v-slot:example>
         <div class="example-list">
           <div>
-            <s-input width="280px" type="password" v-model="password" placeholder="请输入测试密码" :maxlength="26"></s-input>
+            <s-input
+              width="280px"
+              type="password"
+              v-model="password"
+              placeholder="请输入测试密码"
+              :maxlength="26"
+            ></s-input>
           </div>
           <div>
             <s-password-strength :password="password"></s-password-strength>
@@ -41,7 +47,7 @@
 
 <script lang="ts">
 import { DocumentPage } from "documents/components";
-import { InputValue } from "@quarter/simple-ui";
+import { InputValue } from "@unmian/simple-ui";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component({
@@ -52,38 +58,8 @@ import { Component, Vue } from "vue-property-decorator";
 })
 export default class PasswordStrengthDocument extends Vue {
   password: InputValue = "";
-  code = `
-<template>
-  <div>
-    <div>
-      <s-input
-        width="280px"
-        type="password"
-        v-model="password"
-        placeholder="请输入测试密码"
-        :maxlength="26"
-      ></s-input>
-    </div>
-    <div>
-      <s-password-strength
-        :password="password"
-      ></s-password-strength>
-    </div>
-  </div>
-</template>
-
-<script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-
-@Component
-export default class PasswordStrengthDocument extends Vue {
-  // 密码
-  private password: InputValue = "";
-}
-</${"script"}>
-  `;
+  code = "";
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

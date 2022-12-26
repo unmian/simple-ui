@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2021-06-22 19:06:56
- * @LastEditTime: 2022-04-11 11:20:06
+ * @LastEditTime: 2022-12-13 15:33:13
  * @LastEditors: Quarter
  * @Description: 简易的标记组件
  * @FilePath: /simple-ui/packages/badge/src/badge.vue
@@ -24,7 +24,7 @@ import { CustomClass, CommonSize } from "packages/types";
 @Component({
   name: "SBadge",
 })
-export default class SBadge extends Vue {
+export default class Badge extends Vue {
   @Prop(String)
   size?: CommonSize; // 尺寸
 
@@ -39,7 +39,6 @@ export default class SBadge extends Vue {
 
   /**
    * @description: 过滤的尺寸
-   * @author: Quarter
    * @return {CommonSize}
    */
   get filterSize(): CommonSize {
@@ -51,40 +50,30 @@ export default class SBadge extends Vue {
   }
 
   /**
-     * @description: 过滤的值
-     * @author: Quarter
-     * @return {String|Number}
-     */
+   * @description: 过滤的值
+   * @return {String|Number}
+   */
   get filterValue(): string | number | undefined {
-    if (
-      typeof this.value === "string" &&
-      this.value.replace(/\s/g, "").length > 0
-    ) {
+    if (typeof this.value === "string" && this.value.replace(/\s/g, "").length > 0) {
       return this.value;
     }
     if (typeof this.value === "number") {
       return this.value;
     }
+    return undefined;
   }
 
   /**
    * @description: 安全的颜色
-   * @author: Quarter
    * @return
    */
   get safeColor(): string {
-    const hexColor: RegExp = new RegExp(/^#[0-9a-fA-F]{6}$/);
-    const rgbColor: RegExp = new RegExp(/^rgb\(([0-9]{1,3},){2}[0-9]{1,3}\)$/);
-    const rgbaColor: RegExp = new RegExp(
-      /^rgba\(([0-9]{1,3},){3}((0(\.[0-9]+){0,1})|1)\)$/
-    );
+    const hexColor = new RegExp(/^#[0-9a-fA-F]{6}$/);
+    const rgbColor = new RegExp(/^rgb\(([0-9]{1,3},){2}[0-9]{1,3}\)$/);
+    const rgbaColor = new RegExp(/^rgba\(([0-9]{1,3},){3}((0(\.[0-9]+){0,1})|1)\)$/);
     if (typeof this.color === "string" && this.color) {
       const color: string = this.color.replace(/\s/g, "");
-      if (
-        hexColor.test(color) ||
-        rgbColor.test(color) ||
-        rgbaColor.test(color)
-      ) {
+      if (hexColor.test(color) || rgbColor.test(color) || rgbaColor.test(color)) {
         return color;
       }
     }
@@ -93,14 +82,13 @@ export default class SBadge extends Vue {
 
   /**
    * @description: 自定义类名
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
     const classNames: CustomClass = {
       "is-dot": this.filterValue === undefined,
     };
-    Reflect.set(classNames, "size-" + this.filterSize, true);
+    Reflect.set(classNames, `size-${  this.filterSize}`, true);
     return classNames;
   }
 }

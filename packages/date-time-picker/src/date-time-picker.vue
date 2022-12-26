@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-05 11:21:50
+ * @LastEditTime: 2022-12-13 15:34:12
  * @LastEditors: Quarter
  * @Description: 简易的日期时间选择器
  * @FilePath: /simple-ui/packages/date-time-picker/src/date-time-picker.vue
@@ -58,7 +58,7 @@ import { Input } from "packages/input";
 import { Emitter } from "packages/mixins";
 import { Popover } from "packages/popover";
 import { dateFormate } from "packages/util";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   name: "SDateTimePicker",
@@ -69,7 +69,7 @@ import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
     SDateTimePickerPopover,
   },
 })
-export default class SDateTimePicker extends Mixins(Emitter) {
+export default class DateTimePicker extends Emitter {
   @Prop(String)
   width?: string; // 宽度
 
@@ -116,7 +116,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {string|undefined}
    */
   get syncedValue(): string | undefined {
@@ -125,7 +124,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {string|undefined} val 值
    * @return
    */
@@ -136,7 +134,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -145,7 +142,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 日期字符串
-   * @author: Quarter
    * @return {String}
    */
   get dateStr(): string | undefined {
@@ -156,17 +152,17 @@ export default class SDateTimePicker extends Mixins(Emitter) {
     ) {
       return dateFormate(this.unsyncedValue, this.formate);
     }
+    return undefined;
   }
 
   /**
    * @description: 标准格式化字符串
-   * @author: Quarter
    * @return {String}
    */
   get standardFormater(): string {
     if (typeof this.formate === "string") {
-      const dateStrArr: string[] = new Array();
-      const timeStrArr: string[] = new Array();
+      const dateStrArr: string[] = [];
+      const timeStrArr: string[] = [];
       const timeStrMap: any = {
         "y+": "yyyy",
         "M+": "MM",
@@ -185,48 +181,43 @@ export default class SDateTimePicker extends Mixins(Emitter) {
           timeStrArr.push(timeStrMap[str] || "");
         }
       });
-      return dateStrArr.join("-") + " " + timeStrArr.join(":");
+      return `${dateStrArr.join("-")} ${timeStrArr.join(":")}`;
     }
     return "";
   }
 
   /**
    * @description: 区间最小值
-   * @author: Quarter
    * @return
    */
   get min(): number | undefined {
     if (Array.isArray(this.interval) && typeof this.interval[0] === "string") {
       const minStr: string = this.interval[0];
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/,
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(minStr)) {
         return new Date(minStr).getTime();
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 区间最大值
-   * @author: Quarter
    * @return
    */
   get max(): number | undefined {
     if (Array.isArray(this.interval) && typeof this.interval[1] === "string") {
       const maxStr: string = this.interval[1];
-      const dateRegExp: RegExp = new RegExp(
-        /^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/,
-      );
+      const dateRegExp = new RegExp(/^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$/);
       if (dateRegExp.test(maxStr)) {
         return new Date(maxStr).getTime();
       }
     }
+    return undefined;
   }
 
   /**
    * @description: 监听传入值变化
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return
    */
@@ -244,7 +235,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 监听选中值变化
-   * @author: Quarter
    * @param {Number} timeStamp 时间戳
    * @return
    */
@@ -252,7 +242,7 @@ export default class SDateTimePicker extends Mixins(Emitter) {
   handleUnsyncedValueChange(timeStamp: number): void {
     if (typeof timeStamp === "number" && typeof this.formate === "string") {
       if (timeStamp === 0) {
-        const value: string = "";
+        const value = "";
         this.syncedValue = value;
         this.$emit("input", value);
         this.$emit("change", value);
@@ -268,7 +258,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 格式化标准时间字符串
-   * @author: Quarter
    * @param {String} timeStr 时间字符串
    * @return {String}
    */
@@ -286,14 +275,13 @@ export default class SDateTimePicker extends Mixins(Emitter) {
           timeStrArr[index] = timeStr.substr(this.formate.indexOf(str), str.length);
         }
       });
-      return dateStrArr.join("-") + " " + timeStrArr.join(":");
+      return `${dateStrArr.join("-")} ${timeStrArr.join(":")}`;
     }
     return "";
   }
 
   /**
    * @description: 清空值
-   * @author: Quarter
    * @return
    */
   clearValue(): void {
@@ -302,7 +290,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 切换弹窗显示
-   * @author: Quarter
    * @param {Boolean} visible 是否显示
    * @return
    */
@@ -314,7 +301,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认快捷时间
-   * @author: Quarter
    * @param {Number} timestamp 时间戳
    * @return
    */
@@ -331,7 +317,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closePopover(): void {
@@ -342,7 +327,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认使用此时的时间
-   * @author: Quarter
    * @return
    */
   confirmNow(): void {
@@ -361,7 +345,6 @@ export default class SDateTimePicker extends Mixins(Emitter) {
 
   /**
    * @description: 确认弹窗
-   * @author: Quarter
    * @return
    */
   confirmPopover(): void {

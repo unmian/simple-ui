@@ -1,94 +1,109 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-07-05 11:26:47
+ * @LastEditTime: 2022-12-14 19:32:05
  * @LastEditors: Quarter
  * @Description: 简易的文本域
  * @FilePath: /simple-ui/packages/textarea/src/textarea.vue
 -->
 <template>
-  <div class="s-textarea" :class="customClass" :style="customStyle">
-    <div class="textarea-content">
-      <div v-if="placeholderVisible" class="textarea-placeholder">
-        <template v-for="(item, index) of placeholderArr">
-          {{ item }}
-          <br v-if="index + 1 !== placeholderArr.length" :key="`placeholder-item-${index}`" />
-        </template>
-      </div>
-      <div v-if="counterEnable" ref="counter" class="input-counter">
-        {{ counterStr }}
-      </div>
-      <textarea
-        v-model="unsyncedValue"
-        :cols="realCols"
-        :rows="rows"
-        :maxlength="maxlength"
-        :disabled="!enabled"
-        @focus="focus"
-        @blur="blur"
-        @keydown.stop="exposeEvent($event, 'keydown')"
-        @keyup.stop="exposeEvent($event, 'keyup')"
-        @keypress.stop="exposeEvent($event, 'keypress')"
-      ></textarea>
+  <div
+    class="s-textarea"
+    :class="{
+      's-textarea--focused': isFocused,
+      's-textarea--disabled': disabled,
+      's-textarea--readonly': readonly,
+    }"
+    :style="{ width }"
+  >
+    <div v-if="placeholderVisible" class="s-textarea__placeholder">
+      <template v-for="(item, index) of placeholderArr">
+        {{ item }}
+        <br v-if="index + 1 !== placeholderArr.length" :key="`placeholder-item-${index}`" />
+      </template>
     </div>
+    <div v-if="counterEnable" ref="counter" class="s-textarea__counter">
+      {{ counterStr }}
+    </div>
+    <textarea
+      v-model="unsyncedValue"
+      :cols="realCols"
+      :rows="rows"
+      :maxlength="maxlength"
+      :disabled="!enabled"
+      @focus="focus"
+      @blur="blur"
+      @keydown.stop="exposeEvent($event, 'keydown')"
+      @keyup.stop="exposeEvent($event, 'keyup')"
+      @keypress.stop="exposeEvent($event, 'keypress')"
+    ></textarea>
   </div>
 </template>
 
 <script lang="ts">
 import { InputValue } from "packages/input";
 import { Emitter } from "packages/mixins";
-import { CustomClass, CustomStyle } from "packages/types";
-import { Component, Mixins, Prop, Watch } from "vue-property-decorator";
+import { Component, Prop, Watch } from "vue-property-decorator";
 
 @Component({
   name: "STextarea",
 })
-export default class STextarea extends Mixins(Emitter) {
+export default class Textarea extends Emitter {
+  // 值
   @Prop({
     type: String,
     default: null,
   })
-  value!: string | null; // 值
+  readonly value!: string | null;
 
+  // 宽度
   @Prop(String)
-  width?: string; // 宽度
+  readonly width?: string;
 
+  // 列数
   @Prop([String, Number])
-  cols?: string | number; // 列数
+  readonly cols?: string | number;
 
+  // 行数
   @Prop([String, Number])
-  rows?: string | number; // 行数
+  readonly rows?: string | number;
 
+  // 最大字数
   @Prop(Number)
-  maxlength?: number; // 最大字数
+  readonly maxlength?: number;
 
+  // 文本提示
   @Prop(String)
-  placeholder?: string; // 文本提示
+  readonly placeholder?: string;
 
+  // 是否显示计数器
   @Prop({
     type: Boolean,
     default: true,
   })
-  showCounter!: boolean; // 是否显示计数器
+  readonly showCounter!: boolean;
 
+  // 是否禁用
   @Prop({
     type: Boolean,
     default: false,
   })
-  disabled!: boolean; // 是否禁用
+  readonly disabled!: boolean;
 
+  // 是否只读
   @Prop({
     type: Boolean,
     default: false,
   })
-  readonly!: boolean; // 是否只读
+  readonly readonly!: boolean;
 
-  unsyncedValue = ""; // 不同步的文本内容
-  isFocused = false; // 是否获取到焦点
+  // 不同步的文本内容
+  unsyncedValue = "";
+  // 是否获取到焦点
+  isFocused = false;
 
   /**
    * @description: 值
-   * @author: Quarter
    * @return {InputValue}
    */
   get middleValue(): InputValue {
@@ -97,7 +112,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 值
-   * @author: Quarter
    * @param {InputValue} val 值
    * @return
    */
@@ -109,7 +123,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 是否可用
-   * @author: Quarter
    * @return {Boolean}
    */
   get enabled(): boolean {
@@ -117,34 +130,18 @@ export default class STextarea extends Mixins(Emitter) {
   }
 
   /**
-   * @description: 自定义样式表
-   * @author: Quarter
-   * @return {CustomStyle}
-   */
-  get customStyle(): CustomStyle {
-    const styles: CustomStyle = {};
-    if (typeof this.width === "string") {
-      styles["--textarea-container-width"] = this.width;
-      styles["--textarea-width"] = `calc(${this.width} - 2px)`;
-    }
-    return styles;
-  }
-
-  /**
    * @description: 提示文本数组
-   * @author: Quarter
    * @return {Array<String>}
    */
   get placeholderArr(): string[] {
     if (this.placeholderVisible && typeof this.placeholder === "string") {
       return this.placeholder.split("\\n");
     }
-    return new Array();
+    return [];
   }
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @return {String}
    */
   get syncedValue(): string {
@@ -156,7 +153,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 同步的值
-   * @author: Quarter
    * @param {String} val 值
    * @return
    */
@@ -169,31 +165,17 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 处理后的列数
-   * @author: Quarter
    * @return {MayNumber}
    */
   get realCols(): number | undefined {
     if (this.width === undefined && typeof this.cols === "number") {
       return this.cols;
     }
-  }
-
-  /**
-   * @description: 自定义类名
-   * @author: Quarter
-   * @return {CustomClass}
-   */
-  get customClass(): CustomClass {
-    return {
-      "is-focused": this.isFocused,
-      "is-disabled": this.disabled,
-      "is-readonly": this.readonly,
-    };
+    return undefined;
   }
 
   /**
    * @description: 是否显示提示内容
-   * @author: Quarter
    * @return {Boolean}
    */
   get placeholderVisible(): boolean {
@@ -202,16 +184,17 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 是否启用计数器
-   * @author: Quarter
    * @return {Boolean}
    */
   get counterEnable(): boolean {
+    if (this.disabled || this.readonly) {
+      return false;
+    }
     return typeof this.maxlength === "number" && this.showCounter === true;
   }
 
   /**
    * @description: 计数器内容
-   * @author: Quarter
    * @return {String}
    */
   get counterStr(): string {
@@ -220,7 +203,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 生命周期函数
-   * @author: Quarter
    * @return
    */
   created(): void {
@@ -229,7 +211,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 监控传入值的变化
-   * @author: Quarter
    * @return
    */
   @Watch("value")
@@ -239,7 +220,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 监控不同步值的变化
-   * @author: Quarter
    * @return
    */
   @Watch("unsyncedValue")
@@ -249,7 +229,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 获取焦点
-   * @author: Quarter
    * @return
    */
   focus(): void {
@@ -260,7 +239,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 失去焦点
-   * @author: Quarter
    * @return
    */
   blur(): void {
@@ -271,7 +249,6 @@ export default class STextarea extends Mixins(Emitter) {
 
   /**
    * @description: 暴露事件
-   * @author: Quarter
    * @return
    */
   exposeEvent(event: Event, eventName: string): void {
@@ -285,97 +262,78 @@ export default class STextarea extends Mixins(Emitter) {
 
 <style lang="scss">
 .s-textarea {
-  width: var(--textarea-container-width, fit-content);
-  font-size: 14px;
-  border-radius: 4px;
+  width: fit-content;
+  color: var(--s-text-primary);
+  font-size: 1.4rem;
+  line-height: 1.5;
   overflow: hidden;
-  background-color: #ffffff;
+  border-radius: var(--s-border-radius);
+  border: 1px solid var(--s-border-color);
+  background-color: var(--s-background-primary);
   display: inline-flex;
+  position: relative;
 
-  .textarea-content {
-    width: var(--textarea-container-width, fit-content);
+  textarea {
+    width: 100%;
+    padding: var(--s-spacing-8);
+    color: inherit;
     font-size: inherit;
-    line-height: 1.5;
-    border-radius: 4px;
-    border: 1px solid #d6e1e5;
+    line-height: inherit;
+    border: none;
+    outline-color: transparent;
+    background: none;
     box-sizing: border-box;
-    transition: border 0.2s ease;
-    overflow: hidden;
+    display: block;
     position: relative;
-
-    .textarea-placeholder {
-      width: 100%;
-      height: 100%;
-      padding: 8px 10px;
-      color: #d6e1e5;
-      box-sizing: border-box;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    textarea {
-      width: var(--textarea-width, fit-content);
-      padding: 8px 10px;
-      color: #333333;
-      font-size: inherit;
-      line-height: inherit;
-      border: none;
-      outline-color: transparent;
-      background: none;
-      box-sizing: border-box;
-      display: block;
-      position: relative;
-    }
-
-    .input-counter {
-      padding: 0 10px;
-      color: #b7c1c5;
-      font-size: 12px;
-      line-height: 1.75;
-      background-color: #ffffff;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-    }
-
-    &:hover {
-      border-color: #b7c1c5;
-    }
   }
 
-  &.is-focused .textarea-content,
-  &.is-focused .textarea-content:hover {
-    border-color: #549fff;
+  &:hover {
+    border-color: var(--s-brand-hover);
+  }
+}
+
+.s-textarea__placeholder {
+  width: 100%;
+  height: 100%;
+  padding: var(--s-spacing-8);
+  color: var(--s-text-placeholder);
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.s-textarea__counter {
+  padding: var(--s-spacing-4) var(--s-spacing-8);
+  color: var(--s-text-placeholder);
+  font-size: 1.2rem;
+  line-height: inherit;
+  background-color: var(--s-background-primary);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.s-textarea--focused,
+.s-textarea--focused:hover {
+  border-color: var(--s-brand-hover);
+}
+
+.s-textarea--disabled {
+  cursor: not-allowed;
+  background-color: var(--s-background-secondary);
+
+  &:hover {
+    border-color: var(--s-border-color);
   }
 
-  &.is-disabled .textarea-content,
-  &.is-disabled .textarea-content:hover {
-    border-color: #d6e1e5;
-    background-color: #f9f9f9;
-
-    textarea {
-      color: #666666;
-    }
-
-    .input-counter {
-      background-color: #f9f9f9;
-    }
+  textarea {
+    color: var(--s--text-dsiabled);
   }
+}
 
-  &:not(.is-disabled).is-readonly .textarea-content,
-  &:not(.is-disabled).is-readonly .textarea-content:hover {
-    cursor: not-allowed;
-    border-color: #d6e1e5;
-
-    textarea {
-      color: #333333;
-      cursor: not-allowed;
-    }
-
-    .input-counter {
-      display: none;
-    }
-  }
+.s-textarea--readonly:not(.s-textarea--disabled) {
+  cursor: default;
+  border-color: var(--s-border-color);
 }
 </style>

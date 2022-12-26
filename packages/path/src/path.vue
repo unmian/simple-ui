@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 16:47:14
+ * @LastEditTime: 2022-12-13 16:11:17
  * @LastEditors: Quarter
  * @Description: 简易的路径显示框
  * @FilePath: /simple-ui/packages/path/src/path.vue
@@ -10,18 +10,9 @@
   <div class="s-path" :class="{ 'can-click': click }">
     <div v-if="!hideMark" class="mark"></div>
     <div class="path-list">
-      <div
-        v-for="(item, index) in path"
-        :key="`path-item-${index}`"
-        class="path-item"
-      >
+      <div v-for="(item, index) in path" :key="`path-item-${index}`" class="path-item">
         <div class="path-name" @click="toPath(item.path)">{{ item.name }}</div>
-        <div
-          v-if="Array.isArray(path) && index !== path.length - 1"
-          class="path-split"
-        >
-          /
-        </div>
+        <div v-if="Array.isArray(path) && index !== path.length - 1" class="path-split">/</div>
       </div>
     </div>
   </div>
@@ -29,17 +20,21 @@
 
 <script lang="ts">
 import { Component, Inject, Prop, Vue } from "vue-property-decorator";
+import VueRouter from "vue-router";
 import { MenuItem } from "./types";
 
 @Component({
   name: "SPath",
 })
-export default class SPath extends Vue {
+export default class Path extends Vue {
   @Inject({
     from: "refresh",
     default: () => ({}),
   })
   refresh!: () => void;
+
+  @Prop(Object)
+  readonly router?: VueRouter;
 
   @Prop({
     type: Array,
@@ -61,21 +56,20 @@ export default class SPath extends Vue {
 
   /**
    * @description: 前往指定路径
-   * @author: Quarter
    * @param {String} path 指定路径
    * @return
    */
   toPath(path: string | undefined): void {
     if (this.click === true && typeof path === "string") {
-      const currentPath: string = this.$route.path;
-      if (path === currentPath) {
+      const currentPath: string | undefined = this.router?.currentRoute.path;
+      if (currentPath && path === currentPath) {
         if (typeof this.refresh === "function") {
           this.refresh();
         }
       } else {
-        this.$router.push(path).catch((reason: any) => {
-          const samePathError: RegExp = new RegExp(
-            /^Avoided\sredundant\snavigation\sto\scurrent\slocation/
+        this.router?.push(path).catch((reason: any) => {
+          const samePathError = new RegExp(
+            /^Avoided\sredundant\snavigation\sto\scurrent\slocation/,
           );
           if (samePathError.test(reason.message) === false) {
             throw reason;

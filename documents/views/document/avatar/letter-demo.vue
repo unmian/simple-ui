@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-05-16 10:50:33
- * @LastEditTime: 2022-06-08 11:17:11
+ * @LastEditTime: 2022-12-13 15:30:36
  * @LastEditors: Quarter
  * @Description: 示例代码
  * @FilePath: /simple-ui/documents/views/document/avatar/letter-demo.vue
@@ -41,7 +41,7 @@
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class LetterDemo extends Vue {}
+export default class AvatarLetterDemo extends Vue {}
 </script>
 
 <style lang="scss" scoped>

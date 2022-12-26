@@ -1,40 +1,51 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-10 10:27:07
+ * @LastEditTime: 2022-12-13 15:40:08
  * @LastEditors: Quarter
  * @Description: 简易的消息提示组件
  * @FilePath: /simple-ui/packages/message/src/message.vue
 -->
 <template>
   <div class="s-message" :class="customClass">
+    <!-- 背景颜色 -->
+    <div class="s-message__background"></div>
+    <!-- 图标 -->
     <div v-if="iconVisible" class="s-message__icon">
-      <i :class="iconName"></i>
+      <icon :name="iconName"></icon>
     </div>
+    <!-- 消息内容 -->
     <div class="s-message__content">
       <slot></slot>
     </div>
+    <!-- 关闭按钮 -->
     <div class="s-message__close" v-if="showClose" @click="closeMessage">
       <button>
-        <i class="s-icon-close"></i>
+        <icon name="close-big"></icon>
       </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { Icon } from "@unmian/simple-icons";
 import { CustomClass, CommonType } from "packages/types";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
+const MESSAGE_THEME_LIST: CommonType[] = ["info", "warning", "success", "error"];
+
 @Component({
   name: "SMessage",
+  components: {
+    Icon,
+  },
 })
-export default class SMessage extends Vue {
+export default class Message extends Vue {
   @Prop({
     type: String,
     default: "info",
   })
-  theme?: CommonType; // 提示类型
+  theme!: CommonType; // 提示类型
 
   @Prop({
     type: Boolean,
@@ -49,24 +60,27 @@ export default class SMessage extends Vue {
   showClose?: boolean; // 是否显示关闭按钮
 
   /**
+   * @description: 过滤的主题
+   * @return {CommonType}
+   */
+  get filterTheme(): CommonType {
+    if (MESSAGE_THEME_LIST.includes(this.theme)) {
+      return this.theme;
+    }
+    return "info";
+  }
+
+  /**
    * @description: 自定义类
-   * @author: Quarter
    * @return {CustomClass}
    */
   get customClass(): CustomClass {
-    return {
-      "type-info": this.type === "info",
-      "type-warning": this.type === "warning",
-      "type-success": this.type === "success",
-      "type-error": this.type === "error",
-      "icon-hidden": this.iconVisible === false,
-      "close-hidden": this.showClose !== true,
-    };
+    const classList = [`s-message--theme-${this.filterTheme}`];
+    return classList;
   }
 
   /**
    * @description: 是否显示图标
-   * @author: Quarter
    * @return {Boolean}
    */
   get iconVisible(): boolean {
@@ -75,26 +89,25 @@ export default class SMessage extends Vue {
 
   /**
    * @description: 图标的名称
-   * @author: Quarter
    * @return {String}
    */
   get iconName(): string | null {
-    switch (this.type) {
+    switch (this.theme) {
       case "info":
-        return "s-icon-info";
+        return "error";
       case "warning":
-        return "s-icon-warning";
+        return "error";
       case "success":
-        return "s-icon-success";
+        return "circle-check";
       case "error":
-        return "s-icon-error";
+        return "off-close";
+      default:
+        return null;
     }
-    return null;
   }
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   close(): void {
@@ -103,7 +116,6 @@ export default class SMessage extends Vue {
 
   /**
    * @description: 关闭弹窗
-   * @author: Quarter
    * @return
    */
   closeMessage(): void {
@@ -117,15 +129,30 @@ export default class SMessage extends Vue {
 <style lang="scss">
 .s-message {
   width: 100%;
-  padding: 20px 30px;
+  padding: var(--s-spacing-12) var(--s-spacing-16);
+  backdrop-filter: blur(3px);
   box-sizing: border-box;
   display: flex;
   align-items: center;
+  position: relative;
 
-  .message-icon {
-    width: 30px;
+  .s-message__background {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--s-border-radius);
+    border: 1px solid transparent;
+    opacity: 0.36;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
+
+  .s-message__icon {
     display: flex;
     align-items: center;
+    margin-right: var(--s-spacing-8);
   }
 
   .message-content {
@@ -133,11 +160,11 @@ export default class SMessage extends Vue {
     font-size: 14px;
   }
 
-  .message-close {
-    width: 60px;
+  .s-message__close {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    margin-left: var(--s-spacing-8);
 
     button {
       padding: 2px 5px;
@@ -183,6 +210,43 @@ export default class SMessage extends Vue {
   &.type-error {
     color: #f56c6c;
     background-color: rgba($color: #f56c6c, $alpha: 0.1);
+  }
+}
+
+// 信息主题
+.s-message--theme-info {
+  color: var(--s-text-secondary);
+
+  .s-message__background {
+    border-color: var(--s-text-disabled);
+    background-color: var(--s-background-primary);
+  }
+}
+
+.s-message--theme-warning {
+  color: var(--s-warning-normal);
+
+  .s-message__background {
+    border-color: var(--s-warning-focus);
+    background-color: var(--s-warning-light);
+  }
+}
+
+.s-message--theme-success {
+  color: var(--s-success-normal);
+
+  .s-message__background {
+    border-color: var(--s-success-focus);
+    background-color: var(--s-success-light);
+  }
+}
+
+.s-message--theme-error {
+  color: var(--s-danger-normal);
+
+  .s-message__background {
+    border-color: var(--s-danger-focus);
+    background-color: var(--s-danger-light);
   }
 }
 </style>

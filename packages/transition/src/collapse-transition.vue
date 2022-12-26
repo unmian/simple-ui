@@ -1,7 +1,7 @@
 <!--
  * @Author: Quarter
  * @Date: 2022-01-06 02:27:39
- * @LastEditTime: 2022-06-07 17:20:31
+ * @LastEditTime: 2022-12-13 15:42:47
  * @LastEditors: Quarter
  * @Description: 展开过渡
  * @FilePath: /simple-ui/packages/transition/src/collapse-transition.vue
@@ -45,7 +45,6 @@ export default class CollapseTransition extends Vue {
 
   /**
    * @description: 过滤的排列方式
-   * @author: Quarter
    * @return {String}
    */
   get filterAlign(): CommonDirection {
@@ -57,7 +56,6 @@ export default class CollapseTransition extends Vue {
 
   /**
    * @description: 过滤的过渡方式
-   * @author: Quarter
    * @return {String}
    */
   get filterTransition(): TransitionType {
@@ -77,14 +75,13 @@ export default class CollapseTransition extends Vue {
 
   /**
    * @description: 过滤的持续时间
-   * @author: Quarter
    * @return {Number}
    */
   get filterDuration(): number {
     if (typeof this.duration === "number" && this.duration > 0) {
       return this.duration;
     } else if (typeof this.duration === "string") {
-      const numRegExp: RegExp = new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/);
+      const numRegExp = new RegExp(/^[0-9]+(\.[0-9]+){0,1}$/);
       if (numRegExp.test(this.duration)) {
         const duration: number = parseFloat(this.duration);
         if (duration > 0) {
@@ -101,16 +98,20 @@ export default class CollapseTransition extends Vue {
    * @return
    */
   beforeEnter(el: HTMLElement): void {
-    el.style.transitionProperty =
-      this.filterAlign === "horizontal" ? "width" : "height";
+    // eslint-disable-next-line no-param-reassign
+    el.style.transitionProperty = this.filterAlign === "horizontal" ? "width" : "height";
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionTimingFunction = this.filterTransition;
-    el.style.transitionDuration = this.filterDuration + "s";
+    // eslint-disable-next-line no-param-reassign
+    el.style.transitionDuration = `${this.filterDuration  }s`;
     if (!el.dataset) {
       Reflect.set(el, "dataset", {});
     }
     if (this.filterAlign === "horizontal") {
+      // eslint-disable-next-line no-param-reassign
       el.style.width = "0";
     } else {
+      // eslint-disable-next-line no-param-reassign
       el.style.height = "0";
     }
   }
@@ -122,10 +123,13 @@ export default class CollapseTransition extends Vue {
    */
   enter(el: HTMLElement) {
     if (this.filterAlign === "horizontal") {
+      // eslint-disable-next-line no-param-reassign
       el.style.width = `${el.scrollWidth}px`;
     } else {
+      // eslint-disable-next-line no-param-reassign
       el.style.height = `${el.scrollHeight}px`;
     }
+    // eslint-disable-next-line no-param-reassign
     el.style.overflow = "hidden";
   }
 
@@ -135,10 +139,15 @@ export default class CollapseTransition extends Vue {
    * @return
    */
   afterEnter(el: HTMLElement) {
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionProperty = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionTimingFunction = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionDuration = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.width = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.height = "";
     this.$emit("enter-end");
   }
@@ -149,18 +158,23 @@ export default class CollapseTransition extends Vue {
    * @return
    */
   beforeLeave(el: HTMLElement) {
-    el.style.transitionProperty =
-      this.filterAlign === "horizontal" ? "width" : "height";
+    // eslint-disable-next-line no-param-reassign
+    el.style.transitionProperty = this.filterAlign === "horizontal" ? "width" : "height";
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionTimingFunction = this.filterTransition;
-    el.style.transitionDuration = this.filterDuration + "s";
+    // eslint-disable-next-line no-param-reassign
+    el.style.transitionDuration = `${this.filterDuration  }s`;
     if (!el.dataset) {
       Reflect.set(el, "dataset", {});
     }
     if (this.filterAlign === "horizontal") {
+      // eslint-disable-next-line no-param-reassign
       el.style.width = `${el.scrollWidth}px`;
     } else {
+      // eslint-disable-next-line no-param-reassign
       el.style.height = `${el.scrollHeight}px`;
     }
+    // eslint-disable-next-line no-param-reassign
     el.style.overflow = "hidden";
   }
 
@@ -172,13 +186,13 @@ export default class CollapseTransition extends Vue {
   leave(el: HTMLElement) {
     if (this.filterAlign === "horizontal") {
       if (el.scrollWidth !== 0) {
+        // eslint-disable-next-line no-param-reassign
         el.style.width = "0";
       }
-    } else {
-      if (el.scrollHeight !== 0) {
+    } else if (el.scrollHeight !== 0) {
+        // eslint-disable-next-line no-param-reassign
         el.style.height = "0";
       }
-    }
   }
 
   /**
@@ -187,10 +201,15 @@ export default class CollapseTransition extends Vue {
    * @return
    */
   afterLeave(el: HTMLElement) {
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionProperty = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionTimingFunction = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.transitionDuration = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.width = "";
+    // eslint-disable-next-line no-param-reassign
     el.style.height = "";
     this.$emit("leave-end");
   }

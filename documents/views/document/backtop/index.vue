@@ -2,7 +2,7 @@
  * @Author: Quarter
  * @Date: 2020-09-29 16:31:22
  * @LastEditors: Quarter
- * @LastEditTime: 2022-05-26 03:52:01
+ * @LastEditTime: 2022-12-13 15:31:17
  * @Description: 返回顶部文档
  * @FilePath: /simple-ui/documents/views/document/backtop/index.vue
 -->
@@ -70,5 +70,5 @@ import { Component, Vue } from "vue-property-decorator";
     DocumentPage,
   },
 })
-export default class BacktopDocument extends Vue { }
+export default class BacktopDocument extends Vue {}
 </script>
